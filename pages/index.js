@@ -40,7 +40,7 @@ function Landing() {
               Vrei să-ți găsești cariera? Vrei să știi la ce facultate să îți
               continui studiile?
               <br />
-              ProjectAlpha își propune să faciliteze tinerilor în cautarea
+              StudCompass își propune să faciliteze tinerilor în cautarea
               carierei, informațiile necesare pentru <br /> facilitarea
               succesului. I-ați viitorul in propriile mâini!
             </p>
@@ -57,7 +57,7 @@ function Landing() {
         </section>
         {/*--------------Content---------------*/}
         <section className={styles.content}>
-          <h1 className={styles.h1}>Cum funcționează ProjectAlpha?</h1>
+          <h1 className={styles.h1}>Cum funcționează StudCompass?</h1>
           <p className={styles.h4}>
             Iată câțiva pași simpli prin care îți poti găsi facultatea sau
             școala la care vrei să studiezi
@@ -151,10 +151,10 @@ function Landing() {
           <h3 className={styles.citattext}>
             "Suntem de părere că sunt puține moduri de a-ți afla traseul necesar
             pentu obținerea unui job sau găsirea unei profesii/cariere, așa că
-            am creat ProjectAlpha, site-ul necesar fiecărui tânar în căutarea
+            am creat StudCompass, site-ul necesar fiecărui tânăr în căutarea
             drumului său spre viitor."
           </h3>
-          <p className={styles.citattext}>~Echipa Alpha~</p>
+          <p className={styles.citattext}>~Echipa StudCompass~</p>
         </section>
         <Footer />
       </div>

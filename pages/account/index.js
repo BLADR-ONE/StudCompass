@@ -36,14 +36,12 @@ import Link from 'next/link';
 function Settings() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [budget, setBudget] = useState('');
 
   const handleBudget = (event) => {
     setBudget(event.target.value);
   };
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [bac, setBac] = useState('');
 
   const handleBac = (event) => {

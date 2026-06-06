@@ -27,7 +27,7 @@ function Footer() {
           </li>
         </ul>
         <p className={styles.p}>
-          ~Made with <FontAwesomeIcon icon={faHeart} /> by AlphaTeam~
+          ~Made with <FontAwesomeIcon icon={faHeart} /> by StudCompass~
         </p>
       </section>
     </>

@@ -43,7 +43,19 @@ function MyApp({ Component, pageProps }) {
     >
       <ThemeProvider theme={theme}>
         <Head>
-          <title>ProjectAlpha</title>
+          <title>StudCompass</title>
+          <meta
+            name="description"
+            content="StudCompass helps students discover the right faculties and career paths."
+          />
+          <meta property="og:title" content="StudCompass" />
+          <meta
+            property="og:description"
+            content="StudCompass helps students discover the right faculties and career paths."
+          />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary" />
+          <meta name="application-name" content="StudCompass" />
         </Head>
         <Component {...pageProps} />
       </ThemeProvider>

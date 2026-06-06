@@ -30,7 +30,7 @@ function Landing() {
 
           <div className={styles.footer}>
           <p className={`${styles["p"]} ${styles["p__a_and_c"]}`} style={{color: '#f1f2f3'}}>
-           ~Made with <FontAwesomeIcon icon={faHeart} /> by AlphaTeam~
+           ~Made with <FontAwesomeIcon icon={faHeart} /> by StudCompass~
           </p>
         </div>
        </div>

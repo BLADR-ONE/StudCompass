@@ -13,7 +13,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import axios from 'axios';
 import { auth, google } from '../../lib/firebase';
 import Router from 'next/router';
-import Navbar from '/components/Navbar';
+import Navbar from '../../components/Navbar';
 
 import GoogleIcon from '@mui/icons-material/Google';
 import { Fade } from 'react-awesome-reveal';
