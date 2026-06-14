@@ -1,0 +1,250 @@
+@import 'tailwindcss';
+
+/* Bind the `dark:` variant to the data-theme attribute set by the no-flash script. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ---------------------------------------------------------------------------
+   Raw brand palette + static design tokens (pinned contract)
+   Orange (accent) = CTAs & highlights ONLY. Rust = destructive ONLY.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-primary: #388870;
+  --color-primary-strong: #306858;
+  --color-primary-soft: #58b098;
+  --color-accent: #f07820;
+  --color-accent-strong: #d05828;
+  --color-highlight: #f8c050;
+  --color-mint: #a8e8e8;
+  --color-teal-soft: #78c8c8;
+  --color-ink: #183838;
+  --color-rust: #884028;
+
+  --shadow-card:
+    0 1px 2px var(--sc-shadow-weak), 0 14px 40px -18px var(--sc-shadow);
+  --shadow-lift:
+    0 2px 4px var(--sc-shadow-weak), 0 26px 52px -18px var(--sc-shadow);
+
+  --animate-rise: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade: fade 0.5s ease-out both;
+  --animate-pop: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-bob: bob 2.6s ease-in-out infinite;
+  --animate-spin-slow: spin 90s linear infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(9px);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Semantic tokens — flipped by [data-theme] on <html>.
+   Light: sage paper + ink. Dark: deep-teal night map + mint.
+--------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --sc-bg: #f4f6f1;
+  --sc-surface: #fbfcf8;
+  --sc-surface-raised: #ffffff;
+  --sc-text: #183838;
+  --sc-text-muted: #50706a;
+  --sc-border: #dbe4da;
+  --sc-eyebrow: #306858;
+  --sc-shadow: rgb(18 46 44 / 0.18);
+  --sc-shadow-weak: rgb(18 46 44 / 0.07);
+  --sc-doodle: url('/assets/bgWhite.jpg');
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --sc-bg: #0d2123;
+  --sc-surface: #11292b;
+  --sc-surface-raised: #163133;
+  --sc-text: #d9f2ec;
+  --sc-text-muted: #8fb4ac;
+  --sc-border: #1f4244;
+  --sc-eyebrow: #78c8c8;
+  --sc-shadow: rgb(2 12 12 / 0.6);
+  --sc-shadow-weak: rgb(2 12 12 / 0.35);
+  --sc-doodle: url('/assets/bgDark.jpg');
+}
+
+/* Expose semantic vars + fonts as Tailwind utilities (bg-bg, text-text, …). */
+@theme inline {
+  --color-bg: var(--sc-bg);
+  --color-surface: var(--sc-surface);
+  --color-surface-raised: var(--sc-surface-raised);
+  --color-text: var(--sc-text);
+  --color-text-muted: var(--sc-text-muted);
+  --color-border: var(--sc-border);
+
+  --font-sans:
+    var(--font-schibsted), ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+  --font-display:
+    var(--font-fraunces), 'Iowan Old Style', 'Palatino Linotype', Georgia,
+    serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--sc-bg);
+    color: var(--sc-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-highlight);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--sc-text) 28%, transparent)
+      transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Custom utilities
+--------------------------------------------------------------------------- */
+
+/* Page gutter / measure. */
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 74rem;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 640px) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Editorial section label: small caps + warm gradient tick. */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sc-eyebrow);
+
+  &::before {
+    content: '';
+    width: 2.25rem;
+    height: 2px;
+    flex: none;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--color-accent),
+      var(--color-highlight)
+    );
+  }
+}
+
+/* Fraunces at its most characterful — for italic accent words. */
+@utility wonky {
+  font-variation-settings:
+    'SOFT' 70,
+    'WONK' 1;
+}
+
+/* Theme-tied education-doodle texture (bgWhite.jpg / bgDark.jpg). */
+@utility texture-doodle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--sc-doodle);
+  background-size: 540px auto;
+  background-repeat: repeat;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+
+  [data-theme='dark'] & {
+    mix-blend-mode: screen;
+    opacity: 0.14;
+  }
+}
+
+/* Always-night variant for the fixed deep-teal CTA band. */
+@utility texture-doodle-night {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url('/assets/bgDark.jpg');
+  background-size: 540px auto;
+  background-repeat: repeat;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+}

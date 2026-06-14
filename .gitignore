@@ -30,3 +30,12 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Local Netlify folder
+.netlify
+
+# Repo secrets
+/secrets
+
+# Firestore import/export artifacts
+firestore-export.json
