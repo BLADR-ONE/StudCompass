@@ -6,38 +6,35 @@ import aboutImage from '../../public/assets/about.jpg';
 export const metadata = {
   title: 'Despre noi',
   description:
-    'Povestea StudCompass: doi elevi din Baia Mare, pasionați de informatică, au desenat o hartă a facultăților din România. Află cine suntem și scrie-ne.',
+    'Povestea StudCompass: un proiect pasionat de informatică, gândit ca o hartă a facultăților din România. Află cine e în spatele busolei și scrie-ne.',
 };
 
 const CONTACT_EMAIL = 'contact@studcompass.ro';
 
-/* Ported facts from v1 (pages/about.js), presented as map coordinates. */
+/* Project author. */
+const AUTHOR = {
+  name: 'Ureche Rafael',
+  alias: 'Bladr-One',
+  role: 'Creator & dezvoltator',
+  github: 'BLADR-ONE',
+};
+
+/* A single low-key contributor mention (left the project, with approval). */
+const CONTRIBUTOR_NAME = 'Toma Aris';
+
+/* Facts presented as map coordinates. */
 const ROUTE_FACTS = [
   {
     label: 'Punct de plecare',
-    value: 'Colegiul Național „Gheorghe Șincai"',
+    value: 'O pasiune pentru informatică',
   },
   {
-    label: 'Coordonate',
-    value: 'Baia Mare, Maramureș',
-    detail: '47.65° N · 23.57° E',
+    label: 'Misiune',
+    value: 'O hartă clară a facultăților din România',
   },
   {
     label: 'Echipaj',
-    value: 'Doi elevi pasionați de informatică',
-  },
-];
-
-const TEAM = [
-  {
-    name: 'Toma Aris',
-    role: 'Elev · Colegiul Național „Gheorghe Șincai"',
-    github: null,
-  },
-  {
-    name: 'Ureche Rafael',
-    role: 'Elev · Colegiul Național „Gheorghe Șincai"',
-    github: 'BLADR-ONE',
+    value: 'Un proiect dus la capăt de un singur om',
   },
 ];
 
@@ -56,93 +53,111 @@ export default function AboutPage() {
   return (
     <>
       {/* ----------------------------------------------------------------
-          Mission spread — the "legend" chapter of the atlas
+          Mission hero — a full-bleed map cover, mirroring the home hero
       ---------------------------------------------------------------- */}
-      <section className="relative overflow-hidden">
-        <div aria-hidden="true" className="texture-doodle" />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-bg via-transparent to-bg"
+      <section className="relative flex min-h-svh items-center overflow-hidden">
+        {/* The cover photo, treated as the page's opening landscape. */}
+        <Image
+          src={aboutImage}
+          alt=""
+          fill
+          priority
+          placeholder="blur"
+          sizes="100vw"
+          className="object-cover object-[center_45%]"
         />
 
-        <div className="wrap relative grid items-center gap-14 pb-20 pt-14 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <div className="max-w-xl">
-            <p className="eyebrow animate-rise" style={{ animationDelay: '60ms' }}>
+        {/* Ink veil, heavier on the text side */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-r from-[#0c2022]/95 via-[#0c2022]/60 to-[#0c2022]/10"
+        />
+        {/* Top vignette for navbar legibility */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#0c2022]/70 to-transparent"
+        />
+        {/* Seamless hand-off into the page background, both themes */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-bg to-transparent"
+        />
+
+        <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
+
+        <div className="wrap relative py-32">
+          <div className="max-w-2xl">
+            <p
+              className="eyebrow animate-rise !text-mint"
+              style={{ animationDelay: '80ms' }}
+            >
               Despre noi
             </p>
+
             <h1
-              className="animate-rise mt-5 text-balance font-display text-4xl font-semibold leading-[1.06] sm:text-5xl lg:text-[3.4rem]"
-              style={{ animationDelay: '160ms' }}
+              className="animate-rise mt-6 text-balance font-display text-[clamp(2.7rem,6.5vw,4.75rem)] font-semibold leading-[1.03] text-white"
+              style={{ animationDelay: '180ms' }}
             >
-              Doi elevi, o singură{' '}
-              <em className="wonky italic text-primary-strong dark:text-primary-soft">
-                busolă
-              </em>
-              .
+              Un om, o singură{' '}
+              <em className="wonky italic text-highlight">busolă</em>.
             </h1>
 
             <div
-              className="animate-rise mt-7 space-y-5 text-pretty leading-relaxed text-text-muted sm:text-lg"
-              style={{ animationDelay: '280ms' }}
+              className="animate-rise mt-7 max-w-xl space-y-5 text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
+              style={{ animationDelay: '300ms' }}
             >
               <p>
-                Suntem o echipă de doi elevi de la Colegiul Național „Gheorghe
-                Șincai" din Baia Mare, Maramureș — amândoi pasionați de
-                informatică.
+                StudCompass e proiectul unui pasionat de informatică, construit
+                ca să demonstreze cât de utilă poate fi tehnologia atunci când
+                îți cauți traseul în viață.
               </p>
               <p>
-                Am construit StudCompass ca să demonstrăm cât de utilă poate fi
-                informatica atunci când îți cauți traseul în viață: o hartă a
-                facultăților din România, desenată de doi oameni care abia își
-                trasează propriul drum.
+                E o hartă a facultăților din România, desenată de un om care
+                abia își trasează propriul drum — și care speră să-ți fie de
+                folos pe-al tău.
               </p>
             </div>
 
             <p
-              className="animate-rise mt-9 inline-flex items-center gap-2.5 text-sm font-semibold text-text-muted"
-              style={{ animationDelay: '400ms' }}
+              className="animate-rise mt-10 inline-flex items-center gap-2.5 text-sm font-semibold text-mint/65"
+              style={{ animationDelay: '420ms' }}
             >
               <span
                 aria-hidden="true"
-                className="h-px w-8 bg-gradient-to-r from-accent to-highlight"
+                className="h-px w-8 bg-gradient-to-r from-highlight to-mint"
               />
               Made with{' '}
-              <HeartIcon className="size-3.5 -translate-y-px text-accent" />
+              <HeartIcon className="size-3.5 -translate-y-px text-highlight" />
               <span className="sr-only">dragoste</span> by StudCompass
             </p>
           </div>
+        </div>
 
-          {/* Photo plate — a pinned snapshot on the map */}
-          <div className="animate-pop relative mx-auto w-full max-w-md lg:max-w-none">
-            <CompassRose className="pointer-events-none absolute -right-16 -top-20 size-64 text-primary/10 dark:text-primary-soft/10" />
-            <div
-              aria-hidden="true"
-              className="absolute -bottom-5 -left-5 size-full rounded-[2rem] border-2 border-dashed border-primary-soft/40"
+        {/* Scroll cue */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-7 left-1/2 hidden -translate-x-1/2 sm:block"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            className="animate-bob size-6 text-mint/70"
+          >
+            <path
+              d="M5 9l7 7 7-7"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
-            <figure className="relative rotate-[1.5deg] overflow-hidden rounded-[2rem] border border-border shadow-lift transition-transform duration-500 hover:rotate-0">
-              <Image
-                src={aboutImage}
-                alt="Studenți la cursuri — drumul prin facultate"
-                placeholder="blur"
-                sizes="(min-width: 1024px) 45vw, (min-width: 640px) 28rem, 100vw"
-                className="aspect-[4/3] w-full object-cover"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/55 to-transparent"
-              />
-              <figcaption className="absolute bottom-4 left-5 text-xs font-semibold uppercase tracking-[0.22em] text-mint/90">
-                Fig. 1 — de aici pornim
-              </figcaption>
-            </figure>
-          </div>
+          </svg>
         </div>
       </section>
 
       {/* ----------------------------------------------------------------
-          Route facts — ported details, drawn as waypoints
+          Route facts — details drawn as waypoints
       ---------------------------------------------------------------- */}
-      <section className="pb-24">
+      <section className="pb-24 pt-20 sm:pt-24">
         <div className="wrap">
           <ol className="relative grid gap-6 md:grid-cols-3 md:gap-8">
             <div
@@ -174,69 +189,57 @@ export default function AboutPage() {
       </section>
 
       {/* ----------------------------------------------------------------
-          The cartographers
+          The cartographer
       ---------------------------------------------------------------- */}
       <section className="pb-24">
         <div className="wrap">
           <div className="max-w-xl">
-            <p className="eyebrow">Cartografii</p>
+            <p className="eyebrow">Cartograful</p>
             <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
               Cine ține creionul pe hartă
             </h2>
             <p className="mt-4 text-pretty text-text-muted sm:text-lg">
-              Vrei să ne contactezi? Ne găsești pe următoarele platforme — sau
-              ne scrii direct, mai jos.
+              Vrei să ne contactezi? Mă găsești pe GitHub — sau îmi scrii
+              direct, mai jos.
             </p>
           </div>
 
-          <div className="mt-10 grid max-w-3xl gap-6 sm:grid-cols-2">
-            {TEAM.map(({ name, role, github }) => {
-              const cardClass =
-                'group flex flex-col rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift';
-              const inner = (
-                <>
-                  <span
-                    aria-hidden="true"
-                    className="wonky flex size-14 items-center justify-center rounded-full bg-primary/10 font-display text-2xl font-semibold italic text-primary-strong dark:bg-primary-soft/10 dark:text-primary-soft"
-                  >
-                    {name.charAt(0)}
-                  </span>
-                  <h3 className="mt-5 font-display text-xl font-semibold transition-colors group-hover:text-primary-strong dark:group-hover:text-primary-soft">
-                    {name}
-                  </h3>
-                  <p className="mt-1 text-sm text-text-muted">{role}</p>
-                  {github && (
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-strong dark:text-primary-soft">
-                      <GitHubIcon className="size-4" />
-                      github.com/{github}
-                      <span
-                        aria-hidden="true"
-                        className="transition-transform duration-200 group-hover:translate-x-1"
-                      >
-                        →
-                      </span>
-                    </span>
-                  )}
-                </>
-              );
-
-              return github ? (
-                <a
-                  key={name}
-                  href={`https://github.com/${github}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={cardClass}
+          <div className="mt-10 max-w-md">
+            <a
+              href={`https://github.com/${AUTHOR.github}`}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift"
+            >
+              <span
+                aria-hidden="true"
+                className="wonky flex size-14 items-center justify-center rounded-full bg-primary/10 font-display text-2xl font-semibold italic text-primary-strong dark:bg-primary-soft/10 dark:text-primary-soft"
+              >
+                {AUTHOR.name.charAt(0)}
+              </span>
+              <h3 className="mt-5 font-display text-xl font-semibold transition-colors group-hover:text-primary-strong dark:group-hover:text-primary-soft">
+                {AUTHOR.name}
+              </h3>
+              <p className="mt-1 text-sm text-text-muted">
+                {AUTHOR.role} · {AUTHOR.alias}
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-strong dark:text-primary-soft">
+                <GitHubIcon className="size-4" />
+                github.com/{AUTHOR.github}
+                <span
+                  aria-hidden="true"
+                  className="transition-transform duration-200 group-hover:translate-x-1"
                 >
-                  {inner}
-                </a>
-              ) : (
-                <div key={name} className={cardClass}>
-                  {inner}
-                </div>
-              );
-            })}
+                  →
+                </span>
+              </span>
+            </a>
           </div>
+
+          {/* A single low-key contributor line. */}
+          <p className="mt-7 text-sm text-text-muted">
+            Cu o contribuție timpurie din partea lui {CONTRIBUTOR_NAME}.
+          </p>
         </div>
       </section>
 
@@ -293,27 +296,23 @@ export default function AboutPage() {
                 </a>
 
                 <ul className="mt-8 space-y-3 border-t border-dashed border-mint/20 pt-6">
-                  {TEAM.filter((member) => member.github).map(
-                    ({ name, github }) => (
-                      <li key={github}>
-                        <a
-                          href={`https://github.com/${github}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="group inline-flex items-center gap-2.5 text-sm text-mint/75 transition-colors hover:text-white"
-                        >
-                          <GitHubIcon className="size-4" />
-                          GitHub: {name}
-                          <span
-                            aria-hidden="true"
-                            className="transition-transform duration-200 group-hover:translate-x-1"
-                          >
-                            →
-                          </span>
-                        </a>
-                      </li>
-                    ),
-                  )}
+                  <li>
+                    <a
+                      href={`https://github.com/${AUTHOR.github}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group inline-flex items-center gap-2.5 text-sm text-mint/75 transition-colors hover:text-white"
+                    >
+                      <GitHubIcon className="size-4" />
+                      GitHub: {AUTHOR.name}
+                      <span
+                        aria-hidden="true"
+                        className="transition-transform duration-200 group-hover:translate-x-1"
+                      >
+                        →
+                      </span>
+                    </a>
+                  </li>
                 </ul>
               </div>
 

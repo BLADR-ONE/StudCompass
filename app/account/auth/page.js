@@ -27,6 +27,9 @@ export default async function AuthPage({ searchParams }) {
   const rawError = Array.isArray(params?.error)
     ? params.error[0]
     : params?.error;
+  const rawEmail = Array.isArray(params?.email)
+    ? params.email[0]
+    : params?.email;
 
   return (
     <section className="relative overflow-hidden">
@@ -74,7 +77,7 @@ export default async function AuthPage({ searchParams }) {
 
           {/* Right page: the forms. */}
           <div className="p-6 sm:p-10">
-            <AuthTabs initialError={rawError || ''} />
+            <AuthTabs initialError={rawError || ''} initialEmail={rawEmail || ''} />
           </div>
         </div>
       </div>

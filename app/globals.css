@@ -152,10 +152,37 @@
     outline-offset: 2px;
   }
 
+  /* Firefox: thin themed scrollbar driven by the semantic text token. */
   * {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklab, var(--sc-text) 28%, transparent)
       transparent;
+  }
+
+  /* WebKit/Blink: custom scrollbar matched to the palette, both themes.
+     Track blends into the page bg; the thumb is a soft tint of the text token
+     so it stays subtle on light paper and on the deep-teal night map alike. */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--sc-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 3px solid var(--sc-bg);
+    background-color: color-mix(in oklab, var(--sc-text) 26%, transparent);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklab, var(--color-primary) 55%, transparent);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--sc-bg);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -220,7 +247,9 @@
     'WONK' 1;
 }
 
-/* Theme-tied education-doodle texture (bgWhite.jpg / bgDark.jpg). */
+/* Theme-tied education-doodle texture (bgWhite.jpg / bgDark.jpg).
+   Kept faint and balanced across themes so light mode reads like a subtle
+   paper grain rather than a stray background image / fade. */
 @utility texture-doodle {
   position: absolute;
   inset: 0;
@@ -228,7 +257,7 @@
   background-image: var(--sc-doodle);
   background-size: 540px auto;
   background-repeat: repeat;
-  opacity: 0.4;
+  opacity: 0.12;
   mix-blend-mode: multiply;
 
   [data-theme='dark'] & {

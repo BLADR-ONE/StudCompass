@@ -6,6 +6,8 @@ import { moderateSchema } from '../../../../lib/validate.js';
 
 const { db, schema } = dbModule;
 
+export const runtime = 'nodejs';
+
 function errorResponse(message, status) {
   return NextResponse.json({ error: message }, { status });
 }

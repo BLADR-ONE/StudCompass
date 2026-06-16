@@ -25,9 +25,7 @@ export const metadata = {
   },
   description:
     'Descoperă facultăți din toată România, citește recenzii sincere de la studenți și află-ți drumul cu testul de carieră StudCompass.',
-  icons: {
-    icon: '/favicon.ico',
-  },
+  /* Tab icon is provided by the app/icon.js file convention (CompassRose). */
 };
 
 export const viewport = {

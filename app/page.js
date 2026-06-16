@@ -1,5 +1,6 @@
 import { eq, sql } from 'drizzle-orm';
 import dbModule from '../lib/db/index.js';
+import { getPublishedTestimonials, getSiteSettings } from '../lib/content.js';
 import Hero from '../components/home/Hero.js';
 import HowItWorks from '../components/home/HowItWorks.js';
 import FeaturedFaculties from '../components/home/FeaturedFaculties.js';
@@ -56,15 +57,19 @@ async function getFeaturedFaculties() {
 }
 
 export default async function HomePage() {
-  const faculties = await getFeaturedFaculties();
+  const [faculties, testimonials, settings] = await Promise.all([
+    getFeaturedFaculties(),
+    getPublishedTestimonials(),
+    getSiteSettings(),
+  ]);
 
   return (
     <>
       <PageViewTracker />
-      <Hero />
+      <Hero headerImage={settings.headerImage} />
       <HowItWorks />
       <FeaturedFaculties faculties={faculties} />
-      <TestimonialBand />
+      <TestimonialBand testimonials={testimonials} />
       <CtaBand />
     </>
   );

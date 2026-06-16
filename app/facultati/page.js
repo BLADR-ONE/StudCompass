@@ -162,7 +162,10 @@ function ChapterHeader({ subtitle }) {
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-b from-bg via-transparent to-bg"
       />
-      <CompassRose className="pointer-events-none absolute -right-28 -top-24 hidden size-[22rem] text-primary/[0.08] lg:block dark:text-primary-soft/10" />
+      {/* Decorative compass rose anchored to the lower-right edge, clear of the
+          navbar and the densest stretch of the doodle texture so it reads as an
+          intentional flourish instead of clashing with the background. */}
+      <CompassRose className="pointer-events-none absolute -bottom-24 -right-24 hidden size-[22rem] text-primary/[0.06] lg:block dark:text-primary-soft/[0.08]" />
 
       <div className="wrap relative pb-12 pt-14 sm:pt-20">
         <p className="eyebrow animate-rise" style={{ animationDelay: '60ms' }}>

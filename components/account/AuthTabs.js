@@ -8,6 +8,8 @@ import Input from '../ui/Input.js';
 /* Romanian copy for the ?error= codes NextAuth can append to this page. */
 const URL_ERRORS = {
   CredentialsSignin: 'Email sau parolă greșite. Mai încearcă o dată.',
+  EmailNeverificat:
+    'Email neverificat — verifică-ți adresa și apoi încearcă din nou.',
   OAuthAccountNotLinked:
     'Emailul acesta e deja legat de altă metodă de autentificare. Intră cu emailul și parola contului.',
   AccessDenied: 'Accesul a fost refuzat. Mai încearcă o dată.',
@@ -51,13 +53,21 @@ function GoogleIcon({ className = '' }) {
 
 /* The right-hand page of the auth booklet: tabbed credentials forms plus
    Google. Success always lands the traveler at /account. */
-export default function AuthTabs({ initialError = '' }) {
+export default function AuthTabs({ initialError = '', initialEmail = '' }) {
   const [tab, setTab] = useState('login');
   /* '', 'login', 'register' or 'google' — only one journey at a time. */
   const [busy, setBusy] = useState('');
   const [banner, setBanner] = useState(() =>
     initialError
-      ? { tone: 'error', text: URL_ERRORS[initialError] || GENERIC_URL_ERROR }
+      ? {
+          tone: initialError === 'EmailNeverificat' ? 'notice' : 'error',
+          text: URL_ERRORS[initialError] || GENERIC_URL_ERROR,
+          actionType:
+            initialError === 'EmailNeverificat'
+              ? 'resendVerification'
+              : null,
+          email: initialEmail || '',
+        }
       : null,
   );
 
@@ -70,6 +80,7 @@ export default function AuthTabs({ initialError = '' }) {
     password: '',
   });
   const [regErrors, setRegErrors] = useState({});
+  const [resendBusy, setResendBusy] = useState(false);
 
   const switchTab = (next) => {
     setTab(next);
@@ -86,6 +97,64 @@ export default function AuthTabs({ initialError = '' }) {
     const { value } = event.target;
     setRegValues((prev) => ({ ...prev, [field]: value }));
     setRegErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const showVerificationBanner = (email) => {
+    setBanner({
+      tone: 'notice',
+      text: 'Email neverificat — verifică-ți adresa.',
+      actionType: 'resendVerification',
+      email,
+    });
+  };
+
+  const handleResendVerification = async (emailOverride) => {
+    const email = (emailOverride || loginValues.email || regValues.email)
+      .trim()
+      .toLowerCase();
+    if (!EMAIL_RE.test(email)) {
+      setBanner({
+        tone: 'error',
+        text: 'Scrie un email valid ca să pot retrimite verificarea.',
+      });
+      return;
+    }
+
+    setResendBusy(true);
+    try {
+      const res = await fetch('/api/verify/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setBanner({
+          tone: 'error',
+          text:
+            data?.error ||
+            'Nu am putut retrimite emailul de verificare. Mai încearcă o dată.',
+        });
+        return;
+      }
+
+      setBanner({
+        tone: 'notice',
+        text:
+          data?.message ||
+          'Am retrimis emailul de verificare. Verifică inboxul și folderul spam.',
+        actionType: null,
+      });
+    } catch {
+      setBanner({
+        tone: 'error',
+        text: 'Nu am putut retrimite emailul de verificare. Verifică-ți conexiunea.',
+      });
+    } finally {
+      setResendBusy(false);
+    }
   };
 
   const handleLogin = async (event) => {
@@ -108,20 +177,66 @@ export default function AuthTabs({ initialError = '' }) {
     setBanner(null);
     setBusy('login');
     try {
+      const callbackUrl = `${window.location.origin}/account`;
       const result = await signIn('credentials', {
         redirect: false,
         email,
         password,
+        callbackUrl,
+        redirectTo: callbackUrl,
       });
 
       if (result?.error) {
-        setBanner({ tone: 'error', text: URL_ERRORS.CredentialsSignin });
+        try {
+          const statusRes = await fetch('/api/verify/status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+          });
+
+          if (statusRes.ok) {
+            const statusData = await statusRes.json();
+            if (statusData?.exists && !statusData?.verified) {
+              showVerificationBanner(email);
+              setBusy('');
+              return;
+            }
+          }
+        } catch {
+          // Fall through to the generic credentials banner.
+        }
+
+        setBanner({
+          tone: 'error',
+          text:
+            URL_ERRORS[result.error] ||
+            URL_ERRORS.CredentialsSignin,
+        });
         setBusy('');
         return;
       }
 
-      /* Full navigation so the fresh session cookie reaches the server. */
-      window.location.assign('/account');
+      if (result?.url) {
+        const url = new URL(result.url, window.location.origin);
+        const error = url.searchParams.get('error');
+        const pendingEmail = url.searchParams.get('email') || email;
+
+        if (error) {
+          if (error === 'EmailNeverificat') {
+            showVerificationBanner(pendingEmail);
+          } else {
+            setBanner({
+              tone: 'error',
+              text: URL_ERRORS[error] || GENERIC_URL_ERROR,
+            });
+          }
+          setBusy('');
+          return;
+        }
+
+        window.location.assign(url.toString());
+        setBusy('');
+      }
     } catch {
       setBanner({
         tone: 'error',
@@ -162,25 +277,18 @@ export default function AuthTabs({ initialError = '' }) {
       });
 
       if (res.status === 201) {
-        const result = await signIn('credentials', {
-          redirect: false,
+        const data = await res.json().catch(() => ({}));
+        setTab('login');
+        setLoginValues({ email, password: '' });
+        setBanner({
+          tone: data?.verificationEmailSent ? 'notice' : 'error',
+          text: data?.verificationEmailSent
+            ? 'Contul a fost creat. Ți-am trimis emailul de verificare.'
+            : 'Contul a fost creat, dar emailul de verificare nu a putut fi trimis.',
+          actionType: 'resendVerification',
           email,
-          password,
         });
-
-        if (result?.error) {
-          /* Account exists now, but the auto sign-in stumbled. */
-          setTab('login');
-          setLoginValues({ email, password: '' });
-          setBanner({
-            tone: 'notice',
-            text: 'Contul a fost creat. Intră cu emailul și parola ta.',
-          });
-          setBusy('');
-          return;
-        }
-
-        window.location.assign('/account');
+        setBusy('');
         return;
       }
 
@@ -213,7 +321,29 @@ export default function AuthTabs({ initialError = '' }) {
     setBanner(null);
     setBusy('google');
     try {
-      await signIn('google', { redirectTo: '/account' });
+      const callbackUrl = `${window.location.origin}/account`;
+      const result = await signIn('google', {
+        redirect: false,
+        callbackUrl,
+        redirectTo: callbackUrl,
+      });
+
+      if (result?.error) {
+        setBanner({
+          tone: 'error',
+          text:
+            result.error === 'Configuration'
+              ? 'Autentificarea cu Google nu e configurată corect acum.'
+              : 'Nu am putut porni autentificarea cu Google. Mai încearcă o dată.',
+        });
+        setBusy('');
+        return;
+      }
+
+      if (result?.url) {
+        window.location.assign(result.url);
+        return;
+      }
     } catch {
       setBanner({
         tone: 'error',
@@ -261,7 +391,17 @@ export default function AuthTabs({ initialError = '' }) {
               : 'border-primary/30 bg-primary/10 text-primary-strong dark:border-primary-soft/30 dark:bg-primary-soft/10 dark:text-primary-soft'
           }`}
         >
-          {banner.text}
+          <span>{banner.text}</span>
+          {banner.actionType === 'resendVerification' && (
+            <button
+              type="button"
+              onClick={() => handleResendVerification(banner.email)}
+              disabled={resendBusy}
+              className="ml-3 inline-flex font-semibold underline-offset-4 transition-colors hover:underline disabled:opacity-60"
+            >
+              Retrimite emailul de verificare
+            </button>
+          )}
         </p>
       )}
 

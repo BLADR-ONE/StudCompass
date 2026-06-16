@@ -5,12 +5,14 @@ import { CompassRose } from '../layout/Brand.js';
 import ModerationList from './ModerationList.js';
 import UsersList from './UsersList.js';
 import StatsPanel from './StatsPanel.js';
+import SiteSettings from './SiteSettings.js';
 
 const TABS = [
   { id: 'recenzii', label: 'Recenzii' },
   { id: 'mesaje', label: 'Mesaje' },
   { id: 'utilizatori', label: 'Utilizatori' },
   { id: 'statistici', label: 'Statistici' },
+  { id: 'setari', label: 'Setări site' },
 ];
 
 /* The whole desk goes dark together: without a database there is nothing
@@ -46,12 +48,17 @@ export default function AdminDesk({
 }) {
   const [tab, setTab] = useState('recenzii');
   const [statsMounted, setStatsMounted] = useState(false);
+  const [settingsMounted, setSettingsMounted] = useState(false);
   const tabRefs = useRef([]);
 
-  /* The chart only starts measuring once its drawer is first opened. */
+  /* The chart only starts measuring once its drawer is first opened. The
+     site-settings drawer likewise fetches its own data on first open. */
   useEffect(() => {
     if (tab === 'statistici') {
       setStatsMounted(true);
+    }
+    if (tab === 'setari') {
+      setSettingsMounted(true);
     }
   }, [tab]);
 
@@ -88,7 +95,7 @@ export default function AdminDesk({
         role="tablist"
         aria-label="Secțiunile mesei de administrare"
         onKeyDown={onKeyDown}
-        className="grid grid-cols-2 gap-1 rounded-[1.6rem] border border-border bg-surface p-1 sm:grid-cols-4 sm:rounded-full"
+        className="grid grid-cols-2 gap-1 rounded-[1.6rem] border border-border bg-surface p-1 sm:grid-cols-3 lg:grid-cols-5 sm:rounded-full"
       >
         {TABS.map(({ id, label }, index) => {
           const active = tab === id;
@@ -167,6 +174,16 @@ export default function AdminDesk({
         className="mt-7"
       >
         {statsMounted && <StatsPanel />}
+      </div>
+
+      <div
+        role="tabpanel"
+        id="desk-panel-setari"
+        aria-labelledby="desk-tab-setari"
+        hidden={tab !== 'setari'}
+        className="mt-7"
+      >
+        {settingsMounted && <SiteSettings />}
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { sql } from 'drizzle-orm';
-import { auth } from '../../../../lib/auth.js';
 import dbModule from '../../../../lib/db/index.js';
+import { requireAdminSession } from '../../../../lib/admin.js';
 
 const { db } = dbModule;
+
+export const runtime = 'nodejs';
 
 const eventTypes = ['page_view', 'card_click', 'cta_click', 'test_completed'];
 
@@ -32,12 +34,9 @@ export async function GET() {
     return errorResponse('Database unavailable', 503);
   }
 
-  const session = await auth();
-  if (!session?.user?.id) {
-    return errorResponse('Unauthorized', 401);
-  }
-  if (session.user.role !== 'admin') {
-    return errorResponse('Forbidden', 403);
+  const { error } = await requireAdminSession();
+  if (error) {
+    return error;
   }
 
   const dailyRows = await db.execute(sql`

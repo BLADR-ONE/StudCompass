@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server';
 import dbModule from '../../../lib/db/index.js';
 import { registerSchema } from '../../../lib/validate.js';
 import { isUniqueViolation } from '../../../lib/db-errors.js';
+import { sendAccountVerificationEmail } from '../../../lib/verification.js';
 
 const { db, schema } = dbModule;
+
+export const runtime = 'nodejs';
 
 export async function POST(request) {
   if (!db) {
@@ -41,5 +44,14 @@ export async function POST(request) {
     throw error;
   }
 
-  return NextResponse.json({ ok: true }, { status: 201 });
+  const verification = await sendAccountVerificationEmail({ email, name });
+
+  return NextResponse.json(
+    {
+      ok: true,
+      verificationEmailSent: verification.ok,
+      verificationError: verification.ok ? null : verification.error,
+    },
+    { status: 201 },
+  );
 }

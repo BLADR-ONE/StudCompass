@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Button from '../ui/Button.js';
 import { CompassRose } from '../layout/Brand.js';
-import heroImage from '../../public/assets/journey.jpg';
 
 const TRUST_POINTS = [
   'Recenzii reale de la studenți',
@@ -9,34 +8,40 @@ const TRUST_POINTS = [
   'Complet gratuit',
 ];
 
-export default function Hero() {
+const DEFAULT_HEADER_IMAGE = 'homeold.jpg';
+
+export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
   return (
     <section className="relative flex min-h-svh items-center overflow-hidden">
-      {/* The road ahead — sunrise oranges echo the accent palette. */}
+      {/* The road ahead — the photo is settings-driven (admin "Imagine antet"),
+          falling back to the default header image. */}
       <Image
-        src={heroImage}
+        src={`/assets/${headerImage}`}
         alt=""
         fill
         priority
-        placeholder="blur"
         sizes="100vw"
         className="object-cover object-[center_62%]"
       />
 
-      {/* Ink veil, heavier on the text side */}
+      {/* Ink veil, heavier on the text side. Kept deep-teal in both themes so
+          the white headline stays legible over the photo — uses the brand ink
+          token rather than a hardcoded hex. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-[#0c2022]/95 via-[#0c2022]/60 to-[#0c2022]/10"
+        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-ink/10"
       />
       {/* Top vignette for navbar legibility */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#0c2022]/70 to-transparent"
+        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
       />
-      {/* Seamless hand-off into the page background, both themes */}
+      {/* Seamless hand-off into the page background, theme-aware: fades the photo
+          + ink veil into the page bg (light paper in light mode, deep teal in
+          dark) so there is no stray dark band where the hero meets the page. */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-bg to-transparent"
+        className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg via-bg/70 to-transparent"
       />
 
       <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
