@@ -102,6 +102,8 @@ export default async function AccountPage() {
 
   const name = user?.name || session?.user?.name || '';
   const email = user?.email || session?.user?.email || '';
+  const role = session?.user?.role || 'user';
+  const roleLabel = role === 'admin' ? 'Administrator' : role;
   const preferences = user?.preferences || {};
   const preferredCity =
     typeof preferences.city === 'string' ? preferences.city : '';
@@ -171,12 +173,17 @@ export default async function AccountPage() {
               {email && (
                 <p className="truncate text-sm text-text-muted">{email}</p>
               )}
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Badge tone={role === 'admin' ? 'primary' : 'neutral'}>
+                  {roleLabel}
+                </Badge>
+                {memberSince && (
+                  <Badge tone="primary" className="hidden sm:inline-flex">
+                    Călător din {memberSince}
+                  </Badge>
+                )}
+              </div>
             </div>
-            {memberSince && (
-              <Badge tone="primary" className="hidden sm:inline-flex">
-                Călător din {memberSince}
-              </Badge>
-            )}
             <SignOutButton className="ml-auto" />
           </div>
 

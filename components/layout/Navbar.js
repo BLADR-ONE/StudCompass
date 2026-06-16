@@ -22,12 +22,13 @@ function isActive(pathname, href) {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isHome = pathname === '/';
   const authed = status === 'authenticated';
+  const isAdmin = session?.user?.role === 'admin';
   /* Kept v1 concept: glass-clear over the home hero, solid surface after. */
   const overHero = isHome && !scrolled && !menuOpen;
 
@@ -96,6 +97,25 @@ export default function Navbar() {
                 </li>
               );
             })}
+            {isAdmin && (
+              <li>
+                <Link
+                  href="/admin"
+                  aria-current={isActive(pathname, '/admin') ? 'page' : undefined}
+                  className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                    overHero
+                      ? 'text-white/80 hover:text-white'
+                      : 'text-text-muted hover:text-text'
+                  } ${
+                    isActive(pathname, '/admin')
+                      ? `${overHero ? 'text-white' : 'text-text'} after:absolute after:-bottom-0.5 after:left-1/2 after:size-1.5 after:-translate-x-1/2 after:rounded-full after:bg-accent after:content-['']`
+                      : ''
+                  }`}
+                >
+                  Administrare
+                </Link>
+              </li>
+            )}
           </ul>
 
           <div className="flex items-center gap-2.5">
@@ -180,6 +200,24 @@ export default function Navbar() {
                   </Link>
                 </li>
               ))}
+              {isAdmin && (
+                <li
+                  className="animate-rise"
+                  style={{ animationDelay: `${80 + LINKS.length * 70}ms` }}
+                >
+                  <Link
+                    href="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className={`block py-3 font-display text-4xl font-semibold tracking-tight transition-colors ${
+                      isActive(pathname, '/admin')
+                        ? 'text-primary-strong dark:text-primary-soft'
+                        : 'text-text hover:text-primary-strong dark:hover:text-primary-soft'
+                    }`}
+                  >
+                    Administrare
+                  </Link>
+                </li>
+              )}
             </ul>
             <div
               className="animate-rise mt-8 border-t border-border pt-6"
