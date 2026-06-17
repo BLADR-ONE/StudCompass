@@ -3,6 +3,7 @@ import ContactForm from '../../components/about/ContactForm.js';
 import DeveloperHero from '../../components/about/DeveloperHero.js';
 import CreditCard from '../../components/about/CreditCard.js';
 import { getSiteSettings } from '../../lib/content.js';
+import { getDefaultHeaderImage } from '../../lib/site-constants.js';
 
 export const metadata = {
   title: 'Despre mine',
@@ -87,13 +88,19 @@ export default async function AboutPage() {
     getOwnerProfile(),
     getSiteSettings(),
   ]);
+  const headerImage =
+    settings.headerImages?.about || getDefaultHeaderImage('about');
 
   return (
     <>
       {/* ----------------------------------------------------------------
           Lead — the featured developer banner (the page's opening)
       ---------------------------------------------------------------- */}
-      <DeveloperHero owner={owner} eyebrow="Despre noi" headerImage={settings.headerImage} />
+      <DeveloperHero
+        owner={owner}
+        eyebrow="Despre noi"
+        headerImage={headerImage}
+      />
 
       {/* ----------------------------------------------------------------
           Mission — what the project is and who it's for

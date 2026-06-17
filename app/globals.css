@@ -87,7 +87,7 @@
   --sc-doodle-opacity: 0.36;
   --sc-doodle-blend: multiply;
   --sc-doodle: url('/assets/bgWhite.jpg');
-  --sc-nav-vignette: rgb(24 56 56 / 0.38);
+  --sc-nav-vignette: rgb(16 36 36 / 0.58);
 }
 
 [data-theme='dark'] {
@@ -104,7 +104,7 @@
   --sc-doodle-opacity: 0.62;
   --sc-doodle-blend: screen;
   --sc-doodle: url('/assets/bgDark.jpg');
-  --sc-nav-vignette: rgb(2 12 12 / 0.55);
+  --sc-nav-vignette: rgb(2 12 12 / 0.58);
 }
 
 /* Expose semantic vars + fonts as Tailwind utilities (bg-bg, text-text, …). */

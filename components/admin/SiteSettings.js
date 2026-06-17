@@ -15,7 +15,26 @@ import {
 import {
   DEFAULT_HEADER_IMAGE,
   HEADER_IMAGE_HISTORY_LIMIT,
+  HEADER_IMAGE_PAGE_CONFIGS,
+  normalizeHeaderImage,
 } from '../../lib/site-constants.js';
+
+const HEADER_IMAGE_PAGE_MAP = Object.fromEntries(
+  HEADER_IMAGE_PAGE_CONFIGS.map((page) => [page.slug, page]),
+);
+const HEADER_IMAGE_PAGE_SLUGS = HEADER_IMAGE_PAGE_CONFIGS.map(({ slug }) => slug);
+
+function createDefaultHeaderImageMap() {
+  return Object.fromEntries(
+    HEADER_IMAGE_PAGE_CONFIGS.map(({ slug, defaultImage }) => [slug, defaultImage]),
+  );
+}
+
+function createDefaultRecentHeaderImagesMap() {
+  return Object.fromEntries(
+    HEADER_IMAGE_PAGE_CONFIGS.map(({ slug, defaultImage }) => [slug, [defaultImage]]),
+  );
+}
 
 /* The shop sign over each settings room. Roomy on purpose — future
    settings get their own <SettingsSection> without disturbing these two. */
@@ -532,31 +551,34 @@ function isDataImage(value) {
   return typeof value === 'string' && value.startsWith('data:image/');
 }
 
-function headerImageSrc(value) {
+function headerImageSrc(value, defaultImage) {
   if (!value) {
-    return `/assets/${DEFAULT_HEADER_IMAGE}`;
+    return `/assets/${defaultImage || DEFAULT_HEADER_IMAGE}`;
   }
 
   return isDataImage(value) ? value : `/assets/${value}`;
 }
 
-function headerImageLabel(value) {
+function headerImageLabel(value, defaultImage) {
   if (isDataImage(value)) {
     return 'Încărcată de admin';
   }
 
-  if (value === DEFAULT_HEADER_IMAGE) {
+  if (value === (defaultImage || DEFAULT_HEADER_IMAGE)) {
     return 'Imagine implicită';
   }
 
   return `Fișierul ${value}`;
 }
 
-function normalizeRecentImages(current, recent = []) {
-  return [...new Set([current, ...recent].filter(Boolean))].slice(
-    0,
-    HEADER_IMAGE_HISTORY_LIMIT,
-  );
+function normalizeRecentImages(current, recent = [], defaultImage) {
+  return [
+    ...new Set(
+      [current, ...recent]
+        .filter(Boolean)
+        .map((value) => normalizeHeaderImage(value, defaultImage)),
+    ),
+  ].slice(0, HEADER_IMAGE_HISTORY_LIMIT);
 }
 
 function readFileAsDataUri(file) {
@@ -577,6 +599,7 @@ function readFileAsDataUri(file) {
 function HeaderImageCard({
   value,
   label,
+  defaultImage,
   selected,
   current,
   onSelect,
@@ -598,7 +621,7 @@ function HeaderImageCard({
     >
       <span className="absolute inset-0">
         <img
-          src={headerImageSrc(value)}
+          src={headerImageSrc(value, defaultImage)}
           alt=""
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
@@ -634,7 +657,9 @@ function HeaderImageCard({
             {label}
           </span>
           <span className="mt-0.5 block text-xs font-medium text-white/80">
-            {isDataImage(value) ? 'Încărcată de admin' : `/assets/${value}`}
+            {isDataImage(value)
+              ? 'Încărcată de admin'
+              : `/assets/${value || defaultImage}`}
           </span>
         </span>
       </span>
@@ -643,18 +668,33 @@ function HeaderImageCard({
 }
 
 function HeaderImagePicker() {
-  const [current, setCurrent] = useState(DEFAULT_HEADER_IMAGE);
-  const [selected, setSelected] = useState(DEFAULT_HEADER_IMAGE);
-  const [recent, setRecent] = useState([DEFAULT_HEADER_IMAGE]);
+  const [selectedPageSlug, setSelectedPageSlug] = useState(
+    HEADER_IMAGE_PAGE_SLUGS[0] || 'home',
+  );
+  const [currentByPage, setCurrentByPage] = useState(() =>
+    createDefaultHeaderImageMap(),
+  );
+  const [draftByPage, setDraftByPage] = useState(() =>
+    createDefaultHeaderImageMap(),
+  );
+  const [recentByPage, setRecentByPage] = useState(() =>
+    createDefaultRecentHeaderImagesMap(),
+  );
   const [status, setStatus] = useState('loading'); // loading | ready | unavailable
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [saved, setSaved] = useState(false);
+  const [savedPageSlug, setSavedPageSlug] = useState('');
   const [uploadBusy, setUploadBusy] = useState(false);
   const fileInputId = useId();
 
+  const page = HEADER_IMAGE_PAGE_MAP[selectedPageSlug] || HEADER_IMAGE_PAGE_CONFIGS[0];
+  const current = currentByPage[selectedPageSlug] || page.defaultImage;
+  const selected = draftByPage[selectedPageSlug] || current;
+  const recent = recentByPage[selectedPageSlug] || [page.defaultImage];
+
   const load = useCallback(async () => {
     setStatus('loading');
+    setSavedPageSlug('');
     try {
       const res = await fetch('/api/admin/settings');
       if (!res.ok) {
@@ -662,13 +702,37 @@ function HeaderImagePicker() {
         return;
       }
       const data = await res.json();
-      const image = data.settings?.headerImage || DEFAULT_HEADER_IMAGE;
-      const history = Array.isArray(data.settings?.recentHeaderImages)
-        ? data.settings.recentHeaderImages
-        : [];
-      setCurrent(image);
-      setSelected(image);
-      setRecent(normalizeRecentImages(image, history));
+      const nextCurrentByPage = createDefaultHeaderImageMap();
+      const nextDraftByPage = createDefaultHeaderImageMap();
+      const nextRecentByPage = createDefaultRecentHeaderImagesMap();
+
+      for (const config of HEADER_IMAGE_PAGE_CONFIGS) {
+        const image =
+          data.settings?.headerImages?.[config.slug] || config.defaultImage;
+        const history = Array.isArray(
+          data.settings?.recentHeaderImagesByPage?.[config.slug],
+        )
+          ? data.settings.recentHeaderImagesByPage[config.slug]
+          : [];
+        const normalizedImage = normalizeHeaderImage(
+          image,
+          config.defaultImage,
+        );
+        nextCurrentByPage[config.slug] = normalizedImage;
+        nextDraftByPage[config.slug] = normalizedImage;
+        nextRecentByPage[config.slug] = normalizeRecentImages(
+          normalizedImage,
+          history,
+          config.defaultImage,
+        );
+      }
+
+      setCurrentByPage(nextCurrentByPage);
+      setDraftByPage(nextDraftByPage);
+      setRecentByPage(nextRecentByPage);
+      setSelectedPageSlug((prev) =>
+        HEADER_IMAGE_PAGE_MAP[prev] ? prev : HEADER_IMAGE_PAGE_SLUGS[0] || 'home',
+      );
       setStatus('ready');
     } catch {
       setStatus('unavailable');
@@ -681,26 +745,43 @@ function HeaderImagePicker() {
 
   const save = async () => {
     setError('');
-    setSaved(false);
+    setSavedPageSlug('');
     setSaving(true);
     try {
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ headerImage: selected }),
+        body: JSON.stringify({
+          headerImages: {
+            [selectedPageSlug]: selected,
+          },
+        }),
       });
       if (!res.ok) {
         throw new Error('save_failed');
       }
       const data = await res.json();
-      const image = data.settings?.headerImage || selected;
-      const history = Array.isArray(data.settings?.recentHeaderImages)
-        ? data.settings.recentHeaderImages
+      const image =
+        data.settings?.headerImages?.[selectedPageSlug] ||
+        selected ||
+        page.defaultImage;
+      const history = Array.isArray(
+        data.settings?.recentHeaderImagesByPage?.[selectedPageSlug],
+      )
+        ? data.settings.recentHeaderImagesByPage[selectedPageSlug]
         : [];
-      setCurrent(image);
-      setSelected(image);
-      setRecent(normalizeRecentImages(image, history));
-      setSaved(true);
+      const normalizedImage = normalizeHeaderImage(image, page.defaultImage);
+      setCurrentByPage((prev) => ({ ...prev, [selectedPageSlug]: normalizedImage }));
+      setDraftByPage((prev) => ({ ...prev, [selectedPageSlug]: normalizedImage }));
+      setRecentByPage((prev) => ({
+        ...prev,
+        [selectedPageSlug]: normalizeRecentImages(
+          normalizedImage,
+          history,
+          page.defaultImage,
+        ),
+      }));
+      setSavedPageSlug(selectedPageSlug);
     } catch {
       setError('Nu am putut salva imaginea. Mai încearcă o dată.');
     } finally {
@@ -709,8 +790,7 @@ function HeaderImagePicker() {
   };
 
   const pickImage = (value) => {
-    setSelected(value);
-    setSaved(false);
+    setDraftByPage((prev) => ({ ...prev, [selectedPageSlug]: value }));
     setError('');
   };
 
@@ -775,12 +855,57 @@ function HeaderImagePicker() {
     <div className="space-y-5">
       {error && <ErrorBanner>{error}</ErrorBanner>}
 
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,18rem)_1fr] sm:items-end">
+        <div className="min-w-0">
+          <label
+            htmlFor="site-settings-header-page"
+            className="mb-1.5 block text-sm font-semibold text-text"
+          >
+            Pagina
+          </label>
+          <div className="relative">
+            <select
+              id="site-settings-header-page"
+              value={selectedPageSlug}
+              onChange={(event) => {
+                setSelectedPageSlug(event.target.value);
+                setError('');
+              }}
+              className="h-11 w-full appearance-none rounded-xl border border-border bg-surface px-4 pr-10 text-[0.95rem] text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/25"
+            >
+              {HEADER_IMAGE_PAGE_CONFIGS.map((config) => (
+                <option key={config.slug} value={config.slug}>
+                  {config.label}
+                </option>
+              ))}
+            </select>
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+              className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-text-muted"
+            >
+              <path
+                d="M4 6l4 4 4-4"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+        <p className="text-sm leading-relaxed text-text-muted">
+          {page.description}
+        </p>
+      </div>
+
       <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
         <section className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="max-w-2xl">
               <h3 className="font-display text-xl font-semibold text-text">
-                Imaginea selectată
+                Imaginea selectată pentru {page.label}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-text-muted">
                 Alege o variantă recentă sau încarcă o imagine nouă.
@@ -801,7 +926,7 @@ function HeaderImagePicker() {
           <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card">
             <div className="relative aspect-[16/9]">
               <img
-                src={headerImageSrc(selected)}
+                src={headerImageSrc(selected, page.defaultImage)}
                 alt=""
                 className="h-full w-full object-cover"
               />
@@ -809,12 +934,12 @@ function HeaderImagePicker() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
               <div>
                 <p className="text-sm font-semibold text-text">
-                  {headerImageLabel(selected)}
+                  {headerImageLabel(selected, page.defaultImage)}
                 </p>
                 <p className="text-xs text-text-muted">
                   {isDataImage(selected)
                     ? 'Se salvează ca data URI în site_settings.'
-                    : selected === DEFAULT_HEADER_IMAGE
+                    : selected === page.defaultImage
                       ? 'Imaginea implicită din /assets.'
                       : `Fișierul ${selected}`}
                 </p>
@@ -841,9 +966,9 @@ function HeaderImagePicker() {
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            {saved && !dirty && (
+            {savedPageSlug === selectedPageSlug && !dirty && (
               <span className="text-sm font-medium text-primary-strong dark:text-primary-soft">
-                Imaginea de antet a fost salvată.
+                Imaginea pentru {page.label} a fost salvată.
               </span>
             )}
           </div>
@@ -867,7 +992,8 @@ function HeaderImagePicker() {
               <HeaderImageCard
                 key={file}
                 value={file}
-                label={headerImageLabel(file)}
+                label={headerImageLabel(file, page.defaultImage)}
+                defaultImage={page.defaultImage}
                 selected={selected}
                 current={current}
                 onSelect={() => pickImage(file)}
@@ -895,8 +1021,8 @@ export default function SiteSettings() {
       </SettingsSection>
 
       <SettingsSection
-        title="Imagine antet"
-        description="Fundalul secțiunii principale de pe pagina de start. Folosește o variantă recentă sau încarcă o imagine nouă, apoi salvează."
+        title="Imagini antet"
+        description="Fundalurile pentru paginile principale. Alege pagina din dropdown și actualizează imaginea dintr-un singur picker."
       >
         <HeaderImagePicker />
       </SettingsSection>

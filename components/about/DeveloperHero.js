@@ -16,9 +16,8 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
       : `/assets/${headerImage}`;
 
   return (
-    <section className="relative overflow-hidden pb-24 pt-28 sm:pt-36">
-      {/* Full-bleed background photo — same asset/logic as home Hero.
-          Sits at z-0, content is relatively positioned above it. */}
+    <section className="relative flex min-h-svh items-center overflow-hidden bg-bg">
+      {/* Full-bleed background photo — same asset/logic as home Hero. */}
       <Image
         src={headerSrc}
         alt=""
@@ -28,19 +27,21 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
         className="object-cover object-[center_62%]"
       />
 
-      {/* Ink veil — heavier on the text side, mirrors home Hero overlay
-          so the transparent navbar's white text stays legible. */}
+      {/* Ink veil, heavier on the text side. Mirrors home Hero. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/65 to-ink/25"
+        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-ink/10"
       />
-      {/* Extra top fade for the navbar blending strip */}
+
+      {/* Top vignette for navbar legibility. */}
       <div
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
       />
 
-      <div className="wrap relative">
+      <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
+
+      <div className="wrap relative py-32">
         <p
           className="eyebrow animate-rise !text-mint"
           style={{ animationDelay: '60ms' }}

@@ -160,23 +160,18 @@ async function getCatalog(filters) {
 
 function ChapterHeader({ subtitle }) {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden bg-bg">
       <div aria-hidden="true" className="texture-doodle" />
-      {/* Top vignette — darkens the section behind the transparent fixed navbar
-          so the navbar's white text stays legible, mirroring the home hero's
-          own top gradient. Fades out well before the headline copy so the rest
-          of the section reads against the normal page background. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/60 to-transparent dark:from-ink/75"
-      />
-      {/* Decorative compass rose anchored to the lower-right edge, clear of the
-          navbar and the densest stretch of the doodle texture so it reads as an
-          intentional flourish instead of clashing with the background. */}
-      <CompassRose className="pointer-events-none absolute -bottom-24 -right-24 hidden size-[22rem] text-primary/[0.06] lg:block dark:text-primary-soft/[0.08]" />
+      {/* Decorative compass rose anchored to the lower-right edge, kept faint
+          so it reads as a background flourish instead of competing with the
+          header copy. */}
+      <CompassRose className="pointer-events-none absolute -bottom-24 -right-24 hidden size-[22rem] text-primary/[0.08] dark:text-primary-soft/10 lg:block" />
 
-      <div className="wrap relative pb-12 pt-24 sm:pt-28">
-        <p className="eyebrow animate-rise" style={{ animationDelay: '60ms' }}>
+      <div className="wrap relative pb-16 pt-28 sm:pb-20 sm:pt-36">
+        <p
+          className="eyebrow animate-rise"
+          style={{ animationDelay: '60ms' }}
+        >
           Catalogul facultăților
         </p>
         <h1
@@ -262,7 +257,7 @@ export default async function FacultiesPage({ searchParams }) {
         subtitle="Toate facultățile de pe hartă, cu recenzii sincere, costuri și date de admitere. Filtrează după oraș, domeniu și nume — apoi pornește."
       />
 
-      <section className="pb-24 sm:pb-28">
+      <section className="pb-24 pt-12 sm:pb-28 sm:pt-14">
         <div className="wrap">
           {catalog ? (
             <>

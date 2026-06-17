@@ -26,10 +26,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const isHome = pathname === '/';
   const authed = status === 'authenticated';
   const isAdmin = session?.user?.role === 'admin';
   const overHero = !scrolled && !menuOpen;
+  const showSpacer = !['/', '/admin', '/about', '/facultati'].includes(pathname);
   const headerShellClass = overHero
     ? 'border-b border-transparent bg-transparent'
     : 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md';
@@ -230,8 +230,8 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Spacer: pages without the full-bleed home hero start below the bar. */}
-      {!isHome && <div aria-hidden="true" className="h-[4.5rem]" />}
+      {/* Spacer only for routes that still need a fixed-header offset. */}
+      {showSpacer && <div aria-hidden="true" className="h-[4.5rem]" />}
     </>
   );
 }
