@@ -528,13 +528,6 @@ function TestimonialsManager() {
 /*  Room 2 — Imagine antet                                                     */
 /* -------------------------------------------------------------------------- */
 
-const HEADER_CHOICES = [
-  { file: 'homeold.jpg', label: 'Clasică' },
-  { file: 'journey.jpg', label: 'Drumul' },
-  { file: 'home.jpg', label: 'Acasă' },
-  { file: 'maincover.jpg', label: 'Panoramă' },
-];
-
 function isDataImage(value) {
   return typeof value === 'string' && value.startsWith('data:image/');
 }
@@ -548,8 +541,15 @@ function headerImageSrc(value) {
 }
 
 function headerImageLabel(value) {
-  const preset = HEADER_CHOICES.find((choice) => choice.file === value);
-  return preset ? preset.label : 'Imagine încărcată';
+  if (isDataImage(value)) {
+    return 'Încărcată de admin';
+  }
+
+  if (value === DEFAULT_HEADER_IMAGE) {
+    return 'Imagine implicită';
+  }
+
+  return `Fișierul ${value}`;
 }
 
 function normalizeRecentImages(current, recent = []) {
@@ -783,7 +783,7 @@ function HeaderImagePicker() {
                 Imaginea selectată
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-text-muted">
-                Alege un preset, o variantă recentă sau încarcă o imagine nouă.
+                Alege o variantă recentă sau încarcă o imagine nouă.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -793,7 +793,7 @@ function HeaderImagePicker() {
               {isDataImage(selected) ? (
                 <Badge tone="highlight">Încărcată</Badge>
               ) : (
-                <Badge tone="neutral">Preset</Badge>
+                <Badge tone="neutral">Fișier</Badge>
               )}
             </div>
           </div>
@@ -814,7 +814,9 @@ function HeaderImagePicker() {
                 <p className="text-xs text-text-muted">
                   {isDataImage(selected)
                     ? 'Se salvează ca data URI în site_settings.'
-                    : `Fișierul ${selected}`}
+                    : selected === DEFAULT_HEADER_IMAGE
+                      ? 'Imaginea implicită din /assets.'
+                      : `Fișierul ${selected}`}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -874,33 +876,6 @@ function HeaderImagePicker() {
           </div>
         </section>
       </div>
-
-      <div className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="font-display text-xl font-semibold text-text">
-              Preseturi
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-text-muted">
-              Imaginile pregătite în atlas. Poți reveni oricând la una dintre ele.
-            </p>
-          </div>
-          <Badge tone="neutral">{HEADER_CHOICES.length}</Badge>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {HEADER_CHOICES.map(({ file, label }) => (
-            <HeaderImageCard
-              key={file}
-              value={file}
-              label={label}
-              selected={selected}
-              current={current}
-              onSelect={() => pickImage(file)}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -921,7 +896,7 @@ export default function SiteSettings() {
 
       <SettingsSection
         title="Imagine antet"
-        description="Fundalul secțiunii principale de pe pagina de start. Alege una dintre imaginile pregătite, apoi salvează."
+        description="Fundalul secțiunii principale de pe pagina de start. Folosește o variantă recentă sau încarcă o imagine nouă, apoi salvează."
       >
         <HeaderImagePicker />
       </SettingsSection>

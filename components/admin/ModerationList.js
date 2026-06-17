@@ -33,6 +33,13 @@ const COPY = {
   },
 };
 
+function getSearchableText(item) {
+  return [item.authorName, item.authorEmail, item.body, item.facultyName]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+}
+
 /* One moderation drawer — reviews or public messages. Hide/unhide is
    optimistic: the row is struck off the map instantly and restored if
    the server says no. */
@@ -58,19 +65,11 @@ export default function ModerationList({ kind, items: initialItems }) {
     ),
   ].sort((a, b) => a.localeCompare(b, 'ro'));
 
+  const search = query.trim().toLowerCase();
+
   const filteredItems = items.filter((item) => {
-    const search = query.trim().toLowerCase();
     if (search) {
-      const haystack = [
-        item.body,
-        item.authorName,
-        item.authorEmail,
-        item.facultyName,
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
-      if (!haystack.includes(search)) {
+      if (!getSearchableText(item).includes(search)) {
         return false;
       }
     }

@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import { CompassRose, GitHubIcon } from '../../components/layout/Brand.js';
 import ContactForm from '../../components/about/ContactForm.js';
-import aboutImage from '../../public/assets/about.jpg';
+import DeveloperHero from '../../components/about/DeveloperHero.js';
+import CreditCard from '../../components/about/CreditCard.js';
 
 export const metadata = {
   title: 'Despre noi',
@@ -87,54 +87,22 @@ export default async function AboutPage() {
   return (
     <>
       {/* ----------------------------------------------------------------
-          Mission hero — a full-bleed map cover, mirroring the home hero
+          Lead — the featured developer banner (the page's opening)
       ---------------------------------------------------------------- */}
-      <section className="relative flex min-h-svh items-center overflow-hidden">
-        {/* The cover photo, treated as the page's opening landscape. */}
-        <Image
-          src={aboutImage}
-          alt=""
-          fill
-          priority
-          placeholder="blur"
-          sizes="100vw"
-          className="object-cover object-[center_45%]"
-        />
+      <DeveloperHero owner={owner} eyebrow="Despre noi" />
 
-        {/* Ink veil, heavier on the text side */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-[#0c2022]/95 via-[#0c2022]/60 to-[#0c2022]/10"
-        />
-        {/* Top vignette for navbar legibility */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#0c2022]/70 to-transparent"
-        />
-
-        <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
-
-        <div className="wrap relative py-32">
+      {/* ----------------------------------------------------------------
+          Mission — what the project is and who it's for
+      ---------------------------------------------------------------- */}
+      <section className="pb-20">
+        <div className="wrap">
           <div className="max-w-2xl">
-            <p
-              className="eyebrow animate-rise !text-mint"
-              style={{ animationDelay: '80ms' }}
-            >
-              Despre noi
-            </p>
-
-            <h1
-              className="animate-rise mt-6 text-balance font-display text-[clamp(2.7rem,6.5vw,4.75rem)] font-semibold leading-[1.03] text-white"
-              style={{ animationDelay: '180ms' }}
-            >
+            <p className="eyebrow">Misiunea</p>
+            <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
               Busola care te ajută să alegi{' '}
               <em className="wonky italic text-highlight">facultatea potrivită</em>.
-            </h1>
-
-            <div
-              className="animate-rise mt-7 max-w-xl space-y-5 text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
-              style={{ animationDelay: '300ms' }}
-            >
+            </h2>
+            <div className="mt-5 space-y-5 text-pretty text-base leading-relaxed text-text-muted sm:text-lg">
               <p>
                 StudCompass este o platformă pentru elevii și studenții din
                 România care vor să compare facultăți fără să se piardă printre
@@ -147,45 +115,22 @@ export default async function AboutPage() {
               </p>
             </div>
 
-            <p
-              className="animate-rise mt-10 inline-flex items-center gap-2.5 text-sm font-semibold text-mint/65"
-              style={{ animationDelay: '420ms' }}
-            >
+            <p className="mt-9 inline-flex items-center gap-2.5 text-sm font-semibold text-text-muted">
               <span
                 aria-hidden="true"
-                className="h-px w-8 bg-gradient-to-r from-highlight to-mint"
+                className="h-px w-8 bg-gradient-to-r from-accent to-highlight"
               />
-              <HeartIcon className="size-3.5 -translate-y-px text-highlight" />
+              <HeartIcon className="size-3.5 -translate-y-px text-accent" />
               <span>Gândit pentru decizii mai clare</span>
             </p>
           </div>
-        </div>
-
-        {/* Scroll cue */}
-        <div
-          aria-hidden="true"
-          className="absolute bottom-7 left-1/2 hidden -translate-x-1/2 sm:block"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            className="animate-bob size-6 text-mint/70"
-          >
-            <path
-              d="M5 9l7 7 7-7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
         </div>
       </section>
 
       {/* ----------------------------------------------------------------
           Route facts — details drawn as waypoints
       ---------------------------------------------------------------- */}
-      <section className="pb-24 pt-20 sm:pt-24">
+      <section className="pb-24">
         <div className="wrap">
           <ol className="relative grid gap-6 md:grid-cols-3 md:gap-8">
             <div
@@ -213,75 +158,6 @@ export default async function AboutPage() {
               </li>
             ))}
           </ol>
-        </div>
-      </section>
-
-      {/* ----------------------------------------------------------------
-          The cartographer
-      ---------------------------------------------------------------- */}
-      <section className="pb-24">
-        <div className="wrap">
-          <div className="max-w-xl">
-            <p className="eyebrow">Cartograful</p>
-            <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
-              Cine a desenat busola
-            </h2>
-            <p className="mt-4 text-pretty text-text-muted sm:text-lg">
-              StudCompass este creat de un singur om. Mai jos găsești profilul
-              lui GitHub, cu date live și un link direct către cont.
-            </p>
-          </div>
-
-          <div className="mt-10 max-w-xl">
-            <a
-              href={owner.html_url}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col gap-5 rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift sm:flex-row sm:items-center"
-            >
-              <img
-                src={owner.avatar_url}
-                alt={owner.name}
-                className="size-20 rounded-2xl border border-border object-cover shadow-sm"
-                loading="lazy"
-              />
-
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="font-display text-xl font-semibold transition-colors group-hover:text-primary-strong dark:group-hover:text-primary-soft">
-                    {owner.name}
-                  </h3>
-                  <span className="rounded-full border border-border px-2.5 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-text-muted">
-                    creator unic
-                  </span>
-                </div>
-
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-muted sm:text-[0.95rem]">
-                  {owner.bio}
-                </p>
-
-                <div className="mt-4 flex flex-wrap gap-2.5 text-sm text-text-muted">
-                  <span className="rounded-full border border-border px-3 py-1.5">
-                    {owner.public_repos} repo-uri publice
-                  </span>
-                  <span className="rounded-full border border-border px-3 py-1.5">
-                    {owner.followers} urmăritori
-                  </span>
-                </div>
-
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-strong dark:text-primary-soft">
-                  <GitHubIcon className="size-4" />
-                  {owner.html_url.replace('https://github.com/', 'github.com/')}
-                  <span
-                    aria-hidden="true"
-                    className="transition-transform duration-200 group-hover:translate-x-1"
-                  >
-                    →
-                  </span>
-                </span>
-              </div>
-            </a>
-          </div>
         </div>
       </section>
 
@@ -364,21 +240,12 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* ----------------------------------------------------------------
+          Credit — modest, wide banner for an earlier contributor
+      ---------------------------------------------------------------- */}
       <section className="pb-24 pt-0">
         <div className="wrap">
-          <p className="text-sm text-text-muted">
-            Merită să mai arunci un ochi și la{' '}
-            <a
-              href="https://github.com/IRules"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-primary-strong underline decoration-primary-soft/40 underline-offset-4 transition-colors hover:text-primary-soft"
-            >
-              Toma Aris
-            </a>
-            , care a ajutat la prima versiune a proiectului cu ceva timp în
-            urmă.
-          </p>
+          <CreditCard name="Toma Aris" handle="IRules" />
         </div>
       </section>
     </>

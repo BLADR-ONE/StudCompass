@@ -84,9 +84,10 @@
   --sc-eyebrow: #306858;
   --sc-shadow: rgb(18 46 44 / 0.18);
   --sc-shadow-weak: rgb(18 46 44 / 0.07);
-  --sc-doodle-opacity: 0.17;
+  --sc-doodle-opacity: 0.28;
   --sc-doodle-blend: multiply;
   --sc-doodle: url('/assets/bgWhite.jpg');
+  --sc-nav-vignette: rgb(24 56 56 / 0.38);
 }
 
 [data-theme='dark'] {
@@ -100,9 +101,10 @@
   --sc-eyebrow: #78c8c8;
   --sc-shadow: rgb(2 12 12 / 0.6);
   --sc-shadow-weak: rgb(2 12 12 / 0.35);
-  --sc-doodle-opacity: 0.22;
+  --sc-doodle-opacity: 0.45;
   --sc-doodle-blend: screen;
   --sc-doodle: url('/assets/bgDark.jpg');
+  --sc-nav-vignette: rgb(2 12 12 / 0.55);
 }
 
 /* Expose semantic vars + fonts as Tailwind utilities (bg-bg, text-text, …). */
@@ -135,6 +137,21 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Top vignette — gives the transparent fixed navbar a readable dark backdrop
+     on every route, not just the home hero. Sits behind the navbar (z-40),
+     never captures clicks, and fades out after ~9 rem so it doesn't tint page
+     content. Driven by the per-theme --sc-nav-vignette token. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 9rem;
+    background: linear-gradient(to bottom, var(--sc-nav-vignette), transparent);
+    pointer-events: none;
+    z-index: 40;
   }
 
   h1,
