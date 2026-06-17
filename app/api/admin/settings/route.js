@@ -2,21 +2,15 @@ import { NextResponse } from 'next/server';
 import dbModule from '../../../../lib/db/index.js';
 import { siteSettingsSchema } from '../../../../lib/validate.js';
 import { jsonError, requireAdminSession } from '../../../../lib/admin.js';
-import { DEFAULT_HEADER_IMAGE } from '../../../../lib/content.js';
+import {
+  HEADER_IMAGE_HISTORY_LIMIT,
+  getSiteSettingsDetails,
+  normalizeHeaderImage,
+} from '../../../../lib/content.js';
 
 const { db, schema } = dbModule;
 
 export const runtime = 'nodejs';
-
-function normalizeSettings(rows) {
-  const settings = { headerImage: DEFAULT_HEADER_IMAGE };
-  for (const row of rows) {
-    if (row.key === 'header_image' && row.value) {
-      settings.headerImage = row.value;
-    }
-  }
-  return settings;
-}
 
 export async function GET() {
   if (!db) {
@@ -28,18 +22,12 @@ export async function GET() {
     return error;
   }
 
-  const rows = await db
-    .select({
-      key: schema.siteSettings.key,
-      value: schema.siteSettings.value,
-      updatedAt: schema.siteSettings.updatedAt,
-    })
-    .from(schema.siteSettings);
+  const settings = await getSiteSettingsDetails();
 
   return NextResponse.json(
     {
       ok: true,
-      settings: normalizeSettings(rows),
+      settings,
     },
     { status: 200 },
   );
@@ -67,31 +55,53 @@ export async function PUT(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const headerImage = parsed.data.headerImage;
+  const headerImage = normalizeHeaderImage(parsed.data.headerImage);
+  const currentSettings = await getSiteSettingsDetails();
+  const recentHeaderImages = [
+    headerImage,
+    ...(currentSettings.recentHeaderImages || []),
+  ]
+    .map((value) => normalizeHeaderImage(value))
+    .filter((value, index, array) => array.indexOf(value) === index)
+    .slice(0, HEADER_IMAGE_HISTORY_LIMIT);
 
-  const [row] = await db
-    .insert(schema.siteSettings)
-    .values({
-      key: 'header_image',
-      value: headerImage,
-    })
-    .onConflictDoUpdate({
-      target: schema.siteSettings.key,
-      set: {
+  await db.transaction(async (tx) => {
+    await tx
+      .insert(schema.siteSettings)
+      .values({
+        key: 'header_image',
         value: headerImage,
-        updatedAt: new Date(),
-      },
-    })
-    .returning({
-      key: schema.siteSettings.key,
-      value: schema.siteSettings.value,
-      updatedAt: schema.siteSettings.updatedAt,
-    });
+      })
+      .onConflictDoUpdate({
+        target: schema.siteSettings.key,
+        set: {
+          value: headerImage,
+          updatedAt: new Date(),
+        },
+      });
+
+    await tx
+      .insert(schema.siteSettings)
+      .values({
+        key: 'header_image_history',
+        value: JSON.stringify(recentHeaderImages),
+      })
+      .onConflictDoUpdate({
+        target: schema.siteSettings.key,
+        set: {
+          value: JSON.stringify(recentHeaderImages),
+          updatedAt: new Date(),
+        },
+      });
+  });
 
   return NextResponse.json(
     {
       ok: true,
-      settings: normalizeSettings([row]),
+      settings: {
+        headerImage,
+        recentHeaderImages,
+      },
     },
     { status: 200 },
   );

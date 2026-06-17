@@ -285,10 +285,6 @@ export default async function FacultyPage({ params }) {
 
         <div className="relative mt-4 h-[19rem] overflow-hidden rounded-[2.5rem] shadow-lift sm:h-[23rem] lg:h-[26rem]">
           <HeroCover coverUrl={faculty.coverUrl} name={faculty.name} />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-[#0c2022]/95 via-[#0c2022]/40 to-[#0c2022]/10"
-          />
           <CompassRose className="pointer-events-none absolute -right-16 -top-20 size-72 text-mint/10" />
 
           <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-6 sm:gap-6 sm:p-10">

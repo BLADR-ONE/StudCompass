@@ -174,7 +174,14 @@ export default async function AccountPage() {
                 <p className="truncate text-sm text-text-muted">{email}</p>
               )}
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge tone={role === 'admin' ? 'primary' : 'neutral'}>
+                <Badge
+                  tone={role === 'admin' ? 'primary' : 'neutral'}
+                  className={
+                    role === 'admin'
+                      ? 'border-orange-500 bg-orange-500 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.2)]'
+                      : ''
+                  }
+                >
                   {roleLabel}
                 </Badge>
                 {memberSince && (

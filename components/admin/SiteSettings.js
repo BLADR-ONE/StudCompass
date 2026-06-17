@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useCallback, useEffect, useId, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
@@ -13,6 +12,7 @@ import {
   DeskEmpty,
   ErrorBanner,
 } from './DeskBits.js';
+import { DEFAULT_HEADER_IMAGE } from '../../lib/content.js';
 
 /* The shop sign over each settings room. Roomy on purpose — future
    settings get their own <SettingsSection> without disturbing these two. */
@@ -532,15 +532,125 @@ const HEADER_CHOICES = [
   { file: 'maincover.jpg', label: 'Panoramă' },
 ];
 
-const DEFAULT_HEADER_IMAGE = 'homeold.jpg';
+const HEADER_IMAGE_HISTORY_LIMIT = 4;
+
+function isDataImage(value) {
+  return typeof value === 'string' && value.startsWith('data:image/');
+}
+
+function headerImageSrc(value) {
+  if (!value) {
+    return `/assets/${DEFAULT_HEADER_IMAGE}`;
+  }
+
+  return isDataImage(value) ? value : `/assets/${value}`;
+}
+
+function headerImageLabel(value) {
+  const preset = HEADER_CHOICES.find((choice) => choice.file === value);
+  return preset ? preset.label : 'Imagine încărcată';
+}
+
+function normalizeRecentImages(current, recent = []) {
+  return [...new Set([current, ...recent].filter(Boolean))].slice(
+    0,
+    HEADER_IMAGE_HISTORY_LIMIT,
+  );
+}
+
+function readFileAsDataUri(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(new Error('upload_failed'));
+      }
+    };
+    reader.onerror = () => reject(new Error('upload_failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function HeaderImageCard({
+  value,
+  label,
+  selected,
+  current,
+  onSelect,
+  className = '',
+}) {
+  const active = selected === value;
+  const live = current === value;
+
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onSelect}
+      className={`group relative overflow-hidden rounded-2xl border-2 text-left shadow-card transition-all duration-200 ${
+        active
+          ? 'border-primary ring-2 ring-primary/30'
+          : 'border-border hover:border-primary-soft'
+      } ${className}`}
+    >
+      <span className="absolute inset-0">
+        <img
+          src={headerImageSrc(value)}
+          alt=""
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </span>
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/12 to-transparent"
+      />
+      <span className="relative flex min-h-28 flex-col justify-between gap-3 p-3.5">
+        <span className="flex items-start justify-between gap-2">
+          {live ? <Badge tone="highlight">Activă</Badge> : <span />}
+          {active && (
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary text-white shadow">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+                className="size-3.5"
+              >
+                <path
+                  d="M3.5 8.5l3 3 6-7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          )}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-semibold text-white drop-shadow">
+            {label}
+          </span>
+          <span className="mt-0.5 block text-xs font-medium text-white/80">
+            {isDataImage(value) ? 'Încărcată de admin' : `/assets/${value}`}
+          </span>
+        </span>
+      </span>
+    </button>
+  );
+}
 
 function HeaderImagePicker() {
   const [current, setCurrent] = useState(DEFAULT_HEADER_IMAGE);
   const [selected, setSelected] = useState(DEFAULT_HEADER_IMAGE);
+  const [recent, setRecent] = useState([DEFAULT_HEADER_IMAGE]);
   const [status, setStatus] = useState('loading'); // loading | ready | unavailable
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [uploadBusy, setUploadBusy] = useState(false);
+  const fileInputId = useId();
 
   const load = useCallback(async () => {
     setStatus('loading');
@@ -552,8 +662,12 @@ function HeaderImagePicker() {
       }
       const data = await res.json();
       const image = data.settings?.headerImage || DEFAULT_HEADER_IMAGE;
+      const history = Array.isArray(data.settings?.recentHeaderImages)
+        ? data.settings.recentHeaderImages
+        : [];
       setCurrent(image);
       setSelected(image);
+      setRecent(normalizeRecentImages(image, history));
       setStatus('ready');
     } catch {
       setStatus('unavailable');
@@ -579,13 +693,54 @@ function HeaderImagePicker() {
       }
       const data = await res.json();
       const image = data.settings?.headerImage || selected;
+      const history = Array.isArray(data.settings?.recentHeaderImages)
+        ? data.settings.recentHeaderImages
+        : [];
       setCurrent(image);
       setSelected(image);
+      setRecent(normalizeRecentImages(image, history));
       setSaved(true);
     } catch {
       setError('Nu am putut salva imaginea. Mai încearcă o dată.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const pickImage = (value) => {
+    setSelected(value);
+    setSaved(false);
+    setError('');
+  };
+
+  const handleUpload = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setError('Alege un fișier imagine valid.');
+      return;
+    }
+
+    if (file.size > 2_000_000) {
+      setError('Imaginea e prea mare. Încarcă un fișier sub 2 MB.');
+      return;
+    }
+
+    setUploadBusy(true);
+    setError('');
+
+    try {
+      const dataUri = await readFileAsDataUri(file);
+      pickImage(dataUri);
+    } catch {
+      setError('Nu am putut citi imaginea. Mai încearcă o dată.');
+    } finally {
+      setUploadBusy(false);
     }
   };
 
@@ -616,69 +771,134 @@ function HeaderImagePicker() {
   const dirty = selected !== current;
 
   return (
-    <div>
+    <div className="space-y-5">
       {error && <ErrorBanner>{error}</ErrorBanner>}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {HEADER_CHOICES.map(({ file, label }) => {
-          const isSelected = selected === file;
-          const isCurrent = current === file;
-          return (
-            <button
-              key={file}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => { setSelected(file); setSaved(false); }}
-              className={`group relative aspect-[4/3] overflow-hidden rounded-2xl border-2 text-left shadow-card transition-all duration-200 ${
-                isSelected
-                  ? 'border-primary ring-2 ring-primary/30'
-                  : 'border-border hover:border-primary-soft'
-              }`}
-            >
-              <Image
-                src={`/assets/${file}`}
-                alt=""
-                fill
-                sizes="(min-width: 640px) 25vw, 50vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"
-              />
-              <span className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1.5 p-2.5">
-                <span className="text-xs font-semibold text-white drop-shadow">
-                  {label}
-                </span>
-                {isCurrent && <Badge tone="highlight">Activă</Badge>}
-              </span>
-              {isSelected && (
-                <span className="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-full bg-primary text-white shadow">
-                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="size-3.5">
-                    <path
-                      d="M3.5 8.5l3 3 6-7"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+      <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+        <section className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-2xl">
+              <h3 className="font-display text-xl font-semibold text-text">
+                Imaginea selectată
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                Alege un preset, o variantă recentă sau încarcă o imagine nouă.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone={dirty ? 'accent' : 'primary'}>
+                {dirty ? 'Nesalvată' : 'Salvată'}
+              </Badge>
+              {isDataImage(selected) ? (
+                <Badge tone="highlight">Încărcată</Badge>
+              ) : (
+                <Badge tone="neutral">Preset</Badge>
               )}
-            </button>
-          );
-        })}
+            </div>
+          </div>
+
+          <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card">
+            <div className="relative aspect-[16/9]">
+              <img
+                src={headerImageSrc(selected)}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-text">
+                  {headerImageLabel(selected)}
+                </p>
+                <p className="text-xs text-text-muted">
+                  {isDataImage(selected)
+                    ? 'Se salvează ca data URI în site_settings.'
+                    : `Fișierul ${selected}`}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <label
+                  htmlFor={fileInputId}
+                  className={`inline-flex h-9 cursor-pointer items-center justify-center rounded-full border border-border px-4 text-sm font-semibold text-text transition-colors hover:border-primary-soft hover:text-primary-strong ${uploadBusy ? 'pointer-events-none opacity-60' : ''}`}
+                >
+                  {uploadBusy ? 'Se încarcă...' : 'Încarcă imagine'}
+                </label>
+                <input
+                  id={fileInputId}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="sr-only"
+                />
+                <Button size="sm" loading={saving} disabled={!dirty} onClick={save}>
+                  Salvează imaginea
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {saved && !dirty && (
+              <span className="text-sm font-medium text-primary-strong dark:text-primary-soft">
+                Imaginea de antet a fost salvată.
+              </span>
+            )}
+          </div>
+        </section>
+
+        <section className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="font-display text-xl font-semibold text-text">
+                Variante recente
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                Ultimele alegeri rămân aici, ca să poți reveni rapid la ele.
+              </p>
+            </div>
+            <Badge tone="neutral">{recent.length}</Badge>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {recent.map((file) => (
+              <HeaderImageCard
+                key={file}
+                value={file}
+                label={headerImageLabel(file)}
+                selected={selected}
+                current={current}
+                onSelect={() => pickImage(file)}
+              />
+            ))}
+          </div>
+        </section>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
-        <Button size="sm" loading={saving} disabled={!dirty} onClick={save}>
-          Salvează imaginea
-        </Button>
-        {saved && !dirty && (
-          <span className="text-sm font-medium text-primary-strong dark:text-primary-soft">
-            Imaginea de antet a fost salvată.
-          </span>
-        )}
+      <div className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="font-display text-xl font-semibold text-text">
+              Preseturi
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-text-muted">
+              Imaginile pregătite în atlas. Poți reveni oricând la una dintre ele.
+            </p>
+          </div>
+          <Badge tone="neutral">{HEADER_CHOICES.length}</Badge>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {HEADER_CHOICES.map(({ file, label }) => (
+            <HeaderImageCard
+              key={file}
+              value={file}
+              label={label}
+              selected={selected}
+              current={current}
+              onSelect={() => pickImage(file)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

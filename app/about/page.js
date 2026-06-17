@@ -6,35 +6,67 @@ import aboutImage from '../../public/assets/about.jpg';
 export const metadata = {
   title: 'Despre noi',
   description:
-    'Povestea StudCompass: un proiect pasionat de informatică, gândit ca o hartă a facultăților din România. Află cine e în spatele busolei și scrie-ne.',
+    'StudCompass este busola pentru elevii și studenții din România care vor să compare facultăți, să citească recenzii și să-și clarifice traseul academic și profesional.',
 };
 
 const CONTACT_EMAIL = 'contact@studcompass.ro';
-
-/* Project author. */
-const AUTHOR = {
-  name: 'Ureche Rafael',
-  alias: 'Bladr-One',
-  role: 'Creator & dezvoltator',
-  github: 'BLADR-ONE',
+const OWNER_HANDLE = 'BLADR-ONE';
+const OWNER_PROFILE_URL = `https://github.com/${OWNER_HANDLE}`;
+const OWNER_FALLBACK = {
+  name: 'Rafael-Matei Ureche',
+  bio: 'Creatorul unic al StudCompass, construit din dorința de a face alegerea unei facultăți mai clară și mai puțin haotică.',
+  avatar_url: 'https://github.com/BLADR-ONE.png',
+  public_repos: 0,
+  followers: 0,
+  html_url: OWNER_PROFILE_URL,
 };
 
-/* A single low-key contributor mention (left the project, with approval). */
-const CONTRIBUTOR_NAME = 'Toma Aris';
+async function getOwnerProfile() {
+  try {
+    const response = await fetch(`https://api.github.com/users/${OWNER_HANDLE}`, {
+      next: { revalidate: 86400 },
+      headers: {
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'StudCompass',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub profile request failed with ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    return {
+      name: data.name || OWNER_FALLBACK.name,
+      bio: data.bio || OWNER_FALLBACK.bio,
+      avatar_url: data.avatar_url || OWNER_FALLBACK.avatar_url,
+      public_repos:
+        typeof data.public_repos === 'number'
+          ? data.public_repos
+          : OWNER_FALLBACK.public_repos,
+      followers:
+        typeof data.followers === 'number' ? data.followers : OWNER_FALLBACK.followers,
+      html_url: data.html_url || OWNER_FALLBACK.html_url,
+    };
+  } catch {
+    return OWNER_FALLBACK;
+  }
+}
 
 /* Facts presented as map coordinates. */
 const ROUTE_FACTS = [
   {
-    label: 'Punct de plecare',
-    value: 'O pasiune pentru informatică',
+    label: 'Pentru cine',
+    value: 'Elevi, liceeni și studenți care vor să aleagă mai sigur',
   },
   {
-    label: 'Misiune',
-    value: 'O hartă clară a facultăților din România',
+    label: 'Ce rezolvă',
+    value: 'Reduce zgomotul din jurul facultăților și compară opțiunile pe bune',
   },
   {
-    label: 'Echipaj',
-    value: 'Un proiect dus la capăt de un singur om',
+    label: 'Cum funcționează',
+    value: 'Recenzii, filtre utile și un test de personalitate care îți restrânge traseul',
   },
 ];
 
@@ -49,7 +81,9 @@ function HeartIcon({ className = '' }) {
   );
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const owner = await getOwnerProfile();
+
   return (
     <>
       {/* ----------------------------------------------------------------
@@ -77,11 +111,6 @@ export default function AboutPage() {
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#0c2022]/70 to-transparent"
         />
-        {/* Seamless hand-off into the page background, both themes */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-bg to-transparent"
-        />
 
         <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
 
@@ -98,8 +127,8 @@ export default function AboutPage() {
               className="animate-rise mt-6 text-balance font-display text-[clamp(2.7rem,6.5vw,4.75rem)] font-semibold leading-[1.03] text-white"
               style={{ animationDelay: '180ms' }}
             >
-              Un om, o singură{' '}
-              <em className="wonky italic text-highlight">busolă</em>.
+              Busola care te ajută să alegi{' '}
+              <em className="wonky italic text-highlight">facultatea potrivită</em>.
             </h1>
 
             <div
@@ -107,14 +136,14 @@ export default function AboutPage() {
               style={{ animationDelay: '300ms' }}
             >
               <p>
-                StudCompass e proiectul unui pasionat de informatică, construit
-                ca să demonstreze cât de utilă poate fi tehnologia atunci când
-                îți cauți traseul în viață.
+                StudCompass este o platformă pentru elevii și studenții din
+                România care vor să compare facultăți fără să se piardă printre
+                opinii contradictorii, reclame și liste greu de citit.
               </p>
               <p>
-                E o hartă a facultăților din România, desenată de un om care
-                abia își trasează propriul drum — și care speră să-ți fie de
-                folos pe-al tău.
+                Îți adună într-un singur loc recenzii, filtre utile și un test
+                de personalitate ca să vezi mai repede ce facultăți și ce
+                direcții profesionale ți se potrivesc.
               </p>
             </div>
 
@@ -126,9 +155,8 @@ export default function AboutPage() {
                 aria-hidden="true"
                 className="h-px w-8 bg-gradient-to-r from-highlight to-mint"
               />
-              Made with{' '}
               <HeartIcon className="size-3.5 -translate-y-px text-highlight" />
-              <span className="sr-only">dragoste</span> by StudCompass
+              <span>Gândit pentru decizii mai clare</span>
             </p>
           </div>
         </div>
@@ -196,50 +224,64 @@ export default function AboutPage() {
           <div className="max-w-xl">
             <p className="eyebrow">Cartograful</p>
             <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
-              Cine ține creionul pe hartă
+              Cine a desenat busola
             </h2>
             <p className="mt-4 text-pretty text-text-muted sm:text-lg">
-              Vrei să ne contactezi? Mă găsești pe GitHub — sau îmi scrii
-              direct, mai jos.
+              StudCompass este creat de un singur om. Mai jos găsești profilul
+              lui GitHub, cu date live și un link direct către cont.
             </p>
           </div>
 
-          <div className="mt-10 max-w-md">
+          <div className="mt-10 max-w-xl">
             <a
-              href={`https://github.com/${AUTHOR.github}`}
+              href={owner.html_url}
               target="_blank"
               rel="noreferrer"
-              className="group flex flex-col rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift"
+              className="group flex flex-col gap-5 rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift sm:flex-row sm:items-center"
             >
-              <span
-                aria-hidden="true"
-                className="wonky flex size-14 items-center justify-center rounded-full bg-primary/10 font-display text-2xl font-semibold italic text-primary-strong dark:bg-primary-soft/10 dark:text-primary-soft"
-              >
-                {AUTHOR.name.charAt(0)}
-              </span>
-              <h3 className="mt-5 font-display text-xl font-semibold transition-colors group-hover:text-primary-strong dark:group-hover:text-primary-soft">
-                {AUTHOR.name}
-              </h3>
-              <p className="mt-1 text-sm text-text-muted">
-                {AUTHOR.role} · {AUTHOR.alias}
-              </p>
-              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-strong dark:text-primary-soft">
-                <GitHubIcon className="size-4" />
-                github.com/{AUTHOR.github}
-                <span
-                  aria-hidden="true"
-                  className="transition-transform duration-200 group-hover:translate-x-1"
-                >
-                  →
+              <img
+                src={owner.avatar_url}
+                alt={owner.name}
+                className="size-20 rounded-2xl border border-border object-cover shadow-sm"
+                loading="lazy"
+              />
+
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="font-display text-xl font-semibold transition-colors group-hover:text-primary-strong dark:group-hover:text-primary-soft">
+                    {owner.name}
+                  </h3>
+                  <span className="rounded-full border border-border px-2.5 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-text-muted">
+                    creator unic
+                  </span>
+                </div>
+
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-muted sm:text-[0.95rem]">
+                  {owner.bio}
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2.5 text-sm text-text-muted">
+                  <span className="rounded-full border border-border px-3 py-1.5">
+                    {owner.public_repos} repo-uri publice
+                  </span>
+                  <span className="rounded-full border border-border px-3 py-1.5">
+                    {owner.followers} urmăritori
+                  </span>
+                </div>
+
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-strong dark:text-primary-soft">
+                  <GitHubIcon className="size-4" />
+                  {owner.html_url.replace('https://github.com/', 'github.com/')}
+                  <span
+                    aria-hidden="true"
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </span>
-              </span>
+              </div>
             </a>
           </div>
-
-          {/* A single low-key contributor line. */}
-          <p className="mt-7 text-sm text-text-muted">
-            Cu o contribuție timpurie din partea lui {CONTRIBUTOR_NAME}.
-          </p>
         </div>
       </section>
 
@@ -298,13 +340,13 @@ export default function AboutPage() {
                 <ul className="mt-8 space-y-3 border-t border-dashed border-mint/20 pt-6">
                   <li>
                     <a
-                      href={`https://github.com/${AUTHOR.github}`}
+                      href={owner.html_url}
                       target="_blank"
                       rel="noreferrer"
                       className="group inline-flex items-center gap-2.5 text-sm text-mint/75 transition-colors hover:text-white"
                     >
                       <GitHubIcon className="size-4" />
-                      GitHub: {AUTHOR.name}
+                      GitHub: {owner.name}
                       <span
                         aria-hidden="true"
                         className="transition-transform duration-200 group-hover:translate-x-1"
@@ -319,6 +361,24 @@ export default function AboutPage() {
               <ContactForm email={CONTACT_EMAIL} />
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="pb-24 pt-0">
+        <div className="wrap">
+          <p className="text-sm text-text-muted">
+            Merită să mai arunci un ochi și la{' '}
+            <a
+              href="https://github.com/IRules"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-primary-strong underline decoration-primary-soft/40 underline-offset-4 transition-colors hover:text-primary-soft"
+            >
+              Toma Aris
+            </a>
+            , care a ajutat la prima versiune a proiectului cu ceva timp în
+            urmă.
+          </p>
         </div>
       </section>
     </>

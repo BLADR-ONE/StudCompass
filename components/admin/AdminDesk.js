@@ -6,11 +6,13 @@ import ModerationList from './ModerationList.js';
 import UsersList from './UsersList.js';
 import StatsPanel from './StatsPanel.js';
 import SiteSettings from './SiteSettings.js';
+import FacultiesList from './FacultiesList.js';
 
 const TABS = [
   { id: 'recenzii', label: 'Recenzii' },
   { id: 'mesaje', label: 'Mesaje' },
   { id: 'utilizatori', label: 'Utilizatori' },
+  { id: 'facultati', label: 'Facultăți' },
   { id: 'statistici', label: 'Statistici' },
   { id: 'setari', label: 'Setări site' },
 ];
@@ -36,7 +38,7 @@ function DeskOffline() {
   );
 }
 
-/* The cartographer's desk: one tab rail, four drawers. Panels stay
+/* The cartographer's desk: one tab rail, six drawers. Panels stay
    mounted once opened, so moderation state and the chart survive
    switching back and forth. */
 export default function AdminDesk({
@@ -44,6 +46,8 @@ export default function AdminDesk({
   reviews = [],
   messages = [],
   users = [],
+  faculties = [],
+  domains = [],
   currentUserId = '',
 }) {
   const [tab, setTab] = useState('recenzii');
@@ -74,6 +78,7 @@ export default function AdminDesk({
     recenzii: reviews.length,
     mesaje: messages.length,
     utilizatori: users.length,
+    facultati: faculties.length,
   };
 
   const onKeyDown = (event) => {
@@ -95,7 +100,7 @@ export default function AdminDesk({
         role="tablist"
         aria-label="Secțiunile mesei de administrare"
         onKeyDown={onKeyDown}
-        className="grid grid-cols-2 gap-1 rounded-[1.6rem] border border-border bg-surface p-1 sm:grid-cols-3 lg:grid-cols-5 sm:rounded-full"
+        className="grid grid-cols-2 gap-1 rounded-[1.6rem] border border-border bg-surface p-1 sm:grid-cols-3 lg:grid-cols-6 sm:rounded-full"
       >
         {TABS.map(({ id, label }, index) => {
           const active = tab === id;
@@ -164,6 +169,16 @@ export default function AdminDesk({
         className="mt-7"
       >
         <UsersList items={users} currentUserId={currentUserId} />
+      </div>
+
+      <div
+        role="tabpanel"
+        id="desk-panel-facultati"
+        aria-labelledby="desk-tab-facultati"
+        hidden={tab !== 'facultati'}
+        className="mt-7"
+      >
+        <FacultiesList items={faculties} domains={domains} />
       </div>
 
       <div

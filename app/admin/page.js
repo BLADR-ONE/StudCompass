@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 import { auth } from '../../lib/auth.js';
 import dbModule from '../../lib/db/index.js';
 import AdminDesk from '../../components/admin/AdminDesk.js';
@@ -30,7 +30,8 @@ async function getDeskData() {
   }
 
   try {
-    const [reviewRows, messageRows, userRows] = await Promise.all([
+    const [reviewRows, messageRows, userRows, facultyRows, programRows, linkRows, domainRows] =
+      await Promise.all([
       db
         .select({
           id: schema.reviews.id,
@@ -80,7 +81,77 @@ async function getDeskData() {
         .from(schema.users)
         .orderBy(desc(schema.users.createdAt))
         .limit(LIST_CAP),
+      db
+        .select({
+          id: schema.faculties.id,
+          slug: schema.faculties.slug,
+          name: schema.faculties.name,
+          description: schema.faculties.description,
+          city: schema.faculties.city,
+          address: schema.faculties.address,
+          website: schema.faculties.website,
+          email: schema.faculties.email,
+          phone: schema.faculties.phone,
+          coverUrl: schema.faculties.coverUrl,
+          emblemUrl: schema.faculties.emblemUrl,
+          tuitionCost: schema.faculties.tuitionCost,
+          minAdmissionGrade: schema.faculties.minAdmissionGrade,
+          budgetSeatsIndex: schema.faculties.budgetSeatsIndex,
+          multiCampus: schema.faculties.multiCampus,
+          createdAt: schema.faculties.createdAt,
+          updatedAt: schema.faculties.updatedAt,
+        })
+        .from(schema.faculties)
+        .orderBy(asc(schema.faculties.name)),
+      db
+        .select({
+          facultyId: schema.programs.facultyId,
+          name: schema.programs.name,
+        })
+        .from(schema.programs)
+        .orderBy(
+          asc(schema.programs.facultyId),
+          asc(schema.programs.name),
+        ),
+      db
+        .select({
+          facultyId: schema.facultyDomains.facultyId,
+          id: schema.domains.id,
+          name: schema.domains.name,
+          slug: schema.domains.slug,
+        })
+        .from(schema.facultyDomains)
+        .innerJoin(
+          schema.domains,
+          eq(schema.facultyDomains.domainId, schema.domains.id),
+        )
+        .orderBy(
+          asc(schema.facultyDomains.facultyId),
+          asc(schema.domains.name),
+        ),
+      db
+        .select({
+          id: schema.domains.id,
+          name: schema.domains.name,
+          slug: schema.domains.slug,
+        })
+        .from(schema.domains)
+        .orderBy(asc(schema.domains.name)),
     ]);
+
+    const programsByFaculty = new Map();
+    for (const row of programRows) {
+      const list = programsByFaculty.get(row.facultyId) || [];
+      list.push({ name: row.name });
+      programsByFaculty.set(row.facultyId, list);
+    }
+
+    const domainsByFaculty = new Map();
+    for (const row of linkRows) {
+      const list = domainsByFaculty.get(row.facultyId) || [];
+      list.push({ id: row.id, name: row.name, slug: row.slug });
+      domainsByFaculty.set(row.facultyId, list);
+    }
 
     return {
       reviews: reviewRows.map((row) => ({
@@ -98,6 +169,20 @@ async function getDeskData() {
         bannedAt: iso(row.bannedAt),
         createdAt: iso(row.createdAt),
       })),
+      faculties: facultyRows.map((row) => ({
+        ...row,
+        tuitionCost: row.tuitionCost == null ? null : Number(row.tuitionCost),
+        minAdmissionGrade:
+          row.minAdmissionGrade == null ? null : Number(row.minAdmissionGrade),
+        budgetSeatsIndex:
+          row.budgetSeatsIndex == null ? null : Number(row.budgetSeatsIndex),
+        createdAt: iso(row.createdAt),
+        updatedAt: iso(row.updatedAt),
+        domainIds: (domainsByFaculty.get(row.id) || []).map((domain) => domain.id),
+        domains: domainsByFaculty.get(row.id) || [],
+        programs: programsByFaculty.get(row.id) || [],
+      })),
+      domains: domainRows,
     };
   } catch {
     /* Unreachable database — the desk shows its offline state. */
@@ -152,6 +237,8 @@ export default async function AdminPage() {
             reviews={data?.reviews ?? []}
             messages={data?.messages ?? []}
             users={data?.users ?? []}
+            faculties={data?.faculties ?? []}
+            domains={data?.domains ?? []}
             currentUserId={session?.user?.id || ''}
           />
         </div>

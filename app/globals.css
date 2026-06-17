@@ -84,6 +84,8 @@
   --sc-eyebrow: #306858;
   --sc-shadow: rgb(18 46 44 / 0.18);
   --sc-shadow-weak: rgb(18 46 44 / 0.07);
+  --sc-doodle-opacity: 0.17;
+  --sc-doodle-blend: multiply;
   --sc-doodle: url('/assets/bgWhite.jpg');
 }
 
@@ -98,6 +100,8 @@
   --sc-eyebrow: #78c8c8;
   --sc-shadow: rgb(2 12 12 / 0.6);
   --sc-shadow-weak: rgb(2 12 12 / 0.35);
+  --sc-doodle-opacity: 0.22;
+  --sc-doodle-blend: screen;
   --sc-doodle: url('/assets/bgDark.jpg');
 }
 
@@ -248,8 +252,8 @@
 }
 
 /* Theme-tied education-doodle texture (bgWhite.jpg / bgDark.jpg).
-   Kept faint and balanced across themes so light mode reads like a subtle
-   paper grain rather than a stray background image / fade. */
+   Tuned per theme so it reads like a deliberate paper grain instead of a
+   washed-out backdrop. */
 @utility texture-doodle {
   position: absolute;
   inset: 0;
@@ -257,13 +261,8 @@
   background-image: var(--sc-doodle);
   background-size: 540px auto;
   background-repeat: repeat;
-  opacity: 0.12;
-  mix-blend-mode: multiply;
-
-  [data-theme='dark'] & {
-    mix-blend-mode: screen;
-    opacity: 0.14;
-  }
+  opacity: var(--sc-doodle-opacity);
+  mix-blend-mode: var(--sc-doodle-blend);
 }
 
 /* Always-night variant for the fixed deep-teal CTA band. */
@@ -274,6 +273,6 @@
   background-image: url('/assets/bgDark.jpg');
   background-size: 540px auto;
   background-repeat: repeat;
-  opacity: 0.18;
+  opacity: 0.22;
   mix-blend-mode: screen;
 }

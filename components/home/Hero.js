@@ -11,12 +11,17 @@ const TRUST_POINTS = [
 const DEFAULT_HEADER_IMAGE = 'homeold.jpg';
 
 export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
+  const headerSrc =
+    typeof headerImage === 'string' && headerImage.startsWith('data:')
+      ? headerImage
+      : `/assets/${headerImage}`;
+
   return (
-    <section className="relative flex min-h-svh items-center overflow-hidden">
+    <section className="relative flex min-h-svh items-center overflow-hidden bg-bg">
       {/* The road ahead — the photo is settings-driven (admin "Imagine antet"),
           falling back to the default header image. */}
       <Image
-        src={`/assets/${headerImage}`}
+        src={headerSrc}
         alt=""
         fill
         priority
@@ -35,13 +40,6 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
       <div
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
-      />
-      {/* Seamless hand-off into the page background, theme-aware: fades the photo
-          + ink veil into the page bg (light paper in light mode, deep teal in
-          dark) so there is no stray dark band where the hero meets the page. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg via-bg/70 to-transparent"
       />
 
       <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />

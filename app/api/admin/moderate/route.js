@@ -1,16 +1,12 @@
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import { auth } from '../../../../lib/auth.js';
 import dbModule from '../../../../lib/db/index.js';
+import { jsonError, requireAdminSession } from '../../../../lib/admin.js';
 import { moderateSchema } from '../../../../lib/validate.js';
 
 const { db, schema } = dbModule;
 
 export const runtime = 'nodejs';
-
-function errorResponse(message, status) {
-  return NextResponse.json({ error: message }, { status });
-}
 
 async function updateById(table, idColumn, id, values) {
   const [updated] = await db
@@ -24,30 +20,24 @@ async function updateById(table, idColumn, id, values) {
 
 export async function POST(request) {
   if (!db) {
-    return errorResponse('Database unavailable', 503);
+    return jsonError('Baza de date nu este disponibilă', 503);
   }
 
-  const session = await auth();
-  if (!session?.user?.id) {
-    return errorResponse('Unauthorized', 401);
-  }
-  if (session.user.banned) {
-    return errorResponse('Banned users cannot modify content', 403);
-  }
-  if (session.user.role !== 'admin') {
-    return errorResponse('Forbidden', 403);
+  const { error } = await requireAdminSession();
+  if (error) {
+    return error;
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return errorResponse('Invalid JSON body', 400);
+    return jsonError('Corp JSON invalid', 400);
   }
 
   const parsed = moderateSchema.safeParse(body);
   if (!parsed.success) {
-    return errorResponse('Validation error', 400);
+    return jsonError('Date invalide', 400);
   }
 
   const { action, id } = parsed.data;
@@ -64,6 +54,13 @@ export async function POST(request) {
         hiddenAt: null,
       });
       break;
+    case 'delete_review':
+      updated = await db
+        .delete(schema.reviews)
+        .where(eq(schema.reviews.id, id))
+        .returning({ id: schema.reviews.id })
+        .then((rows) => rows[0] || null);
+      break;
     case 'hide_message':
       updated = await updateById(schema.messages, schema.messages.id, id, {
         hiddenAt: new Date(),
@@ -73,6 +70,13 @@ export async function POST(request) {
       updated = await updateById(schema.messages, schema.messages.id, id, {
         hiddenAt: null,
       });
+      break;
+    case 'delete_message':
+      updated = await db
+        .delete(schema.messages)
+        .where(eq(schema.messages.id, id))
+        .returning({ id: schema.messages.id })
+        .then((rows) => rows[0] || null);
       break;
     case 'ban_user':
       updated = await updateById(schema.users, schema.users.id, id, {
@@ -85,11 +89,11 @@ export async function POST(request) {
       });
       break;
     default:
-      return errorResponse('Validation error', 400);
+      return jsonError('Date invalide', 400);
   }
 
   if (!updated) {
-    return errorResponse('Not found', 404);
+    return jsonError('Negăsit', 404);
   }
 
   return NextResponse.json({ ok: true }, { status: 200 });

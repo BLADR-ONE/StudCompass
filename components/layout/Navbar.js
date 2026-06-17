@@ -23,16 +23,25 @@ function isActive(pathname, href) {
 export default function Navbar() {
   const pathname = usePathname();
   const { status, data: session } = useSession();
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() => pathname !== '/');
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isHome = pathname === '/';
   const authed = status === 'authenticated';
   const isAdmin = session?.user?.role === 'admin';
-  /* Kept v1 concept: glass-clear over the home hero, solid surface after. */
   const overHero = isHome && !scrolled && !menuOpen;
+  const headerShellClass = overHero
+    ? 'border-b border-transparent bg-transparent'
+    : isHome
+      ? 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md'
+      : 'border-b border-border bg-bg shadow-[0_1px_0_0_var(--sc-border)]';
 
   useEffect(() => {
+    if (!isHome) {
+      setScrolled(true);
+      return undefined;
+    }
+
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -44,7 +53,7 @@ export default function Navbar() {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [isHome]);
 
   /* Close the mobile menu on navigation and lock the page behind it. */
   useEffect(() => {
@@ -64,11 +73,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ${
-          overHero
-            ? 'border-b border-transparent bg-transparent'
-            : 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md'
-        }`}
+        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ${headerShellClass}`}
       >
         <nav className="wrap flex h-[4.5rem] items-center justify-between gap-4">
           <Brand inverse={overHero} />
@@ -103,13 +108,9 @@ export default function Navbar() {
                   href="/admin"
                   aria-current={isActive(pathname, '/admin') ? 'page' : undefined}
                   className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
-                    overHero
-                      ? 'text-white/80 hover:text-white'
-                      : 'text-text-muted hover:text-text'
-                  } ${
                     isActive(pathname, '/admin')
-                      ? `${overHero ? 'text-white' : 'text-text'} after:absolute after:-bottom-0.5 after:left-1/2 after:size-1.5 after:-translate-x-1/2 after:rounded-full after:bg-accent after:content-['']`
-                      : ''
+                      ? "text-orange-600 dark:text-orange-300 after:absolute after:-bottom-0.5 after:left-1/2 after:size-1.5 after:-translate-x-1/2 after:rounded-full after:bg-orange-500 after:content-[''] dark:after:bg-orange-400"
+                      : 'text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300'
                   }`}
                 >
                   Administrare
@@ -210,8 +211,8 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className={`block py-3 font-display text-4xl font-semibold tracking-tight transition-colors ${
                       isActive(pathname, '/admin')
-                        ? 'text-primary-strong dark:text-primary-soft'
-                        : 'text-text hover:text-primary-strong dark:hover:text-primary-soft'
+                        ? 'text-orange-600 dark:text-orange-300'
+                        : 'text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300'
                     }`}
                   >
                     Administrare

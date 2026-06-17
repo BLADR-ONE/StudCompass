@@ -34,10 +34,6 @@ export default async function AuthPage({ searchParams }) {
   return (
     <section className="relative overflow-hidden">
       <div aria-hidden="true" className="texture-doodle" />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-bg via-transparent to-bg"
-      />
 
       <div className="wrap relative py-12 sm:py-16">
         <div className="animate-pop mx-auto grid w-full max-w-4xl overflow-hidden rounded-[2.5rem] border border-border bg-surface-raised shadow-lift lg:grid-cols-[1fr_1.1fr]">

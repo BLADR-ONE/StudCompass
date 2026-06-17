@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { and, eq, exists, inArray, sql } from 'drizzle-orm';
+import { and, eq, exists, ilike, inArray, sql } from 'drizzle-orm';
 import dbModule from '../../lib/db/index.js';
 import FilterBar from '../../components/faculty/FilterBar.js';
 import FacultyCard from '../../components/faculty/FacultyCard.js';
@@ -11,7 +11,7 @@ const { db, schema } = dbModule;
 export const metadata = {
   title: 'Facultăți',
   description:
-    'Catalogul StudCompass: facultăți din toată România, cu recenzii de la studenți, costuri și date de admitere. Filtrează după oraș și domeniul de studiu.',
+    'Catalogul StudCompass: facultăți din toată România, cu recenzii de la studenți, costuri și date de admitere. Filtrează după oraș, domeniu și nume.',
 };
 
 function firstParam(value) {
@@ -28,6 +28,7 @@ function listParam(value) {
 function parseFilters(params) {
   return {
     city: firstParam(params.city) || '',
+    search: firstParam(params.search) || '',
     domains: listParam(params.domain),
     multiCampus: firstParam(params.multiCampus) === '1',
   };
@@ -45,6 +46,9 @@ async function getCatalog(filters) {
     }
     if (filters.multiCampus) {
       conditions.push(eq(schema.faculties.multiCampus, true));
+    }
+    if (filters.search.trim()) {
+      conditions.push(ilike(schema.faculties.name, `%${filters.search.trim()}%`));
     }
     if (filters.domains.length > 0) {
       conditions.push(
@@ -158,10 +162,6 @@ function ChapterHeader({ subtitle }) {
   return (
     <section className="relative overflow-hidden">
       <div aria-hidden="true" className="texture-doodle" />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-bg via-transparent to-bg"
-      />
       {/* Decorative compass rose anchored to the lower-right edge, clear of the
           navbar and the densest stretch of the doodle texture so it reads as an
           intentional flourish instead of clashing with the background. */}
@@ -230,8 +230,8 @@ function NoResults() {
           Nimic în această zonă a hărții.
         </h2>
         <p className="mt-3 text-pretty text-sm leading-relaxed text-text-muted">
-          Nicio facultate nu se potrivește cu filtrele alese. Lărgește puțin
-          căutarea — drumul bun e uneori cu un oraș mai încolo.
+          Nicio facultate nu se potrivește cu căutarea și filtrele alese.
+          Lărgește puțin căutarea — drumul bun e uneori cu un oraș mai încolo.
         </p>
         <div className="mt-7">
           <Button href="/facultati" variant="ghost">
@@ -251,7 +251,7 @@ export default async function FacultiesPage({ searchParams }) {
   return (
     <>
       <ChapterHeader
-        subtitle="Toate facultățile de pe hartă, cu recenzii sincere, costuri și date de admitere. Filtrează după oraș și domeniu — apoi pornește."
+        subtitle="Toate facultățile de pe hartă, cu recenzii sincere, costuri și date de admitere. Filtrează după oraș, domeniu și nume — apoi pornește."
       />
 
       <section className="pb-24 sm:pb-28">
@@ -262,6 +262,7 @@ export default async function FacultiesPage({ searchParams }) {
                 cities={catalog.cities}
                 domains={catalog.domains}
                 city={filters.city}
+                search={filters.search}
                 selectedDomains={filters.domains}
                 multiCampus={filters.multiCampus}
               />
