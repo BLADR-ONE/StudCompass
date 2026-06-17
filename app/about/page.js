@@ -105,7 +105,7 @@ export default async function AboutPage() {
       {/* ----------------------------------------------------------------
           Mission — what the project is and who it's for
       ---------------------------------------------------------------- */}
-      <section className="pb-20">
+      <section className="pb-24 pt-12 sm:pb-28 sm:pt-14">
         <div className="wrap">
           <div className="max-w-2xl">
             <p className="eyebrow">Misiunea</p>
