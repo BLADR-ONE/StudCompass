@@ -3,10 +3,12 @@ import dbModule from '../../../../lib/db/index.js';
 import { siteSettingsSchema } from '../../../../lib/validate.js';
 import { jsonError, requireAdminSession } from '../../../../lib/admin.js';
 import {
-  HEADER_IMAGE_HISTORY_LIMIT,
   getSiteSettingsDetails,
-  normalizeHeaderImage,
 } from '../../../../lib/content.js';
+import {
+  HEADER_IMAGE_HISTORY_LIMIT,
+  normalizeHeaderImage,
+} from '../../../../lib/site-constants.js';
 
 const { db, schema } = dbModule;
 

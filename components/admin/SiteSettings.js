@@ -12,7 +12,10 @@ import {
   DeskEmpty,
   ErrorBanner,
 } from './DeskBits.js';
-import { DEFAULT_HEADER_IMAGE } from '../../lib/content.js';
+import {
+  DEFAULT_HEADER_IMAGE,
+  HEADER_IMAGE_HISTORY_LIMIT,
+} from '../../lib/site-constants.js';
 
 /* The shop sign over each settings room. Roomy on purpose — future
    settings get their own <SettingsSection> without disturbing these two. */
@@ -531,8 +534,6 @@ const HEADER_CHOICES = [
   { file: 'home.jpg', label: 'Acasă' },
   { file: 'maincover.jpg', label: 'Panoramă' },
 ];
-
-const HEADER_IMAGE_HISTORY_LIMIT = 4;
 
 function isDataImage(value) {
   return typeof value === 'string' && value.startsWith('data:image/');

@@ -23,25 +23,18 @@ function isActive(pathname, href) {
 export default function Navbar() {
   const pathname = usePathname();
   const { status, data: session } = useSession();
-  const [scrolled, setScrolled] = useState(() => pathname !== '/');
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isHome = pathname === '/';
   const authed = status === 'authenticated';
   const isAdmin = session?.user?.role === 'admin';
-  const overHero = isHome && !scrolled && !menuOpen;
+  const overHero = !scrolled && !menuOpen;
   const headerShellClass = overHero
     ? 'border-b border-transparent bg-transparent'
-    : isHome
-      ? 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md'
-      : 'border-b border-border bg-bg shadow-[0_1px_0_0_var(--sc-border)]';
+    : 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md';
 
   useEffect(() => {
-    if (!isHome) {
-      setScrolled(true);
-      return undefined;
-    }
-
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -53,7 +46,7 @@ export default function Navbar() {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
     };
-  }, [isHome]);
+  }, []);
 
   /* Close the mobile menu on navigation and lock the page behind it. */
   useEffect(() => {
