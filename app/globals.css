@@ -84,7 +84,7 @@
   --sc-eyebrow: #306858;
   --sc-shadow: rgb(18 46 44 / 0.18);
   --sc-shadow-weak: rgb(18 46 44 / 0.07);
-  --sc-doodle-opacity: 0.28;
+  --sc-doodle-opacity: 0.36;
   --sc-doodle-blend: multiply;
   --sc-doodle: url('/assets/bgWhite.jpg');
   --sc-nav-vignette: rgb(24 56 56 / 0.38);
@@ -101,7 +101,7 @@
   --sc-eyebrow: #78c8c8;
   --sc-shadow: rgb(2 12 12 / 0.6);
   --sc-shadow-weak: rgb(2 12 12 / 0.35);
-  --sc-doodle-opacity: 0.45;
+  --sc-doodle-opacity: 0.62;
   --sc-doodle-blend: screen;
   --sc-doodle: url('/assets/bgDark.jpg');
   --sc-nav-vignette: rgb(2 12 12 / 0.55);

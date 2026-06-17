@@ -2,9 +2,10 @@ import { CompassRose, GitHubIcon } from '../../components/layout/Brand.js';
 import ContactForm from '../../components/about/ContactForm.js';
 import DeveloperHero from '../../components/about/DeveloperHero.js';
 import CreditCard from '../../components/about/CreditCard.js';
+import { getSiteSettings } from '../../lib/content.js';
 
 export const metadata = {
-  title: 'Despre noi',
+  title: 'Despre mine',
   description:
     'StudCompass este busola pentru elevii și studenții din România care vor să compare facultăți, să citească recenzii și să-și clarifice traseul academic și profesional.',
 };
@@ -14,7 +15,7 @@ const OWNER_HANDLE = 'BLADR-ONE';
 const OWNER_PROFILE_URL = `https://github.com/${OWNER_HANDLE}`;
 const OWNER_FALLBACK = {
   name: 'Rafael-Matei Ureche',
-  bio: 'Creatorul unic al StudCompass, construit din dorința de a face alegerea unei facultăți mai clară și mai puțin haotică.',
+  bio: 'Creatorul StudCompass, construit din dorința de a face alegerea unei facultăți mai clară și mai puțin haotică.',
   avatar_url: 'https://github.com/BLADR-ONE.png',
   public_repos: 0,
   followers: 0,
@@ -82,14 +83,17 @@ function HeartIcon({ className = '' }) {
 }
 
 export default async function AboutPage() {
-  const owner = await getOwnerProfile();
+  const [owner, settings] = await Promise.all([
+    getOwnerProfile(),
+    getSiteSettings(),
+  ]);
 
   return (
     <>
       {/* ----------------------------------------------------------------
           Lead — the featured developer banner (the page's opening)
       ---------------------------------------------------------------- */}
-      <DeveloperHero owner={owner} eyebrow="Despre noi" />
+      <DeveloperHero owner={owner} eyebrow="Despre noi" headerImage={settings.headerImage} />
 
       {/* ----------------------------------------------------------------
           Mission — what the project is and who it's for

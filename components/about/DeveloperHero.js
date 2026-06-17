@@ -1,31 +1,55 @@
+import Image from 'next/image';
 import { CompassRose, GitHubIcon } from '../layout/Brand.js';
+
+const DEFAULT_HEADER_IMAGE = 'homeold.jpg';
 
 /* Featured developer banner — the page lead. A full-width branded panel
    introducing the single creator behind StudCompass, with live GitHub
-   stats and a clear link to the profile. Built to read as a proper
-   intro/banner, not a small card. */
-export default function DeveloperHero({ owner, eyebrow = 'Despre noi' }) {
+   stats and a clear link to the profile. Sits over the same full-bleed
+   header image used on the home hero so the transparent navbar blends
+   seamlessly at the top of /about. */
+export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerImage = DEFAULT_HEADER_IMAGE }) {
   const handle = owner.html_url.replace('https://github.com/', '');
+  const headerSrc =
+    typeof headerImage === 'string' && headerImage.startsWith('data:')
+      ? headerImage
+      : `/assets/${headerImage}`;
 
   return (
-    <section className="relative overflow-hidden pb-20 pt-28 sm:pt-32">
-      {/* Soft branded wash behind the lead, anchored to the night palette
-          on the right so the compass rose has somewhere to live. */}
+    <section className="relative overflow-hidden pb-24 pt-28 sm:pt-36">
+      {/* Full-bleed background photo — same asset/logic as home Hero.
+          Sits at z-0, content is relatively positioned above it. */}
+      <Image
+        src={headerSrc}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[center_62%]"
+      />
+
+      {/* Ink veil — heavier on the text side, mirrors home Hero overlay
+          so the transparent navbar's white text stays legible. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary-soft/[0.10] via-transparent to-transparent dark:from-primary-soft/[0.06]"
+        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/65 to-ink/25"
+      />
+      {/* Extra top fade for the navbar blending strip */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
       />
 
       <div className="wrap relative">
         <p
-          className="eyebrow animate-rise"
+          className="eyebrow animate-rise !text-mint"
           style={{ animationDelay: '60ms' }}
         >
           {eyebrow}
         </p>
 
         <h1
-          className="animate-rise mt-5 max-w-3xl text-balance font-display text-[clamp(2.4rem,5.5vw,4rem)] font-semibold leading-[1.05]"
+          className="animate-rise mt-5 max-w-3xl text-balance font-display text-[clamp(2.4rem,5.5vw,4rem)] font-semibold leading-[1.05] text-white"
           style={{ animationDelay: '140ms' }}
         >
           StudCompass este desenat de{' '}
@@ -33,7 +57,7 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi' }) {
         </h1>
 
         <p
-          className="animate-rise mt-5 max-w-2xl text-pretty text-base leading-relaxed text-text-muted sm:text-lg"
+          className="animate-rise mt-5 max-w-2xl text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
           style={{ animationDelay: '220ms' }}
         >
           O busolă pentru elevii și studenții din România care vor să compare
@@ -42,53 +66,54 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi' }) {
         </p>
 
         {/* The featured panel. Avatar on the left, identity + stats + CTA on
-            the right; collapses to a stacked layout on small screens. */}
+            the right; collapses to a stacked layout on small screens.
+            Night-glass treatment so it reads over the dark hero photo. */}
         <div
-          className="animate-rise mt-12 overflow-hidden rounded-[2.25rem] border border-border bg-surface-raised shadow-card transition-all duration-300 hover:shadow-lift"
+          className="animate-rise mt-12 overflow-hidden rounded-[2.25rem] border border-mint/20 bg-ink/60 shadow-card backdrop-blur-md transition-all duration-300 hover:border-mint/35 hover:shadow-lift"
           style={{ animationDelay: '320ms' }}
         >
           <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12">
-            <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 hidden size-80 text-primary-soft/10 lg:block" />
+            <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/10 lg:block" />
 
             {/* Avatar, framed like a portrait coordinate. */}
             <div className="relative shrink-0">
               <div
                 aria-hidden="true"
-                className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-primary-soft/30 to-accent/20 blur-md"
+                className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-primary-soft/40 to-accent/25 blur-md"
               />
               <img
                 src={owner.avatar_url}
                 alt={owner.name}
-                className="relative size-32 rounded-[1.6rem] border border-border object-cover shadow-sm sm:size-40"
+                className="relative size-32 rounded-[1.6rem] border border-mint/25 object-cover shadow-sm sm:size-40"
                 loading="eager"
               />
-              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-border bg-bg px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-(--sc-eyebrow) shadow-sm">
-                creator unic
+              <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-mint/30 bg-ink/80 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-mint/80 shadow-sm">
+                creator
               </span>
             </div>
 
             <div className="relative min-w-0">
-              <h2 className="font-display text-3xl font-semibold leading-tight sm:text-4xl">
+              <h2 className="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl">
                 {owner.name}
               </h2>
 
-              <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-text-muted sm:text-[1.05rem]">
+              <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-mint/80 sm:text-[1.05rem]">
                 {owner.bio}
               </p>
 
               {/* Live coordinates from GitHub. */}
               <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-flex items-baseline gap-1.5 rounded-2xl border border-border bg-surface px-4 py-2.5">
-                  <span className="font-display text-lg font-semibold text-primary-strong dark:text-primary-soft">
+                <span className="inline-flex items-baseline gap-1.5 rounded-2xl border border-mint/20 bg-white/[0.06] px-4 py-2.5">
+                  <span className="font-display text-lg font-semibold text-primary-soft">
                     {owner.public_repos}
                   </span>
-                  <span className="text-sm text-text-muted">repo-uri publice</span>
+                  <span className="text-sm text-mint/70">repo-uri publice</span>
                 </span>
-                <span className="inline-flex items-baseline gap-1.5 rounded-2xl border border-border bg-surface px-4 py-2.5">
-                  <span className="font-display text-lg font-semibold text-primary-strong dark:text-primary-soft">
+                <span className="inline-flex items-baseline gap-1.5 rounded-2xl border border-mint/20 bg-white/[0.06] px-4 py-2.5">
+                  <span className="font-display text-lg font-semibold text-primary-soft">
                     {owner.followers}
                   </span>
-                  <span className="text-sm text-text-muted">urmăritori</span>
+                  <span className="text-sm text-mint/70">urmăritori</span>
                 </span>
               </div>
 
