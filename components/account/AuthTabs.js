@@ -387,7 +387,7 @@ export default function AuthTabs({ initialError = '', initialEmail = '' }) {
           role="alert"
           className={`mt-5 rounded-xl border px-4 py-3 text-sm font-medium ${
             banner.tone === 'error'
-              ? 'border-rust/30 bg-rust/10 text-rust dark:text-[#e09478]'
+              ? 'border-rust/30 bg-rust/10 text-rust dark:text-rust-soft'
               : 'border-primary/30 bg-primary/10 text-primary-strong dark:border-primary-soft/30 dark:bg-primary-soft/10 dark:text-primary-soft'
           }`}
         >

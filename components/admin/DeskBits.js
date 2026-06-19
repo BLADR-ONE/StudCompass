@@ -15,24 +15,10 @@ export function deskDate(value) {
   return Number.isNaN(date.getTime()) ? '' : dateFormatter.format(date);
 }
 
-/* Initial-letter mark, same as the traveler avatars on the public pages. */
-export function AuthorMark({ name, dimmed = false }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`wonky flex size-10 flex-none items-center justify-center rounded-full bg-primary/10 font-display text-lg font-semibold italic text-primary-strong dark:bg-primary-soft/10 dark:text-primary-soft ${
-        dimmed ? 'opacity-55' : ''
-      }`}
-    >
-      {(name || '?').charAt(0).toUpperCase()}
-    </span>
-  );
-}
-
 const PILL_TONES = {
   primary:
     'border-primary/30 text-primary-strong hover:bg-primary/10 dark:border-primary-soft/30 dark:text-primary-soft dark:hover:bg-primary-soft/10',
-  rust: 'border-rust/35 text-rust hover:bg-rust/10 dark:border-[#e09478]/35 dark:text-[#e09478] dark:hover:bg-rust/25',
+  rust: 'border-rust/35 text-rust hover:bg-rust/10 dark:border-rust-soft/35 dark:text-rust-soft dark:hover:bg-rust/25',
 };
 
 /* Compact row action. Rust tone is reserved for destructive acts
@@ -80,7 +66,7 @@ export function ErrorBanner({ children }) {
   return (
     <p
       role="alert"
-      className="mb-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-[#e09478]"
+      className="mb-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-rust-soft"
     >
       {children}
     </p>

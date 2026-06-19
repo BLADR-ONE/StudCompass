@@ -7,7 +7,7 @@ export default function CtaBand() {
     <section className="pb-24 pt-4 sm:pb-28">
       <div className="wrap">
         {/* Always the night map, in both themes — a deliberate full-stop. */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-[#1c4a44] to-[#0c2426] px-6 py-16 text-center sm:px-12 sm:py-20">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-16 text-center sm:px-12 sm:py-20">
           <div aria-hidden="true" className="texture-doodle-night" />
           <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 -top-28 size-96 text-mint/10" />
           <CompassRose className="pointer-events-none absolute -bottom-32 -left-24 size-80 text-mint/[0.07]" />

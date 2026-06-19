@@ -1,14 +1,4 @@
-/* Initial-letter mark, in the same hand as the desk + faculty avatars. */
-function InitialMark({ name }) {
-  return (
-    <span
-      aria-hidden="true"
-      className="wonky flex size-11 flex-none items-center justify-center rounded-full border border-border bg-primary/10 font-display text-lg font-semibold italic text-primary-strong dark:bg-primary-soft/10 dark:text-primary-soft"
-    >
-      {(name || '?').charAt(0).toUpperCase()}
-    </span>
-  );
-}
+import InitialAvatar from '../ui/InitialAvatar.js';
 
 /* The community's voice. The editorial pull-quote is the team's own line and
    always stands; the offset cards are real testimonials served from the
@@ -67,7 +57,7 @@ export default function TestimonialBand({ testimonials = [] }) {
                     </p>
                   </blockquote>
                   <figcaption className="mt-5 flex items-center gap-3">
-                    <InitialMark name={item.authorName} />
+                    <InitialAvatar name={item.authorName} size="md" />
                     <div>
                       <p className="text-sm font-semibold text-text">
                         {item.authorName}

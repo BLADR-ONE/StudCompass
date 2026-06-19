@@ -3,15 +3,11 @@
 import { useCallback, useEffect, useId, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
+import InitialAvatar from '../ui/InitialAvatar.js';
 import Input from '../ui/Input.js';
 import Modal from '../ui/Modal.js';
 import Spinner from '../ui/Spinner.js';
-import {
-  ActionPill,
-  AuthorMark,
-  DeskEmpty,
-  ErrorBanner,
-} from './DeskBits.js';
+import { ActionPill, DeskEmpty, ErrorBanner } from './DeskBits.js';
 import {
   DEFAULT_HEADER_IMAGE,
   HEADER_IMAGE_HISTORY_LIMIT,
@@ -187,7 +183,7 @@ function TestimonialRow({
         </button>
       </div>
 
-      <AuthorMark name={item.authorName} dimmed={!published} />
+      <InitialAvatar name={item.authorName} dimmed={!published} size="sm" />
 
       <div className={`min-w-0 flex-1 ${published ? '' : 'opacity-55'}`}>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -533,7 +529,7 @@ function TestimonialsManager() {
         {deleteError && (
           <p
             role="alert"
-            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-[#e09478]"
+            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-rust-soft"
           >
             {deleteError}
           </p>

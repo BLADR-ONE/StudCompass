@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Brand from './Brand.js';
 import ThemeToggle from './ThemeToggle.js';
+import { lock, unlock } from '../../lib/scroll-lock.js';
 
 const LINKS = [
   { href: '/', label: 'Acasă' },
@@ -20,6 +21,10 @@ function isActive(pathname, href) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function matchesRoute(pathname, href) {
+  return isActive(pathname, href);
+}
+
 export default function Navbar() {
   const pathname = usePathname();
   const { status, data: session } = useSession();
@@ -29,7 +34,9 @@ export default function Navbar() {
   const authed = status === 'authenticated';
   const isAdmin = session?.user?.role === 'admin';
   const overHero = !scrolled && !menuOpen;
-  const showSpacer = !['/', '/admin', '/about', '/facultati'].includes(pathname);
+  const showSpacer = !['/', '/admin', '/about', '/facultati'].some((route) =>
+    matchesRoute(pathname, route),
+  );
   const headerShellClass = overHero
     ? 'border-b border-transparent bg-transparent'
     : 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md';
@@ -54,9 +61,13 @@ export default function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    if (!menuOpen) {
+      return undefined;
+    }
+
+    lock();
     return () => {
-      document.body.style.overflow = '';
+      unlock();
     };
   }, [menuOpen]);
 
@@ -68,7 +79,10 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ${headerShellClass}`}
       >
-        <nav className="wrap flex h-[4.5rem] items-center justify-between gap-4">
+        <nav
+          aria-label="Navigare principală"
+          className="wrap flex h-[4.5rem] items-center justify-between gap-4"
+        >
           <Brand inverse={overHero} />
 
           {/* Desktop links */}
@@ -173,7 +187,7 @@ export default function Navbar() {
           id="mobile-menu"
           className="fixed inset-0 z-40 flex flex-col bg-bg pt-[5.5rem] md:hidden"
         >
-          <nav className="wrap flex flex-1 flex-col">
+          <nav aria-label="Meniu mobil" className="wrap flex flex-1 flex-col">
             <ul className="flex flex-col gap-1 border-t border-border pt-6">
               {LINKS.map(({ href, label }, index) => (
                 <li

@@ -448,7 +448,7 @@ export default function FacultiesList({
         {deleteError && (
           <p
             role="alert"
-            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-[#e09478]"
+            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-rust-soft"
           >
             {deleteError}
           </p>

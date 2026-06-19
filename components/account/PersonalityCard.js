@@ -105,7 +105,7 @@ function formatDate(value) {
 
 function EmptyState() {
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-[#1c4a44] to-[#0c2426] p-8 text-center shadow-card sm:p-10">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-8 text-center shadow-card sm:p-10">
       <div aria-hidden="true" className="texture-doodle-night" />
       <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 size-72 text-mint/10" />
 

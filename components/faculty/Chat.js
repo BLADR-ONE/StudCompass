@@ -229,7 +229,7 @@ export default function Chat({ facultySlug }) {
             aria-live="polite"
             className={`mt-2.5 text-[11px] leading-relaxed ${
               sendError
-                ? 'font-medium text-rust dark:text-[#e09478]'
+                ? 'font-medium text-rust dark:text-rust-soft'
                 : 'text-text-muted'
             }`}
           >

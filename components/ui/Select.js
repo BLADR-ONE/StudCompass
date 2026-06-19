@@ -56,7 +56,7 @@ export default function Select({
         <p
           id={messageId}
           className={`mt-1.5 text-xs ${
-            error ? 'font-medium text-rust dark:text-[#e09478]' : 'text-text-muted'
+            error ? 'font-medium text-rust dark:text-rust-soft' : 'text-text-muted'
           }`}
         >
           {error || hint}

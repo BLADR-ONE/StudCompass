@@ -148,7 +148,7 @@ export default async function AboutPage() {
               aria-hidden="true"
               className="absolute -top-7 left-[16%] right-[16%] hidden border-t-2 border-dashed border-primary-soft/40 md:block"
             />
-            {ROUTE_FACTS.map(({ label, value, detail }) => (
+            {ROUTE_FACTS.map(({ label, value }) => (
               <li
                 key={label}
                 className="group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift"
@@ -163,9 +163,6 @@ export default async function AboutPage() {
                 <p className="mt-3 font-display text-lg font-semibold leading-snug">
                   {value}
                 </p>
-                {detail && (
-                  <p className="mt-1.5 text-sm text-text-muted">{detail}</p>
-                )}
               </li>
             ))}
           </ol>
@@ -177,7 +174,7 @@ export default async function AboutPage() {
       ---------------------------------------------------------------- */}
       <section id="contact" className="scroll-mt-24 pb-24 sm:pb-28">
         <div className="wrap">
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-[#1c4a44] to-[#0c2426] px-6 py-14 sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-14 sm:px-12 sm:py-16">
             <div aria-hidden="true" className="texture-doodle-night" />
             <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 -top-28 size-96 text-mint/10" />
             <CompassRose className="pointer-events-none absolute -bottom-32 -left-24 size-80 text-mint/[0.07]" />

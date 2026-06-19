@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Input from '../ui/Input.js';
 import Select from '../ui/Select.js';
@@ -19,15 +19,34 @@ export default function FilterBar({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [searchValue, setSearchValue] = useState(search);
+  const searchTimer = useRef(null);
 
   useEffect(() => {
     setSearchValue(search);
+    clearSearchTimer();
   }, [search]);
+
+  useEffect(
+    () => () => {
+      if (searchTimer.current) {
+        clearTimeout(searchTimer.current);
+      }
+    },
+    [],
+  );
 
   const hasFilters =
     Boolean(city) || selectedDomains.length > 0 || multiCampus || search.trim();
 
+  function clearSearchTimer() {
+    if (searchTimer.current) {
+      clearTimeout(searchTimer.current);
+      searchTimer.current = null;
+    }
+  }
+
   const apply = (next) => {
+    clearSearchTimer();
     const params = new URLSearchParams();
     if (next.search?.trim()) {
       params.set('search', next.search.trim());
@@ -52,12 +71,15 @@ export default function FilterBar({
 
   const setSearch = (value) => {
     setSearchValue(value);
-    apply({
-      search: value,
-      city,
-      domains: selectedDomains,
-      multiCampus,
-    });
+    clearSearchTimer();
+    searchTimer.current = setTimeout(() => {
+      apply({
+        search: value,
+        city,
+        domains: selectedDomains,
+        multiCampus,
+      });
+    }, 350);
   };
 
   const setCity = (value) =>
@@ -88,6 +110,7 @@ export default function FilterBar({
 
   const reset = () => {
     setSearchValue('');
+    clearSearchTimer();
     apply({ search: '', city: '', domains: [], multiCampus: false });
   };
 
@@ -155,13 +178,29 @@ export default function FilterBar({
                         : 'border-border bg-surface text-text-muted hover:border-primary-soft/60 hover:text-text'
                     }`}
                   >
-                    <span
-                      aria-hidden="true"
-                      className={`size-1.5 rotate-45 transition-colors ${
-                        active ? 'bg-accent' : 'bg-border'
-                      }`}
-                    />
+                    {active ? (
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        aria-hidden="true"
+                        className="size-3.5 flex-none text-current"
+                      >
+                        <path
+                          d="m3.5 8.5 3 3 6-6"
+                          stroke="currentColor"
+                          strokeWidth="1.75"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        aria-hidden="true"
+                        className="size-1.5 rotate-45 bg-border transition-colors"
+                      />
+                    )}
                     {name}
+                    {active && <span className="sr-only"> selectat</span>}
                   </button>
                 );
               })}

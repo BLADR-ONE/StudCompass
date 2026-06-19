@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { auth } from '../../../lib/auth.js';
 import dbModule from '../../../lib/db/index.js';
 import Badge from '../../../components/ui/Badge.js';
-import { CompassRose } from '../../../components/layout/Brand.js';
+import ChapterHeader from '../../../components/layout/ChapterHeader.js';
 import ProfileCard from '../../../components/account/ProfileCard.js';
 import PreferencesCard from '../../../components/account/PreferencesCard.js';
 import PersonalityCard from '../../../components/account/PersonalityCard.js';
@@ -123,38 +123,19 @@ export default async function AccountPage() {
 
   return (
     <>
-      {/* Chapter header */}
-      <section className="relative overflow-hidden">
-        <div aria-hidden="true" className="texture-doodle" />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-bg via-transparent to-bg"
-        />
-        <CompassRose className="pointer-events-none absolute -right-28 -top-24 hidden size-[22rem] text-primary/[0.08] lg:block dark:text-primary-soft/10" />
-
-        <div className="wrap relative pb-10 pt-14 sm:pt-20">
-          <p className="eyebrow animate-rise" style={{ animationDelay: '60ms' }}>
-            Jurnal de călătorie
-          </p>
-          <h1
-            className="animate-rise mt-5 max-w-2xl text-balance font-display text-4xl font-semibold leading-[1.06] sm:text-5xl"
-            style={{ animationDelay: '160ms' }}
-          >
+      <ChapterHeader
+        eyebrow="Jurnal de călătorie"
+        title={
+          <>
             Carnetul tău de{' '}
             <em className="wonky italic text-primary-strong dark:text-primary-soft">
               drum
             </em>
             .
-          </h1>
-          <p
-            className="animate-rise mt-5 max-w-xl text-pretty leading-relaxed text-text-muted sm:text-lg"
-            style={{ animationDelay: '280ms' }}
-          >
-            Numele tău, direcțiile preferate și busola interioară — tot ce ai
-            descoperit până acum, într-un singur loc.
-          </p>
-        </div>
-      </section>
+          </>
+        }
+        subtitle="Numele tău, direcțiile preferate și busola interioară — tot ce ai descoperit până acum, într-un singur loc."
+      />
 
       <section className="pb-24 sm:pb-28">
         <div className="wrap">

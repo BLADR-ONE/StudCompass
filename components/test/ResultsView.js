@@ -39,7 +39,7 @@ export default function ResultsView({ scores }) {
   return (
     <section className="animate-pop overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-lift">
       {/* Night-map header: the moment the needle settles. */}
-      <header className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-[#1c4a44] to-[#0c2426] p-7 sm:p-10">
+      <header className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-7 sm:p-10">
         <div aria-hidden="true" className="texture-doodle-night" />
         <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 size-80 text-mint/10" />
 

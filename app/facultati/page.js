@@ -5,6 +5,7 @@ import FilterBar from '../../components/faculty/FilterBar.js';
 import FacultyCard from '../../components/faculty/FacultyCard.js';
 import Button from '../../components/ui/Button.js';
 import { CompassRose } from '../../components/layout/Brand.js';
+import ChapterHeader from '../../components/layout/ChapterHeader.js';
 
 const { db, schema } = dbModule;
 
@@ -158,43 +159,6 @@ async function getCatalog(filters) {
   }
 }
 
-function ChapterHeader({ subtitle }) {
-  return (
-    <section className="relative overflow-hidden bg-bg">
-      <div aria-hidden="true" className="texture-doodle" />
-      {/* Decorative compass rose anchored to the lower-right edge, kept faint
-          so it reads as a background flourish instead of competing with the
-          header copy. */}
-      <CompassRose className="pointer-events-none absolute -bottom-24 -right-24 hidden size-[22rem] text-primary/[0.08] dark:text-primary-soft/10 lg:block" />
-
-      <div className="wrap relative pb-16 pt-28 sm:pb-20 sm:pt-36">
-        <p
-          className="eyebrow animate-rise"
-          style={{ animationDelay: '60ms' }}
-        >
-          Catalogul facultăților
-        </p>
-        <h1
-          className="animate-rise mt-5 max-w-2xl text-balance font-display text-4xl font-semibold leading-[1.06] sm:text-5xl"
-          style={{ animationDelay: '160ms' }}
-        >
-          Alege-ți{' '}
-          <em className="wonky italic text-primary-strong dark:text-primary-soft">
-            punctul de plecare
-          </em>
-          .
-        </h1>
-        <p
-          className="animate-rise mt-5 max-w-xl text-pretty leading-relaxed text-text-muted sm:text-lg"
-          style={{ animationDelay: '280ms' }}
-        >
-          {subtitle}
-        </p>
-      </div>
-    </section>
-  );
-}
-
 function OfflineState() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
@@ -254,7 +218,18 @@ export default async function FacultiesPage({ searchParams }) {
   return (
     <>
       <ChapterHeader
+        eyebrow="Catalogul facultăților"
+        title={
+          <>
+            Alege-ți{' '}
+            <em className="wonky italic text-primary-strong dark:text-primary-soft">
+              punctul de plecare
+            </em>
+            .
+          </>
+        }
         subtitle="Toate facultățile de pe hartă, cu recenzii sincere, costuri și date de admitere. Filtrează după oraș, domeniu și nume — apoi pornește."
+        heroMode
       />
 
       <section className="pb-24 pt-12 sm:pb-28 sm:pt-14">

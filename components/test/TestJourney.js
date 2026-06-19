@@ -464,7 +464,7 @@ export default function TestJourney() {
           {submitError && (
             <p
               role="alert"
-              className="mt-6 rounded-2xl border border-rust/40 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-[#e09478]"
+              className="mt-6 rounded-2xl border border-rust/40 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-rust-soft"
             >
               {submitError}
             </p>

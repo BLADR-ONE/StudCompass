@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
+import { lock, unlock } from '../../lib/scroll-lock.js';
 
 export default function Modal({
   open,
@@ -11,6 +12,8 @@ export default function Modal({
   footer,
   className = '',
 }) {
+  const titleId = useId();
+
   useEffect(() => {
     if (!open) {
       return undefined;
@@ -23,12 +26,11 @@ export default function Modal({
     };
 
     document.addEventListener('keydown', onKeyDown);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    lock();
 
     return () => {
       document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = previousOverflow;
+      unlock();
     };
   }, [open, onClose]);
 
@@ -46,12 +48,15 @@ export default function Modal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={typeof title === 'string' ? title : undefined}
+        aria-labelledby={title ? titleId : undefined}
         className={`animate-pop relative w-full max-w-lg rounded-3xl border border-border bg-surface-raised p-6 shadow-lift sm:p-7 ${className}`}
       >
         <div className="flex items-start justify-between gap-4">
           {title && (
-            <h3 className="font-display text-xl font-semibold text-text">
+            <h3
+              id={titleId}
+              className="font-display text-xl font-semibold text-text"
+            >
               {title}
             </h3>
           )}

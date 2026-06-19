@@ -38,7 +38,7 @@ export default async function AuthPage({ searchParams }) {
       <div className="wrap relative py-12 sm:py-16">
         <div className="animate-pop mx-auto grid w-full max-w-4xl overflow-hidden rounded-[2.5rem] border border-border bg-surface-raised shadow-lift lg:grid-cols-[1fr_1.1fr]">
           {/* Left page: always the night map, in both themes. */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-[#1c4a44] to-[#0c2426] p-8 sm:p-10">
+          <div className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-8 sm:p-10">
             <div aria-hidden="true" className="texture-doodle-night" />
             <CompassRose className="animate-spin-slow pointer-events-none absolute -left-24 -top-24 size-72 text-mint/10" />
             <CompassRose className="pointer-events-none absolute -bottom-28 -right-20 size-64 text-mint/[0.07]" />

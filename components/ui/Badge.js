@@ -6,7 +6,7 @@ const TONES = {
     'border-accent/30 bg-accent/10 text-accent-strong dark:text-[#f8a060]',
   highlight:
     'border-highlight/40 bg-highlight/15 text-[#8a5d10] dark:text-highlight',
-  destructive: 'border-rust/30 bg-rust/10 text-rust dark:text-[#e09478]',
+  destructive: 'border-rust/30 bg-rust/10 text-rust dark:text-rust-soft',
 };
 
 export default function Badge({

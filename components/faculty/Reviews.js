@@ -179,7 +179,7 @@ export default function Reviews({ facultySlug }) {
                 aria-live="polite"
                 className={`text-xs font-medium ${
                   formError
-                    ? 'text-rust dark:text-[#e09478]'
+                    ? 'text-rust dark:text-rust-soft'
                     : 'text-primary-strong dark:text-primary-soft'
                 }`}
               >

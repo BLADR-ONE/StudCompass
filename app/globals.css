@@ -115,6 +115,9 @@
   --color-text: var(--sc-text);
   --color-text-muted: var(--sc-text-muted);
   --color-border: var(--sc-border);
+  --color-rust-soft: #e09478;
+  --color-night-mid: #1c4a44;
+  --color-night-deep: #0c2426;
 
   --font-sans:
     var(--font-schibsted), ui-sans-serif, system-ui, 'Segoe UI', sans-serif;

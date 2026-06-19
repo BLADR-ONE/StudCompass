@@ -54,7 +54,7 @@ export default async function VerifyPage({ searchParams }) {
   const copy = statusCopy(result);
 
   return (
-    <main className="wrap py-16 sm:py-24">
+    <section className="wrap py-16 sm:py-24">
       <section className="mx-auto max-w-xl rounded-[2rem] border border-border bg-surface-raised p-8 shadow-card sm:p-10">
         <p className="eyebrow">Verificare email</p>
         <h1 className="mt-4 font-display text-3xl font-semibold text-text">
@@ -66,10 +66,10 @@ export default async function VerifyPage({ searchParams }) {
             href="/account/auth"
             className="inline-flex rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-strong"
           >
-            Înapoi la autentificare
+          Înapoi la autentificare
           </Link>
         </div>
       </section>
-    </main>
+    </section>
   );
 }

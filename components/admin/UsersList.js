@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
+import InitialAvatar from '../ui/InitialAvatar.js';
 import Input from '../ui/Input.js';
 import Modal from '../ui/Modal.js';
 import {
   ActionPill,
-  AuthorMark,
   DeskEmpty,
   ErrorBanner,
   deskDate,
@@ -298,7 +298,7 @@ export default function UsersList({ items: initialItems, currentUserId }) {
               >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="flex min-w-0 flex-1 gap-3">
-                    <AuthorMark name={userName} dimmed={banned} />
+                    <InitialAvatar name={userName} dimmed={banned} size="sm" />
 
                     <div className={`min-w-0 flex-1 ${banned ? 'opacity-55' : ''}`}>
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -426,7 +426,7 @@ export default function UsersList({ items: initialItems, currentUserId }) {
         {modalError && (
           <p
             role="alert"
-            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-[#e09478]"
+            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-rust-soft"
           >
             {modalError}
           </p>
@@ -458,7 +458,7 @@ export default function UsersList({ items: initialItems, currentUserId }) {
         {deleteError && (
           <p
             role="alert"
-            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-[#e09478]"
+            className="mt-4 rounded-xl border border-rust/30 bg-rust/10 px-4 py-3 text-sm font-medium text-rust dark:text-rust-soft"
           >
             {deleteError}
           </p>
