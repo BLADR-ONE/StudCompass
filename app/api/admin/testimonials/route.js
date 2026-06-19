@@ -33,18 +33,23 @@ export async function GET() {
     return error;
   }
 
-  const rows = await db
-    .select({
-      id: schema.testimonials.id,
-      authorName: schema.testimonials.authorName,
-      authorRole: schema.testimonials.authorRole,
-      body: schema.testimonials.body,
-      sortOrder: schema.testimonials.sortOrder,
-      published: schema.testimonials.published,
-      createdAt: schema.testimonials.createdAt,
-    })
-    .from(schema.testimonials)
-    .orderBy(asc(schema.testimonials.sortOrder), desc(schema.testimonials.createdAt));
+  let rows;
+  try {
+    rows = await db
+      .select({
+        id: schema.testimonials.id,
+        authorName: schema.testimonials.authorName,
+        authorRole: schema.testimonials.authorRole,
+        body: schema.testimonials.body,
+        sortOrder: schema.testimonials.sortOrder,
+        published: schema.testimonials.published,
+        createdAt: schema.testimonials.createdAt,
+      })
+      .from(schema.testimonials)
+      .orderBy(asc(schema.testimonials.sortOrder), desc(schema.testimonials.createdAt));
+  } catch {
+    return jsonError('Eroare la încărcarea testimonialelor', 500);
+  }
 
   return NextResponse.json(
     {
@@ -77,24 +82,33 @@ export async function POST(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const [created] = await db
-    .insert(schema.testimonials)
-    .values({
-      authorName: parsed.data.authorName,
-      authorRole: parsed.data.authorRole,
-      body: parsed.data.body,
-      sortOrder: parsed.data.sortOrder,
-      published: parsed.data.published,
-    })
-    .returning({
-      id: schema.testimonials.id,
-      authorName: schema.testimonials.authorName,
-      authorRole: schema.testimonials.authorRole,
-      body: schema.testimonials.body,
-      sortOrder: schema.testimonials.sortOrder,
-      published: schema.testimonials.published,
-      createdAt: schema.testimonials.createdAt,
-    });
+  let created;
+  try {
+    [created] = await db
+      .insert(schema.testimonials)
+      .values({
+        authorName: parsed.data.authorName,
+        authorRole: parsed.data.authorRole,
+        body: parsed.data.body,
+        sortOrder: parsed.data.sortOrder,
+        published: parsed.data.published,
+      })
+      .returning({
+        id: schema.testimonials.id,
+        authorName: schema.testimonials.authorName,
+        authorRole: schema.testimonials.authorRole,
+        body: schema.testimonials.body,
+        sortOrder: schema.testimonials.sortOrder,
+        published: schema.testimonials.published,
+        createdAt: schema.testimonials.createdAt,
+      });
+  } catch {
+    return jsonError('Eroare la crearea testimonialului', 500);
+  }
+
+  if (!created) {
+    return jsonError('Eroare la crearea testimonialului', 500);
+  }
 
   return NextResponse.json(
     {
@@ -127,27 +141,41 @@ export async function PATCH(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const updated = [];
-  for (const item of parsed.data.items) {
-    const [row] = await db
-      .update(schema.testimonials)
-      .set({ sortOrder: item.sortOrder })
-      .where(eq(schema.testimonials.id, item.id))
-      .returning({
-        id: schema.testimonials.id,
-        authorName: schema.testimonials.authorName,
-        authorRole: schema.testimonials.authorRole,
-        body: schema.testimonials.body,
-        sortOrder: schema.testimonials.sortOrder,
-        published: schema.testimonials.published,
-        createdAt: schema.testimonials.createdAt,
-      });
+  let updated;
+  try {
+    updated = await db.transaction(async (tx) => {
+      const rows = await Promise.all(
+        parsed.data.items.map(async (item) => {
+          const [row] = await tx
+            .update(schema.testimonials)
+            .set({ sortOrder: item.sortOrder })
+            .where(eq(schema.testimonials.id, item.id))
+            .returning({
+              id: schema.testimonials.id,
+              authorName: schema.testimonials.authorName,
+              authorRole: schema.testimonials.authorRole,
+              body: schema.testimonials.body,
+              sortOrder: schema.testimonials.sortOrder,
+              published: schema.testimonials.published,
+              createdAt: schema.testimonials.createdAt,
+            });
 
-    if (!row) {
+          return row || null;
+        }),
+      );
+
+      if (rows.some((row) => !row)) {
+        throw new Error('TESTIMONIAL_NOT_FOUND');
+      }
+
+      return rows.map(normalize);
+    });
+  } catch (error) {
+    if (error?.message === 'TESTIMONIAL_NOT_FOUND') {
       return jsonError('Testimonial negăsit', 404);
     }
 
-    updated.push(normalize(row));
+    return jsonError('Eroare la actualizarea testimonialelor', 500);
   }
 
   return NextResponse.json(

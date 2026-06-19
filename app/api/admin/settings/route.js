@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import dbModule from '../../../../lib/db/index.js';
 import { siteSettingsSchema } from '../../../../lib/validate.js';
 import { jsonError, requireAdminSession } from '../../../../lib/admin.js';
-import { getSiteSettingsDetails } from '../../../../lib/content.js';
 import {
   HEADER_IMAGE_HISTORY_LIMIT,
   HEADER_IMAGE_PAGE_CONFIGS,
   getDefaultHeaderImage,
   normalizeHeaderImage,
 } from '../../../../lib/site-constants.js';
+import { getSiteSettings } from '../../../../lib/content.js';
 
 const { db, schema } = dbModule;
 const HEADER_IMAGE_PAGE_SLUGS = HEADER_IMAGE_PAGE_CONFIGS.map(({ slug }) => slug);
@@ -39,7 +39,7 @@ export async function GET() {
     return error;
   }
 
-  const settings = await getSiteSettingsDetails();
+  const settings = await getSiteSettings();
 
   return NextResponse.json(
     {
@@ -72,7 +72,7 @@ export async function PUT(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const currentSettings = await getSiteSettingsDetails();
+  const currentSettings = await getSiteSettings();
   const nextHeaderImages = {
     ...(currentSettings.headerImages || {}),
   };
@@ -80,39 +80,27 @@ export async function PUT(request) {
     ...(currentSettings.recentHeaderImagesByPage || {}),
   };
 
-  const updates = [];
-  if (parsed.data.headerImage !== undefined) {
-    updates.push(['home', parsed.data.headerImage]);
-  }
-
-  if (parsed.data.headerImages) {
-    for (const [slug, value] of Object.entries(parsed.data.headerImages)) {
-      updates.push([slug, value]);
-    }
-  }
-
-  for (const [slug, value] of updates) {
-    if (!HEADER_IMAGE_PAGE_SLUGS.includes(slug)) {
-      continue;
-    }
-
-    const fallbackImage = getDefaultHeaderImage(slug);
-    const image = normalizeHeaderImage(value, fallbackImage);
-    nextHeaderImages[slug] = image;
-    nextRecentHeaderImagesByPage[slug] = normalizeRecentImages(
-      image,
-      nextRecentHeaderImagesByPage[slug],
-      fallbackImage,
-    );
-  }
+  const requestedImages =
+    parsed.data.headerImage !== undefined
+      ? {
+          home: parsed.data.headerImage,
+          ...(parsed.data.headerImages || {}),
+        }
+      : {
+          ...(parsed.data.headerImages || {}),
+        };
 
   for (const slug of HEADER_IMAGE_PAGE_SLUGS) {
     const fallbackImage = getDefaultHeaderImage(slug);
-    const image = normalizeHeaderImage(nextHeaderImages[slug], fallbackImage);
+    const sourceImage =
+      requestedImages[slug] !== undefined
+        ? requestedImages[slug]
+        : currentSettings.headerImages?.[slug];
+    const image = normalizeHeaderImage(sourceImage, fallbackImage);
     nextHeaderImages[slug] = image;
     nextRecentHeaderImagesByPage[slug] = normalizeRecentImages(
       image,
-      nextRecentHeaderImagesByPage[slug],
+      currentSettings.recentHeaderImagesByPage?.[slug],
       fallbackImage,
     );
   }
@@ -121,64 +109,67 @@ export async function PUT(request) {
   const recentHeaderImages = nextRecentHeaderImagesByPage.home || [
     headerImage,
   ];
-
-  await db.transaction(async (tx) => {
-    await tx
-      .insert(schema.siteSettings)
-      .values({
-        key: HEADER_IMAGE_KEY,
-        value: headerImage,
-      })
-      .onConflictDoUpdate({
-        target: schema.siteSettings.key,
-        set: {
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .insert(schema.siteSettings)
+        .values({
+          key: HEADER_IMAGE_KEY,
           value: headerImage,
-          updatedAt: new Date(),
-        },
-      });
+        })
+        .onConflictDoUpdate({
+          target: schema.siteSettings.key,
+          set: {
+            value: headerImage,
+            updatedAt: new Date(),
+          },
+        });
 
-    await tx
-      .insert(schema.siteSettings)
-      .values({
-        key: HEADER_IMAGE_HISTORY_KEY,
-        value: JSON.stringify(recentHeaderImages),
-      })
-      .onConflictDoUpdate({
-        target: schema.siteSettings.key,
-        set: {
+      await tx
+        .insert(schema.siteSettings)
+        .values({
+          key: HEADER_IMAGE_HISTORY_KEY,
           value: JSON.stringify(recentHeaderImages),
-          updatedAt: new Date(),
-        },
-      });
+        })
+        .onConflictDoUpdate({
+          target: schema.siteSettings.key,
+          set: {
+            value: JSON.stringify(recentHeaderImages),
+            updatedAt: new Date(),
+          },
+        });
 
-    await tx
-      .insert(schema.siteSettings)
-      .values({
-        key: HEADER_IMAGES_KEY,
-        value: JSON.stringify(nextHeaderImages),
-      })
-      .onConflictDoUpdate({
-        target: schema.siteSettings.key,
-        set: {
+      await tx
+        .insert(schema.siteSettings)
+        .values({
+          key: HEADER_IMAGES_KEY,
           value: JSON.stringify(nextHeaderImages),
-          updatedAt: new Date(),
-        },
-      });
+        })
+        .onConflictDoUpdate({
+          target: schema.siteSettings.key,
+          set: {
+            value: JSON.stringify(nextHeaderImages),
+            updatedAt: new Date(),
+          },
+        });
 
-    await tx
-      .insert(schema.siteSettings)
-      .values({
-        key: HEADER_IMAGE_HISTORIES_KEY,
-        value: JSON.stringify(nextRecentHeaderImagesByPage),
-      })
-      .onConflictDoUpdate({
-        target: schema.siteSettings.key,
-        set: {
+      await tx
+        .insert(schema.siteSettings)
+        .values({
+          key: HEADER_IMAGE_HISTORIES_KEY,
           value: JSON.stringify(nextRecentHeaderImagesByPage),
-          updatedAt: new Date(),
-        },
-      });
-  });
+        })
+        .onConflictDoUpdate({
+          target: schema.siteSettings.key,
+          set: {
+            value: JSON.stringify(nextRecentHeaderImagesByPage),
+            updatedAt: new Date(),
+          },
+        });
+    });
+  } catch {
+    return jsonError('Eroare la salvarea setărilor', 500);
+  }
 
   return NextResponse.json(
     {

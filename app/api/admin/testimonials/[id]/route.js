@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
 import dbModule from '../../../../../lib/db/index.js';
 import { testimonialUpdateSchema } from '../../../../../lib/validate.js';
 import { jsonError, requireAdminSession } from '../../../../../lib/admin.js';
@@ -55,8 +56,13 @@ export async function PATCH(request, { params }) {
     return jsonError('Corp JSON invalid', 400);
   }
 
+  const parsedParams = z.string().uuid().safeParse(params?.id);
+  if (!parsedParams.success) {
+    return jsonError('Date invalide', 400);
+  }
+
   const parsed = testimonialUpdateSchema.safeParse(body);
-  if (!parsed.success || parsed.data.id !== params.id) {
+  if (!parsed.success || parsed.data.id !== parsedParams.data) {
     return jsonError('Date invalide', 400);
   }
 
@@ -81,7 +87,13 @@ export async function PATCH(request, { params }) {
     return jsonError('Date invalide', 400);
   }
 
-  const row = await updateTestimonial(params.id, values);
+  let row;
+  try {
+    row = await updateTestimonial(parsedParams.data, values);
+  } catch {
+    return jsonError('Eroare la actualizarea testimonialului', 500);
+  }
+
   if (!row) {
     return jsonError('Testimonial negăsit', 404);
   }
@@ -105,10 +117,20 @@ export async function DELETE(_request, { params }) {
     return error;
   }
 
-  const [row] = await db
-    .delete(schema.testimonials)
-    .where(eq(schema.testimonials.id, params.id))
-    .returning({ id: schema.testimonials.id });
+  const parsedParams = z.string().uuid().safeParse(params?.id);
+  if (!parsedParams.success) {
+    return jsonError('Date invalide', 400);
+  }
+
+  let row;
+  try {
+    [row] = await db
+      .delete(schema.testimonials)
+      .where(eq(schema.testimonials.id, parsedParams.data))
+      .returning({ id: schema.testimonials.id });
+  } catch {
+    return jsonError('Eroare la ștergerea testimonialului', 500);
+  }
 
   if (!row) {
     return jsonError('Testimonial negăsit', 404);

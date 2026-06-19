@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
+import { auth } from '../../../../lib/auth.js';
 import dbModule from '../../../../lib/db/index.js';
 import { verificationEmailSchema } from '../../../../lib/validate.js';
 
@@ -28,15 +29,24 @@ export async function POST(request) {
     return errorResponse('Email invalid', 400);
   }
 
-  const { email } = parsed.data;
-  const [user] = await db
-    .select({
-      email: schema.users.email,
-      emailVerified: schema.users.emailVerified,
-    })
-    .from(schema.users)
-    .where(eq(schema.users.email, email))
-    .limit(1);
+  const session = await auth();
+  if (!session?.user?.id) {
+    return errorResponse('Neautorizat', 401);
+  }
+
+  let user;
+  try {
+    [user] = await db
+      .select({
+        email: schema.users.email,
+        emailVerified: schema.users.emailVerified,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.id, session.user.id))
+      .limit(1);
+  } catch {
+    return errorResponse('Nu am putut verifica starea contului.', 500);
+  }
 
   return NextResponse.json(
     {

@@ -39,25 +39,31 @@ export async function GET() {
     return error;
   }
 
-  const dailyRows = await db.execute(sql`
-    select
-      to_char(created_at::date, 'YYYY-MM-DD') as date,
-      event_type as "eventType",
-      count(*)::int as count
-    from analytics_events
-    where created_at >= current_date - interval '29 days'
-    group by 1, 2
-    order by 1 asc, 2 asc
-  `);
+  let dailyRows;
+  let totalRows;
+  try {
+    dailyRows = await db.execute(sql`
+      select
+        to_char(created_at::date, 'YYYY-MM-DD') as date,
+        event_type as "eventType",
+        count(*)::int as count
+      from analytics_events
+      where created_at >= current_date - interval '29 days'
+      group by 1, 2
+      order by 1 asc, 2 asc
+    `);
 
-  const totalRows = await db.execute(sql`
-    select
-      event_type as "eventType",
-      count(*)::int as count
-    from analytics_events
-    group by 1
-    order by 1 asc
-  `);
+    totalRows = await db.execute(sql`
+      select
+        event_type as "eventType",
+        count(*)::int as count
+      from analytics_events
+      group by 1
+      order by 1 asc
+    `);
+  } catch {
+    return errorResponse('Eroare la încărcarea statisticilor', 500);
+  }
 
   const dailyMap = new Map();
   for (const row of dailyRows.rows || dailyRows) {

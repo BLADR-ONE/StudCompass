@@ -41,10 +41,18 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
     }
 
-    throw error;
+    return NextResponse.json(
+      { error: 'Nu am putut crea contul. Încearcă din nou mai târziu.' },
+      { status: 500 },
+    );
   }
 
-  const verification = await sendAccountVerificationEmail({ email, name });
+  let verification;
+  try {
+    verification = await sendAccountVerificationEmail({ email, name });
+  } catch {
+    verification = { ok: false, error: 'email_send_failed' };
+  }
 
   return NextResponse.json(
     {

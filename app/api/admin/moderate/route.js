@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
 import dbModule from '../../../../lib/db/index.js';
 import { jsonError, requireAdminSession } from '../../../../lib/admin.js';
 import { moderateSchema } from '../../../../lib/validate.js';
@@ -40,56 +41,66 @@ export async function POST(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const { action, id } = parsed.data;
+  const parsedId = z.string().uuid().safeParse(parsed.data.id);
+  if (!parsedId.success) {
+    return jsonError('Date invalide', 400);
+  }
+
+  const { action } = parsed.data;
+  const id = parsedId.data;
 
   let updated = null;
-  switch (action) {
-    case 'hide_review':
-      updated = await updateById(schema.reviews, schema.reviews.id, id, {
-        hiddenAt: new Date(),
-      });
-      break;
-    case 'unhide_review':
-      updated = await updateById(schema.reviews, schema.reviews.id, id, {
-        hiddenAt: null,
-      });
-      break;
-    case 'delete_review':
-      updated = await db
-        .delete(schema.reviews)
-        .where(eq(schema.reviews.id, id))
-        .returning({ id: schema.reviews.id })
-        .then((rows) => rows[0] || null);
-      break;
-    case 'hide_message':
-      updated = await updateById(schema.messages, schema.messages.id, id, {
-        hiddenAt: new Date(),
-      });
-      break;
-    case 'unhide_message':
-      updated = await updateById(schema.messages, schema.messages.id, id, {
-        hiddenAt: null,
-      });
-      break;
-    case 'delete_message':
-      updated = await db
-        .delete(schema.messages)
-        .where(eq(schema.messages.id, id))
-        .returning({ id: schema.messages.id })
-        .then((rows) => rows[0] || null);
-      break;
-    case 'ban_user':
-      updated = await updateById(schema.users, schema.users.id, id, {
-        bannedAt: new Date(),
-      });
-      break;
-    case 'unban_user':
-      updated = await updateById(schema.users, schema.users.id, id, {
-        bannedAt: null,
-      });
-      break;
-    default:
-      return jsonError('Date invalide', 400);
+  try {
+    switch (action) {
+      case 'hide_review':
+        updated = await updateById(schema.reviews, schema.reviews.id, id, {
+          hiddenAt: new Date(),
+        });
+        break;
+      case 'unhide_review':
+        updated = await updateById(schema.reviews, schema.reviews.id, id, {
+          hiddenAt: null,
+        });
+        break;
+      case 'delete_review':
+        updated = await db
+          .delete(schema.reviews)
+          .where(eq(schema.reviews.id, id))
+          .returning({ id: schema.reviews.id })
+          .then((rows) => rows[0] || null);
+        break;
+      case 'hide_message':
+        updated = await updateById(schema.messages, schema.messages.id, id, {
+          hiddenAt: new Date(),
+        });
+        break;
+      case 'unhide_message':
+        updated = await updateById(schema.messages, schema.messages.id, id, {
+          hiddenAt: null,
+        });
+        break;
+      case 'delete_message':
+        updated = await db
+          .delete(schema.messages)
+          .where(eq(schema.messages.id, id))
+          .returning({ id: schema.messages.id })
+          .then((rows) => rows[0] || null);
+        break;
+      case 'ban_user':
+        updated = await updateById(schema.users, schema.users.id, id, {
+          bannedAt: new Date(),
+        });
+        break;
+      case 'unban_user':
+        updated = await updateById(schema.users, schema.users.id, id, {
+          bannedAt: null,
+        });
+        break;
+      default:
+        return jsonError('Date invalide', 400);
+    }
+  } catch {
+    return jsonError('Eroare la moderare', 500);
   }
 
   if (!updated) {

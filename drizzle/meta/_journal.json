@@ -15,6 +15,13 @@
       "when": 1781617033091,
       "tag": "0001_stormy_union_jack",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781737178869,
+      "tag": "0002_silent_lockjaw",
+      "breakpoints": true
     }
   ]
 }

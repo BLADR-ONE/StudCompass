@@ -34,7 +34,7 @@ function normalizeNumber(value) {
   }
 
   const parsed = Number(String(value).trim().replace(',', '.'));
-  return Number.isFinite(parsed) ? parsed : Number.NaN;
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function normalizeBoolean(value) {
@@ -223,50 +223,55 @@ export async function POST(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const faculty = await db.transaction(async (tx) => {
-    const slugConflict = await tx
-      .select({ id: schema.faculties.id })
-      .from(schema.faculties)
-      .where(eq(schema.faculties.slug, parsed.data.slug))
-      .limit(1);
+  let faculty;
+  try {
+    faculty = await db.transaction(async (tx) => {
+      const slugConflict = await tx
+        .select({ id: schema.faculties.id })
+        .from(schema.faculties)
+        .where(eq(schema.faculties.slug, parsed.data.slug))
+        .limit(1);
 
-    if (slugConflict.length > 0) {
-      return null;
-    }
+      if (slugConflict.length > 0) {
+        return null;
+      }
 
-    const [created] = await tx
-      .insert(schema.faculties)
-      .values({
-        slug: parsed.data.slug,
-        name: parsed.data.name,
-        description: parsed.data.description,
-        city: parsed.data.city,
-        address: parsed.data.address,
-        website: parsed.data.website,
-        email: parsed.data.email,
-        phone: parsed.data.phone,
-        coverUrl: parsed.data.coverUrl,
-        emblemUrl: parsed.data.emblemUrl,
-        tuitionCost: parsed.data.tuitionCost,
-        minAdmissionGrade: parsed.data.minAdmissionGrade,
-        budgetSeatsIndex: parsed.data.budgetSeatsIndex,
-        multiCampus: parsed.data.multiCampus,
-      })
-      .returning({ id: schema.faculties.id });
+      const [created] = await tx
+        .insert(schema.faculties)
+        .values({
+          slug: parsed.data.slug,
+          name: parsed.data.name,
+          description: parsed.data.description,
+          city: parsed.data.city,
+          address: parsed.data.address,
+          website: parsed.data.website,
+          email: parsed.data.email,
+          phone: parsed.data.phone,
+          coverUrl: parsed.data.coverUrl,
+          emblemUrl: parsed.data.emblemUrl,
+          tuitionCost: parsed.data.tuitionCost,
+          minAdmissionGrade: parsed.data.minAdmissionGrade,
+          budgetSeatsIndex: parsed.data.budgetSeatsIndex,
+          multiCampus: parsed.data.multiCampus,
+        })
+        .returning({ id: schema.faculties.id });
 
-    if (!created) {
-      return null;
-    }
+      if (!created) {
+        return null;
+      }
 
-    await persistFacultyRelations(
-      tx,
-      created.id,
-      parsed.data.domainIds,
-      parsed.data.programs,
-    );
+      await persistFacultyRelations(
+        tx,
+        created.id,
+        parsed.data.domainIds,
+        parsed.data.programs,
+      );
 
-    return loadFaculty(tx, created.id);
-  });
+      return loadFaculty(tx, created.id);
+    });
+  } catch {
+    return jsonError('Eroare la salvarea facultății', 500);
+  }
 
   if (!faculty) {
     return jsonError('Slug-ul există deja', 409);
@@ -306,62 +311,65 @@ export async function PATCH(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const faculty = await db.transaction(async (tx) => {
-    const existing = await tx
-      .select({ id: schema.faculties.id })
-      .from(schema.faculties)
-      .where(eq(schema.faculties.id, parsed.data.id))
-      .limit(1);
+  let faculty;
+  try {
+    faculty = await db.transaction(async (tx) => {
+      const existing = await tx
+        .select({ id: schema.faculties.id })
+        .from(schema.faculties)
+        .where(eq(schema.faculties.id, parsed.data.id))
+        .limit(1);
 
-    if (existing.length === 0) {
-      return null;
-    }
+      if (existing.length === 0) {
+        return null;
+      }
 
-    const slugConflict = await tx
-      .select({ id: schema.faculties.id })
-      .from(schema.faculties)
-      .where(
-        eq(schema.faculties.slug, parsed.data.slug),
-      )
-      .limit(1);
+      const slugConflict = await tx
+        .select({ id: schema.faculties.id })
+        .from(schema.faculties)
+        .where(eq(schema.faculties.slug, parsed.data.slug))
+        .limit(1);
 
-    if (
-      slugConflict.length > 0 &&
-      slugConflict[0].id !== parsed.data.id
-    ) {
-      return { slugConflict: true };
-    }
+      if (
+        slugConflict.length > 0 &&
+        slugConflict[0].id !== parsed.data.id
+      ) {
+        return { slugConflict: true };
+      }
 
-    await tx
-      .update(schema.faculties)
-      .set({
-        slug: parsed.data.slug,
-        name: parsed.data.name,
-        description: parsed.data.description,
-        city: parsed.data.city,
-        address: parsed.data.address,
-        website: parsed.data.website,
-        email: parsed.data.email,
-        phone: parsed.data.phone,
-        coverUrl: parsed.data.coverUrl,
-        emblemUrl: parsed.data.emblemUrl,
-        tuitionCost: parsed.data.tuitionCost,
-        minAdmissionGrade: parsed.data.minAdmissionGrade,
-        budgetSeatsIndex: parsed.data.budgetSeatsIndex,
-        multiCampus: parsed.data.multiCampus,
-        updatedAt: new Date(),
-      })
-      .where(eq(schema.faculties.id, parsed.data.id));
+      await tx
+        .update(schema.faculties)
+        .set({
+          slug: parsed.data.slug,
+          name: parsed.data.name,
+          description: parsed.data.description,
+          city: parsed.data.city,
+          address: parsed.data.address,
+          website: parsed.data.website,
+          email: parsed.data.email,
+          phone: parsed.data.phone,
+          coverUrl: parsed.data.coverUrl,
+          emblemUrl: parsed.data.emblemUrl,
+          tuitionCost: parsed.data.tuitionCost,
+          minAdmissionGrade: parsed.data.minAdmissionGrade,
+          budgetSeatsIndex: parsed.data.budgetSeatsIndex,
+          multiCampus: parsed.data.multiCampus,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.faculties.id, parsed.data.id));
 
-    await persistFacultyRelations(
-      tx,
-      parsed.data.id,
-      parsed.data.domainIds,
-      parsed.data.programs,
-    );
+      await persistFacultyRelations(
+        tx,
+        parsed.data.id,
+        parsed.data.domainIds,
+        parsed.data.programs,
+      );
 
-    return loadFaculty(tx, parsed.data.id);
-  });
+      return loadFaculty(tx, parsed.data.id);
+    });
+  } catch {
+    return jsonError('Eroare la actualizarea facultății', 500);
+  }
 
   if (!faculty) {
     return jsonError('Facultate negăsită', 404);
@@ -402,25 +410,40 @@ export async function DELETE(request) {
     return jsonError('Date invalide', 400);
   }
 
-  const [existing] = await db
-    .select({ id: schema.faculties.id })
-    .from(schema.faculties)
-    .where(eq(schema.faculties.id, parsed.data.id))
-    .limit(1);
+  let existing;
+  try {
+    [existing] = await db
+      .select({ id: schema.faculties.id })
+      .from(schema.faculties)
+      .where(eq(schema.faculties.id, parsed.data.id))
+      .limit(1);
+  } catch {
+    return jsonError('Eroare la ștergerea facultății', 500);
+  }
 
   if (!existing) {
     return jsonError('Facultate negăsită', 404);
   }
 
-  await db.transaction(async (tx) => {
-    await tx
-      .delete(schema.facultyDomains)
-      .where(eq(schema.facultyDomains.facultyId, parsed.data.id));
-    await tx.delete(schema.programs).where(eq(schema.programs.facultyId, parsed.data.id));
-    await tx.delete(schema.reviews).where(eq(schema.reviews.facultyId, parsed.data.id));
-    await tx.delete(schema.messages).where(eq(schema.messages.facultyId, parsed.data.id));
-    await tx.delete(schema.faculties).where(eq(schema.faculties.id, parsed.data.id));
-  });
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .delete(schema.facultyDomains)
+        .where(eq(schema.facultyDomains.facultyId, parsed.data.id));
+      await tx
+        .delete(schema.programs)
+        .where(eq(schema.programs.facultyId, parsed.data.id));
+      await tx
+        .delete(schema.reviews)
+        .where(eq(schema.reviews.facultyId, parsed.data.id));
+      await tx
+        .delete(schema.messages)
+        .where(eq(schema.messages.facultyId, parsed.data.id));
+      await tx.delete(schema.faculties).where(eq(schema.faculties.id, parsed.data.id));
+    });
+  } catch {
+    return jsonError('Eroare la ștergerea facultății', 500);
+  }
 
   return NextResponse.json({ ok: true }, { status: 200 });
 }

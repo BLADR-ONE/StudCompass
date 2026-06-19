@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import { auth } from '../../../lib/auth.js';
 import dbModule from '../../../lib/db/index.js';
 import { facultySlugSchema, reviewUpsertSchema } from '../../../lib/validate.js';
@@ -41,47 +41,66 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const parsedSlug = facultySlugSchema.safeParse(searchParams.get('faculty'));
+  const rawOffset = searchParams.get('offset') ?? searchParams.get('cursor');
+  let offset = 0;
 
   if (!parsedSlug.success) {
     return errorResponse('Validation error', 400);
   }
 
-  const faculty = await getFaculty(parsedSlug.data);
-  if (!faculty) {
-    return errorResponse('Faculty not found', 404);
+  if (rawOffset != null) {
+    const parsedOffset = Number.parseInt(rawOffset, 10);
+    if (!Number.isInteger(parsedOffset) || parsedOffset < 0) {
+      return errorResponse('Validation error', 400);
+    }
+    offset = parsedOffset;
   }
 
-  const rows = await db
-    .select({
-      id: schema.reviews.id,
-      rating: schema.reviews.rating,
-      body: schema.reviews.body,
-      createdAt: schema.reviews.createdAt,
-      authorName: schema.users.name,
-    })
-    .from(schema.reviews)
-    .innerJoin(schema.users, eq(schema.reviews.userId, schema.users.id))
-    .where(
-      and(
-        eq(schema.reviews.facultyId, faculty.id),
-        isNull(schema.reviews.hiddenAt),
-      ),
-    )
-    .orderBy(desc(schema.reviews.createdAt));
+  try {
+    const faculty = await getFaculty(parsedSlug.data);
+    if (!faculty) {
+      return errorResponse('Faculty not found', 404);
+    }
 
-  const count = rows.length;
-  const avg = count
-    ? rows.reduce((sum, row) => sum + Number(row.rating || 0), 0) / count
-    : 0;
+    const filter = and(
+      eq(schema.reviews.facultyId, faculty.id),
+      isNull(schema.reviews.hiddenAt),
+    );
 
-  return NextResponse.json(
-    {
-      reviews: rows.map(mapReview),
-      avg,
-      count,
-    },
-    { status: 200 },
-  );
+    const [stats] = await db
+      .select({
+        count: sql`count(*)::int`,
+        avg: sql`coalesce(avg(${schema.reviews.rating}), 0)`,
+      })
+      .from(schema.reviews)
+      .where(filter);
+
+    const rows = await db
+      .select({
+        id: schema.reviews.id,
+        rating: schema.reviews.rating,
+        body: schema.reviews.body,
+        createdAt: schema.reviews.createdAt,
+        authorName: schema.users.name,
+      })
+      .from(schema.reviews)
+      .innerJoin(schema.users, eq(schema.reviews.userId, schema.users.id))
+      .where(filter)
+      .orderBy(desc(schema.reviews.createdAt))
+      .limit(50)
+      .offset(offset);
+
+    return NextResponse.json(
+      {
+        reviews: rows.map(mapReview),
+        avg: Number(stats?.avg || 0),
+        count: Number(stats?.count || 0),
+      },
+      { status: 200 },
+    );
+  } catch {
+    return errorResponse('Eroare la încărcarea recenziilor', 500);
+  }
 }
 
 export async function POST(request) {
@@ -110,28 +129,32 @@ export async function POST(request) {
   }
 
   const { faculty: facultySlug, rating, body: reviewBody } = parsed.data;
-  const faculty = await getFaculty(facultySlug);
-  if (!faculty) {
-    return errorResponse('Faculty not found', 404);
-  }
+  try {
+    const faculty = await getFaculty(facultySlug);
+    if (!faculty) {
+      return errorResponse('Faculty not found', 404);
+    }
 
-  await db
-    .insert(schema.reviews)
-    .values({
-      facultyId: faculty.id,
-      userId: session.user.id,
-      rating,
-      body: normalizeBody(reviewBody),
-      hiddenAt: null,
-    })
-    .onConflictDoUpdate({
-      target: [schema.reviews.facultyId, schema.reviews.userId],
-      set: {
+    await db
+      .insert(schema.reviews)
+      .values({
+        facultyId: faculty.id,
+        userId: session.user.id,
         rating,
         body: normalizeBody(reviewBody),
         hiddenAt: null,
-      },
-    });
+      })
+      .onConflictDoUpdate({
+        target: [schema.reviews.facultyId, schema.reviews.userId],
+        set: {
+          rating,
+          body: normalizeBody(reviewBody),
+          hiddenAt: null,
+        },
+      });
+  } catch {
+    return errorResponse('Eroare la salvarea recenziei', 500);
+  }
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

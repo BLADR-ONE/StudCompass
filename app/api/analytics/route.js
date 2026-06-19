@@ -33,21 +33,28 @@ export async function POST(request) {
 
   const { eventType, faculty, visitorId } = parsed.data;
 
-  let facultyId = null;
-  if (faculty) {
-    const [facultyRow] = await db
-      .select({ id: schema.faculties.id })
-      .from(schema.faculties)
-      .where(eq(schema.faculties.slug, faculty))
-      .limit(1);
-    facultyId = facultyRow?.id || null;
-  }
+  try {
+    let facultyId = null;
+    if (faculty) {
+      const [facultyRow] = await db
+        .select({ id: schema.faculties.id })
+        .from(schema.faculties)
+        .where(eq(schema.faculties.slug, faculty))
+        .limit(1);
+      facultyId = facultyRow?.id || null;
+    }
 
-  await db.insert(schema.analyticsEvents).values({
-    eventType,
-    facultyId,
-    visitorId,
-  });
+    await db.insert(schema.analyticsEvents).values({
+      eventType,
+      facultyId,
+      visitorId,
+    });
+  } catch {
+    return NextResponse.json(
+      { error: 'Eroare la salvarea evenimentului' },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

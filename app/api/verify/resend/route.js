@@ -30,20 +30,30 @@ export async function POST(request) {
   }
 
   const { email } = parsed.data;
-  const [user] = await db
-    .select({
-      email: schema.users.email,
-      name: schema.users.name,
-      emailVerified: schema.users.emailVerified,
-    })
-    .from(schema.users)
-    .where(eq(schema.users.email, email))
-    .limit(1);
+  let user;
+  try {
+    [user] = await db
+      .select({
+        email: schema.users.email,
+        name: schema.users.name,
+        emailVerified: schema.users.emailVerified,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.email, email))
+      .limit(1);
+  } catch {
+    return errorResponse('Nu am putut procesa cererea. Încearcă mai târziu.', 500);
+  }
 
   if (!user) {
-    return errorResponse(
-      'Nu am găsit un cont cu acest email. Verifică adresa și mai încearcă o dată.',
-      404,
+    console.warn('[verify/resend] Account not found for email:', email);
+    return NextResponse.json(
+      {
+        ok: true,
+        verificationEmailSent: true,
+        message: 'Am retrimis emailul de verificare.',
+      },
+      { status: 200 },
     );
   }
 
@@ -58,10 +68,18 @@ export async function POST(request) {
     );
   }
 
-  const verification = await sendAccountVerificationEmail({
-    email: user.email,
-    name: user.name || '',
-  });
+  let verification;
+  try {
+    verification = await sendAccountVerificationEmail({
+      email: user.email,
+      name: user.name || '',
+    });
+  } catch {
+    return errorResponse(
+      'Nu am putut retrimite emailul de verificare. Încearcă din nou puțin mai târziu.',
+      503,
+    );
+  }
 
   if (!verification.ok) {
     return errorResponse(
