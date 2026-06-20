@@ -151,7 +151,7 @@ export default async function AboutPage() {
             {ROUTE_FACTS.map(({ label, value }) => (
               <li
                 key={label}
-                className="group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift"
+                className="group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift"
               >
                 <div
                   aria-hidden="true"

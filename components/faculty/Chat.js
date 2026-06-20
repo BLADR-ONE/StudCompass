@@ -197,7 +197,7 @@ export default function Chat({ facultySlug }) {
               placeholder="Scrie un mesaj…"
               maxLength={4000}
               disabled={sending}
-              className="h-11 min-w-0 flex-1 rounded-full border border-border bg-surface px-4 text-sm text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition placeholder:text-text-muted/60 focus:border-primary focus:ring-2 focus:ring-primary/25 disabled:opacity-60"
+              className="h-11 min-w-0 flex-1 rounded-full border border-border bg-surface px-4 text-sm text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition placeholder:text-text-muted/70 focus:border-primary focus:ring-2 focus:ring-primary/25 disabled:opacity-60"
             />
             <button
               type="submit"

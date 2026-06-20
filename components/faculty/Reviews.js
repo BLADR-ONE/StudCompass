@@ -171,7 +171,7 @@ export default function Reviews({ facultySlug }) {
               placeholder="Cum a fost experiența ta aici? Ce-ar trebui să știe cineva care vine după tine?"
               rows={4}
               maxLength={4000}
-              className="mt-4 w-full resize-y rounded-xl border border-border bg-surface p-4 text-[0.95rem] text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition placeholder:text-text-muted/60 focus:border-primary focus:ring-2 focus:ring-primary/25"
+              className="mt-4 w-full resize-y rounded-xl border border-border bg-surface p-4 text-[0.95rem] text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition placeholder:text-text-muted/70 focus:border-primary focus:ring-2 focus:ring-primary/25"
             />
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">

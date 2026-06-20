@@ -12,7 +12,7 @@ export default function Card({
         padded ? 'p-6' : ''
       } ${
         interactive
-          ? 'transition-all duration-300 hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift'
+          ? 'transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift'
           : ''
       } ${className}`}
       {...rest}

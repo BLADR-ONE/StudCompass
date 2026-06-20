@@ -70,7 +70,7 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
             the right; collapses to a stacked layout on small screens.
             Night-glass treatment so it reads over the dark hero photo. */}
         <div
-          className="animate-rise mt-12 overflow-hidden rounded-[2.25rem] border border-mint/20 bg-ink/60 shadow-card backdrop-blur-md transition-all duration-300 hover:border-mint/35 hover:shadow-lift"
+          className="animate-rise mt-12 overflow-hidden rounded-[2.25rem] border border-mint/20 bg-ink/60 shadow-card backdrop-blur-md transition-[border-color,box-shadow] duration-300 ease-out-quint hover:border-mint/35 hover:shadow-lift"
           style={{ animationDelay: '320ms' }}
         >
           <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12">

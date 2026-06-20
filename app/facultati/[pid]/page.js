@@ -359,7 +359,7 @@ export default async function FacultyPage({ params }) {
                 {details.programs.map((program) => (
                   <li
                     key={program.id}
-                    className="group flex items-center gap-3 rounded-2xl border border-border bg-surface-raised px-4 py-3.5 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-soft/60"
+                    className="group flex items-center gap-3 rounded-2xl border border-border bg-surface-raised px-4 py-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-0.5 hover:border-primary-soft/60"
                   >
                     <span
                       aria-hidden="true"

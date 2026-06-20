@@ -14,7 +14,7 @@ export default function CreditCard({
       href={profileUrl}
       target="_blank"
       rel="noreferrer"
-      className="group flex w-full items-center gap-4 rounded-2xl border border-border bg-surface-raised px-5 py-4 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-soft/60 hover:shadow-lift sm:gap-5 sm:px-6"
+      className="group flex w-full items-center gap-4 rounded-2xl border border-border bg-surface-raised px-5 py-4 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-0.5 hover:border-primary-soft/60 hover:shadow-lift sm:gap-5 sm:px-6"
     >
       <img
         src={`${profileUrl}.png`}

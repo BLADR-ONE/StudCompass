@@ -24,6 +24,11 @@
   --shadow-lift:
     0 2px 4px var(--sc-shadow-weak), 0 26px 52px -18px var(--sc-shadow);
 
+  /* Shared ease-out curve for hover lifts & micro-interactions — exponential
+     deceleration (ease-out-quint), matching the entrance keyframes so motion
+     reads as one consistent system. Exposed as the `ease-out-quint` utility. */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
   --animate-rise: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-fade: fade 0.5s ease-out both;
   --animate-pop: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -212,8 +217,18 @@
   h3 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.015em;
-    text-wrap: pretty;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+  }
+
+  /* Display-scale headings (the page-leading h1/h2s) read tighter and more
+     deliberate than the small label-sized h3s. Fraunces at large optical
+     sizes wants a touch more negative tracking — held just above the -0.04em
+     floor so letters never touch. h3s stay at the looser base value, since
+     they're used as small labels where tight tracking would cramp. */
+  h1,
+  h2 {
+    letter-spacing: -0.028em;
   }
 
   ::selection {
