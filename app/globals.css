@@ -1004,6 +1004,82 @@
   transform: translate3d(0, calc((1 - var(--p)) * 40px * var(--motif-speed)), 0);
 }
 
+/* ---------------------------------------------------------------------------
+   Side plumb-line ornaments (components/ui/SideOrnament.js + Brand.js)
+   --------------------------------------------------------------------------
+   A vertical survey cord that hangs in a section's side gutter. The wrapper
+   carries [data-ornament] and writes the shared --motif-progress (0..1, neutral
+   0.5) onto the node each frame via the existing rAF scroll engine. From that
+   one value we derive a drop amount; the cord also DRAWS DOWN with progress.
+
+   --motif-progress 0   → section entering: cord short, bob lifted (just dropping)
+   --motif-progress 0.5 → resting/SSR/centre: cord drawn, bob settled
+   --motif-progress 1   → leaving: fully drawn, settled
+
+   Everything is transform / stroke-dash / opacity only. The pendulum SWAY is a
+   separate slow keyframe anchored at the TOP lug (transform-origin set inline on
+   the SVG group), independent of scroll, so the cord feels alive at rest too. */
+[data-ornament] {
+  --p: var(--motif-progress, 0.5);
+  /* Settle factor: 0 while entering (p≤0), reaches 1 by the time the cord is a
+     little past the viewport's lower third. clamp keeps it 0..1. Bob hangs from
+     the lug, so "not yet dropped" = lifted UP toward the lug (negative travel). */
+  --drop: clamp(0, calc(var(--p) * 2.4), 1);
+  will-change: transform;
+}
+
+/* The cord draws down: dash the normalised pathLength (100) and retract the
+   offset as the ornament settles. At rest (--drop→1) it is fully drawn. */
+[data-ornament] .plumb-cord {
+  stroke-dasharray: 100;
+  stroke-dashoffset: calc((1 - var(--drop)) * 100);
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+/* The weight / beads drop from the lug and settle. While entering they sit a
+   little high and faint; by rest they hang at full length. The pendulum sway is
+   layered on top via the keyframe below (own group, but same node → compose by
+   putting the drop on the SVG element and the sway on the inner group). */
+[data-ornament] {
+  transform: translate3d(0, calc((var(--drop) - 1) * 26px), 0);
+}
+[data-ornament] .plumb-cord,
+[data-ornament] .plumb-ticks,
+[data-ornament] .plumb-bob {
+  opacity: calc(0.35 + var(--drop) * 0.65);
+}
+
+/* Staggered bead settle — each bead eases into place slightly after the last,
+   so the strand reads as beads dropping down a chain rather than one rigid bar. */
+[data-ornament] .plumb-bead {
+  transform: translateY(calc((var(--drop) - 1) * 10px));
+  transform-box: fill-box;
+  transition: transform 0.18s var(--ease-out-quint);
+}
+[data-ornament] .plumb-bead-2 {
+  transform: translateY(calc((var(--drop) - 1) * 16px));
+}
+[data-ornament] .plumb-bead-3 {
+  transform: translateY(calc((var(--drop) - 1) * 24px));
+}
+
+/* Pendulum SWAY — a slow settling swing anchored at the top lug. Lives on the
+   inner .plumb-bob group (transform-origin pinned to the lug inline on the SVG),
+   so it composes with the per-bead drop above without fighting the wrapper's
+   translate. Gentle: ±1.6deg, long period, decorative-only. */
+.plumb-bob {
+  animation: plumb-sway 9s ease-in-out infinite;
+}
+@keyframes plumb-sway {
+  0%,
+  100% {
+    transform: rotate(-1.6deg);
+  }
+  50% {
+    transform: rotate(1.6deg);
+  }
+}
+
 /* Reduced motion / no-JS belt-and-braces: snap every scroll-driven wrapper to a
    clean static, fully visible pose (the hooks already decline to arm/write). */
 @media (prefers-reduced-motion: reduce) {
@@ -1012,5 +1088,26 @@
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+  /* Plumb ornaments: cord fully drawn, weight settled, no swing. The engine
+     never writes --motif-progress here, so --drop falls back to its 0.5-derived
+     value; pin the resting pose explicitly for certainty. */
+  [data-ornament] {
+    transform: none !important;
+  }
+  [data-ornament] .plumb-cord {
+    stroke-dashoffset: 0 !important;
+  }
+  [data-ornament] .plumb-cord,
+  [data-ornament] .plumb-ticks,
+  [data-ornament] .plumb-bob {
+    opacity: revert !important;
+  }
+  [data-ornament] .plumb-bead {
+    transform: none !important;
+  }
+  .plumb-bob {
+    animation: none !important;
+    transform: none !important;
   }
 }

@@ -505,6 +505,155 @@ export function Latitude({ className = '' }) {
   );
 }
 
+/* ---------------------------------------------------------------------------
+   Plumb-line family — vertical, side-anchored survey cords.
+   --------------------------------------------------------------------------
+   These differ from the field-notes marks above: they are TALL + NARROW (a thin
+   viewBox) and are meant to HANG from the top of a section down its left/right
+   gutter. A surveyor's plumb line / sounding cord: a thin vertical cord that
+   DRAWS DOWN as the section scrolls in, with a weighted bob / beads that DROP
+   and settle, plus a gentle pendulum SWAY anchored at the very top.
+
+   Same hand-drawn contract as the rest of the family: aria-hidden, a single
+   `className` (caller supplies pointer-events / absolute / size / color), all
+   strokes `currentColor`, exactly one `var(--color-accent)` node. The scroll
+   choreography is driven entirely by the SideOrnament wrapper via the existing
+   --motif-progress engine (the SVG itself only ships element-level `.plumb-*`
+   classes for the CSS to hook). Resting pose = cord fully drawn, bob settled.
+
+   viewBox is 40 wide × 320 tall. The cord hangs from (20,0). The two long cord
+   segments carry pathLength="100" so the wrapper can express "draw" as a single
+   0..100 stroke-dashoffset regardless of real path length.
+--------------------------------------------------------------------------- */
+
+/* PlumbLine — the classic: one thin cord and a single survey plumb-bob weight
+   (a teardrop) at the end, with a small accent collar where cord meets bob. */
+export function PlumbLine({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 40 320"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+      preserveAspectRatio="xMidYMin meet"
+    >
+      {/* Anchor lug at the very top — where the cord is pinned to the section. */}
+      <g stroke="currentColor" strokeWidth="1.4" opacity="0.65">
+        <path d="M12 5h16" strokeLinecap="round" />
+        <circle cx="20" cy="5" r="2.4" fill="currentColor" />
+      </g>
+      {/* The cord — draws down from the lug. pathLength normalises the draw. */}
+      <path
+        className="plumb-cord"
+        d="M20 7 V 250"
+        pathLength="100"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        opacity="0.7"
+      />
+      {/* The bob — drops + settles, swaying about the lug. transform-origin top. */}
+      <g className="plumb-bob" style={{ transformOrigin: '20px 7px' }}>
+        {/* accent collar / fitting */}
+        <circle cx="20" cy="252" r="3.4" fill="var(--color-accent)" />
+        {/* the plumb weight — a long teardrop, point down */}
+        <path
+          d="M20 255 C 11 268 10 280 20 300 C 30 280 29 268 20 255 Z"
+          fill="currentColor"
+          opacity="0.82"
+        />
+        <path d="M20 300 v6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
+      </g>
+    </svg>
+  );
+}
+
+/* BeadCord — a beaded survey line: three beads strung down the cord at uneven
+   intervals (a measuring chain), the lowest given the single accent moment.
+   The beads drop into place; the whole strand sways from the top lug. */
+export function BeadCord({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 40 320"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+      preserveAspectRatio="xMidYMin meet"
+    >
+      <g stroke="currentColor" strokeWidth="1.4" opacity="0.6">
+        <path d="M13 5h14" strokeLinecap="round" />
+        <circle cx="20" cy="5" r="2.2" fill="currentColor" />
+      </g>
+      <path
+        className="plumb-cord"
+        d="M20 7 V 288"
+        pathLength="100"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        opacity="0.62"
+      />
+      {/* Strung beads — share the sway; each drops with a staggered settle. */}
+      <g className="plumb-bob" style={{ transformOrigin: '20px 7px' }}>
+        <circle className="plumb-bead plumb-bead-1" cx="20" cy="118" r="5"
+          stroke="currentColor" strokeWidth="1.5" fill="var(--sc-bg)" opacity="0.85" />
+        <circle className="plumb-bead plumb-bead-2" cx="20" cy="196" r="6"
+          stroke="currentColor" strokeWidth="1.5" fill="var(--sc-bg)" opacity="0.9" />
+        {/* Lowest bead — the accent weight that anchors the strand. */}
+        <circle className="plumb-bead plumb-bead-3" cx="20" cy="290" r="7"
+          fill="var(--color-accent)" />
+      </g>
+    </svg>
+  );
+}
+
+/* SoundingLine — a leadsman's depth-sounding cord: graduated depth ticks down
+   the line and a heavy lead weight at the end. Measuring how deep the water is.
+   The lead drops; an accent depth-mark sits on the cord; the strand sways. */
+export function SoundingLine({ className = '' }) {
+  return (
+    <svg
+      viewBox="0 0 40 320"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+      preserveAspectRatio="xMidYMin meet"
+    >
+      <g stroke="currentColor" strokeWidth="1.4" opacity="0.6">
+        <path d="M13 5h14" strokeLinecap="round" />
+        <circle cx="20" cy="5" r="2.2" fill="currentColor" />
+      </g>
+      <path
+        className="plumb-cord"
+        d="M20 7 V 262"
+        pathLength="100"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity="0.68"
+      />
+      {/* Depth graduations knotted along the cord. */}
+      <g className="plumb-ticks" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5">
+        <path d="M14 70h12" />
+        <path d="M15 120h10" />
+        <path d="M14 170h12" />
+        <path d="M15 220h10" />
+      </g>
+      {/* Accent depth-mark — a single marked fathom (leather strip on the lead line). */}
+      <path d="M12 145h16" stroke="var(--color-accent)" strokeWidth="3.2" strokeLinecap="round" />
+      {/* The lead weight — a tapered sinker that drops + settles, swaying. */}
+      <g className="plumb-bob" style={{ transformOrigin: '20px 7px' }}>
+        <path
+          d="M14 263 H 26 L 24 296 C 24 304 16 304 16 296 Z"
+          fill="currentColor"
+          opacity="0.82"
+        />
+        <path d="M14 263 h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </g>
+    </svg>
+  );
+}
+
 /* Wordmark + mark. `inverse` is for photo/teal surfaces (mint on dark). */
 export default function Brand({ inverse = false, className = '' }) {
   return (

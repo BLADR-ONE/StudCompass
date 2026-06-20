@@ -1,6 +1,7 @@
 import { Contour } from '../layout/Brand.js';
 import Reveal from '../ui/Reveal.js';
 import MotifScroll from '../ui/MotifScroll.js';
+import SideOrnament from '../ui/SideOrnament.js';
 
 const STEPS = [
   {
@@ -38,6 +39,10 @@ export default function HowItWorks() {
         aria-hidden="true"
         className="beacon-glow-primary absolute -left-24 top-10 size-[28rem]"
       />
+
+      {/* Surveyor's plumb line hung in the left gutter — draws down + drops as
+          the band scrolls in. Decorative; clipped by the section's overflow. */}
+      <SideOrnament variant="plumb" side="left" className="top-10" />
 
       <div className="wrap relative">
         <Reveal variant="fade-up" className="max-w-2xl">

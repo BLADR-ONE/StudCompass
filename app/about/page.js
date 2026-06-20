@@ -9,6 +9,7 @@ import DeveloperHero from '../../components/about/DeveloperHero.js';
 import CreditCard from '../../components/about/CreditCard.js';
 import Reveal from '../../components/ui/Reveal.js';
 import MotifScroll from '../../components/ui/MotifScroll.js';
+import SideOrnament from '../../components/ui/SideOrnament.js';
 import { getSiteSettings } from '../../lib/content.js';
 import { getDefaultHeaderImage } from '../../lib/site-constants.js';
 
@@ -121,6 +122,9 @@ export default async function AboutPage() {
         >
           <WindRose className="size-full" />
         </MotifScroll>
+        {/* Leadsman's sounding line in the left gutter — balances the WindRose
+            on the right. Clipped by this section's overflow-hidden. */}
+        <SideOrnament variant="sounding" side="left" className="top-8" />
         <div className="wrap relative">
           <Reveal variant="fade-up" className="max-w-2xl">
             <p className="eyebrow">Misiunea</p>

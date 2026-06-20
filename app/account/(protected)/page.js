@@ -5,6 +5,7 @@ import Badge from '../../../components/ui/Badge.js';
 import ChapterHeader from '../../../components/layout/ChapterHeader.js';
 import { Latitude } from '../../../components/layout/Brand.js';
 import MotifScroll from '../../../components/ui/MotifScroll.js';
+import SideOrnament from '../../../components/ui/SideOrnament.js';
 import ProfileCard from '../../../components/account/ProfileCard.js';
 import PreferencesCard from '../../../components/account/PreferencesCard.js';
 import PersonalityCard from '../../../components/account/PersonalityCard.js';
@@ -150,6 +151,9 @@ export default async function AccountPage() {
         >
           <Latitude className="size-full" />
         </MotifScroll>
+        {/* Plumb line in the right gutter — balances the Latitude globe on the
+            left. Drops + draws on scroll; clipped by the section overflow. */}
+        <SideOrnament variant="plumb" side="right" className="top-6" />
         <div className="wrap relative">
           {/* Identity strip */}
           <div className="animate-pop flex flex-wrap items-center gap-4 rounded-3xl border border-border bg-surface-raised p-5 shadow-card sm:p-6">

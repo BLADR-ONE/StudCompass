@@ -1,5 +1,6 @@
 import InitialAvatar from '../ui/InitialAvatar.js';
 import Reveal from '../ui/Reveal.js';
+import SideOrnament from '../ui/SideOrnament.js';
 
 /* The community's voice. The editorial pull-quote is the team's own line and
    always stands; the offset cards are real testimonials served from the
@@ -14,6 +15,9 @@ export default function TestimonialBand({ testimonials = [] }) {
         aria-hidden="true"
         className="beacon-glow-primary absolute -left-32 top-0 size-[29rem]"
       />
+      {/* Beaded survey chain hung in the right gutter — alternates the side from
+          HowItWorks above. Beads drop + settle on scroll; clipped by overflow. */}
+      <SideOrnament variant="bead" side="right" className="top-12" />
       <div className="wrap relative">
         <p className="eyebrow">Vocea comunității</p>
 
