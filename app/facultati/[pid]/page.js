@@ -9,7 +9,8 @@ import Button from '../../../components/ui/Button.js';
 import StarRating from '../../../components/ui/StarRating.js';
 import Reviews from '../../../components/faculty/Reviews.js';
 import Chat from '../../../components/faculty/Chat.js';
-import { Contour, WaypointGrid, Horizon, CompassRose } from '../../../components/layout/Brand.js';
+import Reveal from '../../../components/ui/Reveal.js';
+import { Contour, WaypointGrid, Horizon, CompassRose, RiverDelta } from '../../../components/layout/Brand.js';
 
 const { db, schema } = dbModule;
 
@@ -387,12 +388,15 @@ export default async function FacultyPage({ params }) {
               Trasee pe care le poți urma
             </h2>
             {details.programs.length > 0 ? (
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                {details.programs.map((program, index) => (
+              <Reveal
+                stagger
+                as="ul"
+                className="mt-6 grid gap-3 sm:grid-cols-2"
+              >
+                {details.programs.map((program) => (
                   <li
                     key={program.id}
-                    style={{ '--i': index }}
-                    className="reveal-stagger group flex items-center gap-3 rounded-2xl border border-border bg-surface-raised px-4 py-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-0.5 hover:border-primary-soft/60 hover:shadow-lift"
+                    className="group flex items-center gap-3 rounded-2xl border border-border bg-surface-raised px-4 py-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-0.5 hover:border-primary-soft/60 hover:shadow-lift"
                   >
                     <span
                       aria-hidden="true"
@@ -401,7 +405,7 @@ export default async function FacultyPage({ params }) {
                     <span className="text-sm font-medium">{program.name}</span>
                   </li>
                 ))}
-              </ul>
+              </Reveal>
             ) : (
               <p className="mt-5 text-sm text-text-muted">
                 Lista programelor de studiu apare aici imediat ce e
@@ -517,9 +521,9 @@ export default async function FacultyPage({ params }) {
       <section className="wrap mt-16 pb-24 sm:mt-20 sm:pb-28">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-10 sm:px-10 sm:py-12">
           <div aria-hidden="true" className="texture-doodle-night" />
-          <WaypointGrid className="pointer-events-none absolute -right-12 -top-12 size-72 text-mint/10" />
+          <RiverDelta className="animate-drift-slow pointer-events-none absolute -right-12 -top-12 size-72 text-mint/10" />
           <span aria-hidden="true" className="beacon-glow animate-beacon absolute -left-8 top-4 size-64 opacity-40" />
-          <div className="relative max-w-2xl">
+          <Reveal variant="fade-up" className="relative max-w-2xl">
             <p className="eyebrow !text-mint before:bg-gradient-to-r before:from-mint before:to-teal-soft">
               Vocea studenților
             </p>
@@ -530,7 +534,7 @@ export default async function FacultyPage({ params }) {
               Părerile sincere ale celor care au trecut pe aici — și un chat
               public pentru întrebări rapide.
             </p>
-          </div>
+          </Reveal>
         </div>
 
         <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.2fr_1fr]">

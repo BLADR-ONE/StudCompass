@@ -1,4 +1,5 @@
 import InitialAvatar from '../ui/InitialAvatar.js';
+import Reveal from '../ui/Reveal.js';
 
 /* The community's voice. The editorial pull-quote is the team's own line and
    always stands; the offset cards are real testimonials served from the
@@ -11,7 +12,7 @@ export default function TestimonialBand({ testimonials = [] }) {
     <section className="relative overflow-hidden py-24 sm:py-28">
       <span
         aria-hidden="true"
-        className="beacon-glow-primary absolute -left-32 top-24 size-[30rem]"
+        className="beacon-glow-primary absolute -left-32 top-0 size-[29rem]"
       />
       <div className="wrap relative">
         <p className="eyebrow">Vocea comunității</p>
@@ -22,7 +23,7 @@ export default function TestimonialBand({ testimonials = [] }) {
           }`}
         >
           {/* Editorial pull-quote */}
-          <figure className="relative">
+          <Reveal as="figure" variant="fade-up" className="relative">
             <span
               aria-hidden="true"
               className="wonky pointer-events-none absolute -left-5 -top-16 select-none font-display text-[13rem] font-semibold italic leading-none text-primary/15 dark:text-primary-soft/15"
@@ -43,16 +44,15 @@ export default function TestimonialBand({ testimonials = [] }) {
               />
               Echipa StudCompass
             </figcaption>
-          </figure>
+          </Reveal>
 
           {/* Offset testimonial cards — real voices from the database. */}
           {hasTestimonials && (
-            <div className="flex flex-col gap-6">
+            <Reveal stagger className="flex flex-col gap-6">
               {testimonials.map((item, index) => (
                 <figure
                   key={item.id}
-                  style={{ '--i': index }}
-                  className={`reveal-stagger rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1 hover:border-primary-soft/50 hover:shadow-lift ${
+                  className={`rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1 hover:border-primary-soft/50 hover:shadow-lift ${
                     index % 2 === 1 ? 'lg:ml-10' : 'lg:mr-10'
                   }`}
                 >
@@ -74,7 +74,7 @@ export default function TestimonialBand({ testimonials = [] }) {
                   </figcaption>
                 </figure>
               ))}
-            </div>
+            </Reveal>
           )}
         </div>
       </div>

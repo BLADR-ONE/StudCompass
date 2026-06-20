@@ -6,7 +6,7 @@ import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
 import StarRating from '../ui/StarRating.js';
 import InitialAvatar from '../ui/InitialAvatar.js';
-import { Constellation, Meridian } from '../layout/Brand.js';
+import { Constellation, RiverDelta, NorthStar } from '../layout/Brand.js';
 
 const dateFormatter = new Intl.DateTimeFormat('ro-RO', {
   day: 'numeric',
@@ -227,7 +227,7 @@ export default function Reviews({ facultySlug }) {
 
         {status === 'unavailable' && (
           <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-border px-6 py-10 text-center">
-            <Meridian className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
+            <RiverDelta className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
             <p className="relative text-sm leading-relaxed text-text-muted">
               Recenziile nu pot fi încărcate momentan. Mai încearcă puțin mai
               târziu.
@@ -244,7 +244,7 @@ export default function Reviews({ facultySlug }) {
             </ul>
           ) : (
             <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-primary-soft/40 px-6 py-12 text-center">
-              <Meridian className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
+              <NorthStar className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
               <div className="relative">
                 <p className="font-display text-xl font-semibold">
                   Jurnalul e încă alb.

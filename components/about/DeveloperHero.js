@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Contour, GitHubIcon } from '../layout/Brand.js';
+import { Contour, Astrolabe, GitHubIcon } from '../layout/Brand.js';
 import ScrollCue from '../ui/ScrollCue.js';
 import { DEFAULT_HEADER_IMAGE } from '../../lib/site-constants.js';
 
@@ -84,7 +84,7 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
           style={{ animationDelay: '380ms' }}
         >
           <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12">
-            <Contour className="animate-sway pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/15 lg:block" />
+            <Astrolabe className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/15 lg:block" />
 
             {/* Avatar, framed like a portrait coordinate. */}
             <div className="relative shrink-0">

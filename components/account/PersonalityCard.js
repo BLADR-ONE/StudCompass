@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
-import { Horizon, Contour } from '../layout/Brand.js';
+import { Horizon, Switchback } from '../layout/Brand.js';
 
 /* RIASEC profiles, ported from the legacy account page (modern diacritics). */
 const DIMENSIONS = {
@@ -225,7 +225,7 @@ export default function PersonalityCard() {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card">
       <div className="relative overflow-hidden border-b border-dashed border-border p-6 sm:p-7">
-        <Contour className="animate-sway pointer-events-none absolute -right-16 -top-20 size-64 text-primary/[0.11] dark:text-primary-soft/[0.12]" />
+        <Switchback className="animate-drift-slow pointer-events-none absolute -right-16 -top-20 size-64 text-primary/[0.11] dark:text-primary-soft/[0.12]" />
 
         <div className="relative">
           <div className="flex flex-wrap items-baseline justify-between gap-2">

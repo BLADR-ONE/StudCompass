@@ -169,6 +169,318 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Motif sub-element animations
+   --------------------------------------------------------------------------
+   The cartographer marks in components/layout/Brand.js carry element-level
+   `.motif-*` classes so individual parts can move (a route drawing itself, a
+   pin dropping, a globe turning) instead of only the whole node drifting.
+   Rules: transform / opacity / stroke-dash ONLY — no layout props. Every
+   keyframe's 0% state IS the motif's natural resting pose, so the global
+   prefers-reduced-motion guard (which forces iteration-count:1 +
+   ~0ms duration) lands each motif on a correct static frame. Decorative and
+   pointer-transparent throughout; never gates content visibility.
+--------------------------------------------------------------------------- */
+
+/* Drawn route — TrailWeave + Switchback. A dashed path that plots itself by
+   travelling its dash offset, then loops seamlessly. */
+@keyframes motif-route-draw {
+  0%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dashoffset: -40;
+  }
+}
+.motif-route {
+  animation: motif-route-draw 6s ease-in-out infinite;
+}
+/* Switchback uses a real draw-on by overriding its dash array. */
+.motif-route.motif-switchback {
+  stroke-dasharray: 360;
+  animation: motif-switchback-draw 7s ease-in-out infinite;
+}
+@keyframes motif-switchback-draw {
+  0% {
+    stroke-dashoffset: 360;
+    opacity: 0.2;
+  }
+  18%,
+  82% {
+    opacity: 0.78;
+  }
+  60%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Destination flag — a gentle plant-and-flutter pivot from the pole base. */
+.motif-flag {
+  animation: motif-flag-flutter 5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom left;
+}
+@keyframes motif-flag-flutter {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+}
+
+/* Constellation — connecting lines draw in, stars twinkle out of phase, the
+   bright accent star pulses (shared .motif-pulse below). */
+.motif-link {
+  stroke-dasharray: 360;
+  animation: motif-link-draw 9s ease-in-out infinite;
+}
+.motif-link-2 {
+  animation-duration: 9s;
+  animation-delay: -2.5s;
+}
+@keyframes motif-link-draw {
+  0% {
+    stroke-dashoffset: 360;
+  }
+  35%,
+  70% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 360;
+  }
+}
+.motif-star {
+  animation: motif-twinkle 6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.motif-star-2 {
+  animation-delay: -1.4s;
+}
+.motif-star-3 {
+  animation-delay: -3.1s;
+}
+.motif-star-4 {
+  animation-delay: -4.6s;
+}
+@keyframes motif-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* Contour — elevation lines undulate horizontally a few px, each offset, so
+   the terrain reads as a slow parallax breath. */
+.motif-contour {
+  animation: motif-undulate 14s ease-in-out infinite;
+}
+.motif-contour-2 {
+  animation-delay: -2s;
+}
+.motif-contour-3 {
+  animation-delay: -4s;
+}
+.motif-contour-4 {
+  animation-delay: -6s;
+}
+.motif-contour-5 {
+  animation-delay: -8s;
+}
+@keyframes motif-undulate {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-6px);
+  }
+}
+
+/* Horizon — the sun rises above the baseline and dips back; arcs breathe. */
+.motif-rise {
+  animation: motif-sun-rise 11s ease-in-out infinite;
+}
+@keyframes motif-sun-rise {
+  0%,
+  100% {
+    transform: translateY(8px);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+.motif-arcs {
+  animation: motif-arc-breathe 11s ease-in-out infinite;
+}
+@keyframes motif-arc-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* WaypointGrid — the pin drops in and settles; the survey cross ticks. */
+.motif-drop {
+  animation: motif-pin-drop 7s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+@keyframes motif-pin-drop {
+  0% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+  14% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(-3px);
+  }
+  26%,
+  88% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+}
+.motif-cross {
+  animation: motif-cross-tick 7s ease-in-out infinite;
+}
+@keyframes motif-cross-tick {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.86);
+  }
+}
+
+/* Meridian — the inner graticule turns slowly behind the fixed limb. */
+.motif-globe {
+  animation: motif-globe-spin 80s linear infinite;
+}
+@keyframes motif-globe-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Astrolabe — the alidade (sighting rule) sweeps slowly around the limb. */
+.motif-spin-host {
+  animation: motif-globe-spin 36s linear infinite;
+}
+
+/* RiverDelta — channels shimmer, light travelling down the watercourses. */
+.motif-flow {
+  animation: motif-flow-shimmer 8s ease-in-out infinite;
+}
+@keyframes motif-flow-shimmer {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* NorthStar — rays rotate gently; the star breathes (shared .motif-pulse). */
+.motif-rays {
+  animation: motif-ray-turn 60s linear infinite;
+}
+@keyframes motif-ray-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ScaleBar — the stepping dividers "walk" the distance bar. */
+.motif-step {
+  animation: motif-step-walk 5s ease-in-out infinite;
+}
+@keyframes motif-step-walk {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(34px) rotate(4deg);
+  }
+}
+
+/* Shared accent-node pulse — the single highlight dot/star in several marks
+   breathes so the eye finds the "you are here" point. */
+.motif-pulse {
+  animation: motif-node-pulse 4.5s ease-in-out infinite;
+}
+@keyframes motif-node-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.78;
+  }
+}
+
+/* Explicit reduced-motion settle — the global base-layer guard already
+   neutralizes these, but pin a clean resting pose for the parts whose 0%
+   frame is offscreen/invisible (the dropped pin and the drawn switchback),
+   so reduced-motion users see the finished mark, not a blank slot. */
+@media (prefers-reduced-motion: reduce) {
+  .motif-route,
+  .motif-route.motif-switchback,
+  .motif-flag,
+  .motif-link,
+  .motif-link-2,
+  .motif-star,
+  .motif-contour,
+  .motif-rise,
+  .motif-arcs,
+  .motif-drop,
+  .motif-cross,
+  .motif-globe,
+  .motif-spin-host,
+  .motif-flow,
+  .motif-rays,
+  .motif-step,
+  .motif-pulse {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    transform: none !important;
+    opacity: revert !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Semantic tokens — flipped by [data-theme] on <html>.
    Light: sage paper + ink. Dark: deep-teal night map + mint.
 --------------------------------------------------------------------------- */
@@ -460,6 +772,22 @@
   filter: blur(40px);
 }
 
+/* Header bottom-blend — a soft fade at the lower edge of a ChapterHeader so
+   the section (its bg tint, doodle texture, and decorative motif) melts into
+   the page below instead of ending in a hard horizontal seam. The overlay
+   ramps from transparent up to solid --sc-bg, so it reads correctly in both
+   themes (token-driven) and quietly dissolves whatever sits in the header's
+   lower band. Pointer-transparent; sits above the texture/motif but below the
+   relatively-positioned text content (which carries its own `relative`). */
+@utility header-blend {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 7rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--sc-bg));
+}
+
 /* Section "chapter" band — a deeper paper tint with a hairline rule top and
    bottom, for full-bleed rhythm between the flat-bg sections. */
 @utility chapter-band {
@@ -481,5 +809,77 @@
 @media (prefers-reduced-motion: reduce) {
   .reveal-stagger {
     animation-delay: 0ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-reveal system (IntersectionObserver-driven)
+   --------------------------------------------------------------------------
+   Powers components/ui/Reveal.js. The make-or-break rule: content is fully
+   visible by default. Only after the client component has mounted, confirmed
+   IntersectionObserver support, and confirmed the user does NOT prefer reduced
+   motion does it add `data-reveal` to arm the element. So SSR / no-JS / headless
+   / inactive-tab / reduced-motion renders all stay visible — the reveal can
+   only ever ENHANCE an already-painted element, never gate its visibility.
+
+   Flow: armed element gets `[data-reveal]` (sets the hidden/offset start pose
+   + the will-change hint). When it enters the viewport the observer adds
+   `[data-reveal-in]`, transitioning it to its resting pose. Reveal-once: the
+   observer unobserves after the first intersection. Only transform + opacity
+   animate; ease-out-quint to match the rest of the motion system.
+--------------------------------------------------------------------------- */
+
+/* Armed start poses — applied by JS only. Variant set via data-reveal value. */
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 0.55s var(--ease-out-quint),
+    transform 0.6s var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal='fade-up'] {
+  transform: translateY(24px);
+}
+[data-reveal='fade'] {
+  transform: none;
+}
+[data-reveal='slide-left'] {
+  /* Element enters from the left → starts shifted left. */
+  transform: translateX(-28px);
+}
+[data-reveal='slide-right'] {
+  transform: translateX(28px);
+}
+
+/* Stagger children: a container marked [data-reveal-group] arms its flagged
+   children and fans them in by index via --reveal-i (set by the component). */
+[data-reveal-item] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.55s var(--ease-out-quint),
+    transform 0.6s var(--ease-out-quint);
+  transition-delay: calc(var(--reveal-i, 0) * 80ms);
+  will-change: opacity, transform;
+}
+
+/* Resting pose — added on intersection. */
+[data-reveal-in],
+[data-reveal-group-in] [data-reveal-item] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Reduced motion: the component already declines to arm, but guard belt-and-
+   braces so any armed element snaps visible with no transform. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

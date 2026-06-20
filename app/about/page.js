@@ -2,6 +2,7 @@ import { Constellation, Meridian, GitHubIcon } from '../../components/layout/Bra
 import ContactForm from '../../components/about/ContactForm.js';
 import DeveloperHero from '../../components/about/DeveloperHero.js';
 import CreditCard from '../../components/about/CreditCard.js';
+import Reveal from '../../components/ui/Reveal.js';
 import { getSiteSettings } from '../../lib/content.js';
 import { getDefaultHeaderImage } from '../../lib/site-constants.js';
 
@@ -107,7 +108,7 @@ export default async function AboutPage() {
       ---------------------------------------------------------------- */}
       <section className="pb-24 pt-12 sm:pb-28 sm:pt-14">
         <div className="wrap">
-          <div className="max-w-2xl">
+          <Reveal variant="fade-up" className="max-w-2xl">
             <p className="eyebrow">Misiunea</p>
             <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold leading-[1.04] tracking-[-0.028em]">
               Busola care te ajută să alegi{' '}
@@ -134,7 +135,7 @@ export default async function AboutPage() {
               <HeartIcon className="size-3.5 -translate-y-px text-accent" />
               <span>Gândit pentru decizii mai clare</span>
             </p>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -143,16 +144,19 @@ export default async function AboutPage() {
       ---------------------------------------------------------------- */}
       <section className="pb-24">
         <div className="wrap">
-          <ol className="relative grid gap-6 md:grid-cols-3 md:gap-8">
+          <Reveal
+            stagger
+            as="ol"
+            className="relative grid gap-6 md:grid-cols-3 md:gap-8"
+          >
             <div
               aria-hidden="true"
               className="absolute -top-7 left-[16%] right-[16%] hidden border-t-2 border-dashed border-primary-soft/40 md:block"
             />
-            {ROUTE_FACTS.map(({ label, value }, index) => (
+            {ROUTE_FACTS.map(({ label, value }) => (
               <li
                 key={label}
-                style={{ '--i': index }}
-                className="reveal-stagger group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift"
+                className="group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift"
               >
                 <div
                   aria-hidden="true"
@@ -166,7 +170,7 @@ export default async function AboutPage() {
                 </p>
               </li>
             ))}
-          </ol>
+          </Reveal>
         </div>
       </section>
 
@@ -180,7 +184,10 @@ export default async function AboutPage() {
             <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/15" />
             <Meridian className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.09]" />
 
-            <div className="relative grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            <Reveal
+              variant="fade-up"
+              className="relative grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16"
+            >
               <div>
                 <p className="eyebrow !text-mint">Contact</p>
                 <h2 className="mt-5 text-balance font-display text-3xl font-semibold text-white sm:text-4xl">
@@ -244,7 +251,7 @@ export default async function AboutPage() {
               </div>
 
               <ContactForm email={CONTACT_EMAIL} />
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -254,7 +261,9 @@ export default async function AboutPage() {
       ---------------------------------------------------------------- */}
       <section className="pb-24 pt-0">
         <div className="wrap">
-          <CreditCard name="Toma Aris" handle="IRules" />
+          <Reveal variant="fade-up">
+            <CreditCard name="Toma Aris" handle="IRules" />
+          </Reveal>
         </div>
       </section>
     </>

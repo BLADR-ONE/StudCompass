@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from '../ui/Button.js';
 import { Constellation, TrailWeave } from '../layout/Brand.js';
+import Reveal from '../ui/Reveal.js';
 
 export default function CtaBand() {
   return (
@@ -17,7 +18,7 @@ export default function CtaBand() {
             className="beacon-glow animate-beacon absolute bottom-2 left-1/2 size-[26rem] -translate-x-1/2"
           />
 
-          <div className="relative mx-auto max-w-2xl">
+          <Reveal variant="fade-up" className="relative mx-auto max-w-2xl">
             <p className="eyebrow justify-center !text-mint">
               Testul de carieră
             </p>
@@ -60,7 +61,7 @@ export default function CtaBand() {
                 sau explorează facultățile →
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

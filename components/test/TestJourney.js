@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
-import { TrailWeave, Horizon, Contour } from '../layout/Brand.js';
+import { TrailWeave, Horizon, RiverDelta } from '../layout/Brand.js';
 import { trackAnalyticsEvent } from '../../lib/analytics.js';
 import QuestionCard, { ANSWER_SELECTED } from './QuestionCard.js';
 import ResultsView from './ResultsView.js';
@@ -342,8 +342,8 @@ export default function TestJourney() {
 
       {phase === 'quiz' && (
         <section className="relative">
-          {/* Contour — topographic depth behind the question stage */}
-          <Contour className="animate-drift-slow pointer-events-none absolute -right-24 top-0 size-72 text-primary/[0.06] dark:text-primary-soft/[0.07]" />
+          {/* RiverDelta — branching watercourses behind the question stage */}
+          <RiverDelta className="animate-drift-slow pointer-events-none absolute -right-24 top-0 size-72 text-primary/[0.06] dark:text-primary-soft/[0.07]" />
 
           <header className="relative">
             <div className="flex flex-wrap items-center justify-between gap-3">

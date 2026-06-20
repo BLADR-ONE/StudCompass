@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import StarRating from '../ui/StarRating.js';
-import { WaypointGrid, Meridian } from '../layout/Brand.js';
+import { WaypointGrid, NorthStar } from '../layout/Brand.js';
+import Reveal from '../ui/Reveal.js';
 
 function Cover({ coverUrl, emblemUrl, name }) {
   const isLocal = typeof coverUrl === 'string' && coverUrl.startsWith('/');
@@ -84,7 +85,7 @@ function EmptyState() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
       <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
-      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+      <NorthStar className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h3 className="font-display text-2xl font-semibold">
           Harta se desenează chiar acum.
@@ -114,7 +115,10 @@ export default function FeaturedFaculties({ faculties = [] }) {
   return (
     <section className="py-20 sm:py-24">
       <div className="wrap">
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <Reveal
+          variant="fade-up"
+          className="flex flex-wrap items-end justify-between gap-6"
+        >
           <div className="max-w-xl">
             <p className="eyebrow">Apreciate de comunitate</p>
             <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold leading-[1.04] tracking-[-0.028em]">
@@ -135,21 +139,20 @@ export default function FeaturedFaculties({ faculties = [] }) {
               </span>
             </Link>
           )}
-        </div>
+        </Reveal>
 
         <div className="mt-12">
           {faculties.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {faculties.map((faculty, index) => (
-                <div
-                  key={faculty.slug}
-                  className="reveal-stagger flex"
-                  style={{ '--i': index }}
-                >
+            <Reveal
+              stagger
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            >
+              {faculties.map((faculty) => (
+                <div key={faculty.slug} className="flex">
                   <FacultyCard faculty={faculty} />
                 </div>
               ))}
-            </div>
+            </Reveal>
           ) : (
             <EmptyState />
           )}

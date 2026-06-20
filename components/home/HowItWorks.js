@@ -1,4 +1,5 @@
 import { Contour } from '../layout/Brand.js';
+import Reveal from '../ui/Reveal.js';
 
 const STEPS = [
   {
@@ -32,7 +33,7 @@ export default function HowItWorks() {
       />
 
       <div className="wrap relative">
-        <div className="max-w-2xl">
+        <Reveal variant="fade-up" className="max-w-2xl">
           <p className="eyebrow">Trei pași simpli</p>
           <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold leading-[1.04] tracking-[-0.028em]">
             Cum funcționează StudCompass?
@@ -41,20 +42,23 @@ export default function HowItWorks() {
             De la „habar n-am încotro" la o listă scurtă de facultăți care
             chiar ți se potrivesc.
           </p>
-        </div>
+        </Reveal>
 
-        <ol className="relative mt-16 grid gap-6 md:grid-cols-3 md:gap-8">
+        <Reveal
+          stagger
+          as="ol"
+          className="relative mt-16 grid gap-6 md:grid-cols-3 md:gap-8"
+        >
           {/* Dashed route connecting the three map markers */}
           <div
             aria-hidden="true"
             className="absolute -top-8 left-[16%] right-[16%] hidden border-t-2 border-dashed border-primary-soft/45 md:block"
           />
 
-          {STEPS.map(({ numeral, title, body }, index) => (
+          {STEPS.map(({ numeral, title, body }) => (
             <li
               key={numeral}
-              style={{ '--i': index }}
-              className="reveal-stagger group relative rounded-3xl border border-border bg-surface-raised p-7 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift"
+              className="group relative rounded-3xl border border-border bg-surface-raised p-7 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift"
             >
               {/* Map marker */}
               <div
@@ -75,7 +79,7 @@ export default function HowItWorks() {
               </p>
             </li>
           ))}
-        </ol>
+        </Reveal>
       </div>
     </section>
   );

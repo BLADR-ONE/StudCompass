@@ -7,6 +7,7 @@ import ProfileCard from '../../../components/account/ProfileCard.js';
 import PreferencesCard from '../../../components/account/PreferencesCard.js';
 import PersonalityCard from '../../../components/account/PersonalityCard.js';
 import SignOutButton from '../../../components/account/SignOutButton.js';
+import Reveal from '../../../components/ui/Reveal.js';
 
 const { db, schema } = dbModule;
 
@@ -176,7 +177,10 @@ export default async function AccountPage() {
           </div>
 
           {/* The logbook spreads */}
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+          <Reveal
+            stagger
+            className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-start"
+          >
             <div className="grid gap-6">
               <ProfileCard initialName={name} />
               <PreferencesCard
@@ -187,7 +191,7 @@ export default async function AccountPage() {
               />
             </div>
             <PersonalityCard />
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

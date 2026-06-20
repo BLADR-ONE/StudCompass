@@ -4,7 +4,8 @@ import dbModule from '../../lib/db/index.js';
 import FilterBar from '../../components/faculty/FilterBar.js';
 import FacultyCard from '../../components/faculty/FacultyCard.js';
 import Button from '../../components/ui/Button.js';
-import { WaypointGrid, Meridian } from '../../components/layout/Brand.js';
+import Reveal from '../../components/ui/Reveal.js';
+import { WaypointGrid, Astrolabe } from '../../components/layout/Brand.js';
 import ChapterHeader from '../../components/layout/ChapterHeader.js';
 
 const { db, schema } = dbModule;
@@ -163,7 +164,7 @@ function OfflineState() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
       <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
-      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+      <Astrolabe className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h2 className="font-display text-2xl font-semibold">
           Catalogul se desenează chiar acum.
@@ -257,11 +258,14 @@ export default async function FacultiesPage({ searchParams }) {
               </p>
 
               {catalog.faculties.length > 0 ? (
-                <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <Reveal
+                  stagger
+                  className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                >
                   {catalog.faculties.map((faculty) => (
                     <FacultyCard key={faculty.slug} faculty={faculty} />
                   ))}
-                </div>
+                </Reveal>
               ) : (
                 <div className="mt-5">
                   <NoResults />
