@@ -95,6 +95,155 @@ export function CompassRose({ className = '' }) {
   );
 }
 
+/* ---------------------------------------------------------------------------
+   Cartographer's field-notes motif family
+   --------------------------------------------------------------------------
+   Six abstract map-making marks that share the compass's line-art DNA
+   (single-weight strokes in `currentColor`, one accent node) but break the
+   visual monotony of the rose being on every page. Each is a drop-in decoration
+   with the exact same contract as CompassRose: an aria-hidden SVG that takes a
+   single `className` (caller supplies pointer-events / absolute / size / color).
+   The compass itself stays the SINGLE signature mark — home hero + logo.
+--------------------------------------------------------------------------- */
+
+/* TrailWeave — a winding dashed route with milestone pins. The journey. */
+export function TrailWeave({ className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true" className={className}>
+      <path
+        d="M14 168 C 48 150 40 108 74 98 C 108 88 100 50 134 42 C 158 36 172 44 186 30"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeDasharray="1 9"
+        opacity="0.75"
+      />
+      <g stroke="currentColor" strokeWidth="1.25" fill="none">
+        <circle cx="14" cy="168" r="4.5" opacity="0.6" />
+        <circle cx="74" cy="98" r="4.5" opacity="0.7" />
+        <circle cx="134" cy="42" r="4.5" opacity="0.8" />
+      </g>
+      {/* Destination flag — the one accent moment. */}
+      <g transform="translate(186 30)">
+        <path d="M0 0v-22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M0 -22 14 -17 0 -12Z" fill="var(--color-accent)" />
+        <circle cx="0" cy="0" r="2.6" fill="currentColor" />
+      </g>
+    </svg>
+  );
+}
+
+/* Constellation — connected star nodes. Discovery, finding your direction. */
+export function Constellation({ className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true" className={className}>
+      <path
+        d="M28 150 70 120 96 146 132 70 158 96 176 40"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+      <path d="M70 120 84 56 132 70" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+      <g stroke="currentColor" strokeWidth="1.25" fill="var(--sc-bg)">
+        <circle cx="28" cy="150" r="3" />
+        <circle cx="70" cy="120" r="3.5" />
+        <circle cx="96" cy="146" r="2.5" />
+        <circle cx="84" cy="56" r="3" />
+        <circle cx="158" cy="96" r="3" />
+        <circle cx="176" cy="40" r="2.5" />
+      </g>
+      {/* Brightest star — accent four-point spark. */}
+      <g transform="translate(132 70)">
+        <path
+          d="M0 -11 2.6 -2.6 11 0 2.6 2.6 0 11 -2.6 2.6 -11 0 -2.6 -2.6Z"
+          fill="var(--color-accent)"
+        />
+      </g>
+    </svg>
+  );
+}
+
+/* Contour — topographic elevation lines. Terrain, depth, the lay of the land. */
+export function Contour({ className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true" className={className}>
+      <g stroke="currentColor" fill="none" strokeLinecap="round">
+        <path d="M6 96 C 50 60 88 132 128 92 C 152 68 178 84 196 70" strokeWidth="1.25" opacity="0.7" />
+        <path d="M2 122 C 48 90 92 150 134 112 C 160 90 182 106 198 94" strokeWidth="1" opacity="0.5" />
+        <path d="M8 70 C 48 42 84 104 122 70 C 148 48 176 62 194 50" strokeWidth="1" opacity="0.45" />
+        <path d="M12 148 C 54 120 96 172 140 138 C 166 118 184 130 198 120" strokeWidth="0.85" opacity="0.32" />
+        <path d="M16 46 C 50 26 80 78 116 50" strokeWidth="0.85" opacity="0.3" />
+      </g>
+      {/* Summit marker — accent benchmark dot. */}
+      <circle cx="128" cy="92" r="3.4" fill="var(--color-accent)" />
+    </svg>
+  );
+}
+
+/* Horizon — concentric arcs over a baseline with a rising marker. Beginnings. */
+export function Horizon({ className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true" className={className}>
+      <line x1="6" y1="132" x2="194" y2="132" stroke="currentColor" strokeWidth="1.25" opacity="0.6" />
+      <g stroke="currentColor" fill="none">
+        <path d="M52 132 A 48 48 0 0 1 148 132" strokeWidth="1.25" opacity="0.7" />
+        <path d="M34 132 A 66 66 0 0 1 166 132" strokeWidth="1" opacity="0.45" />
+        <path d="M16 132 A 84 84 0 0 1 184 132" strokeWidth="0.85" opacity="0.28" />
+      </g>
+      {/* Sun / waypoint cresting the horizon — accent. */}
+      <circle cx="100" cy="132" r="11" fill="var(--color-accent)" />
+      <g stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" opacity="0.6">
+        <path d="M100 104v-10" />
+        <path d="M126 110l7-7" />
+        <path d="M74 110l-7-7" />
+      </g>
+    </svg>
+  );
+}
+
+/* WaypointGrid — a coordinate-grid corner with a dropped location pin. */
+export function WaypointGrid({ className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true" className={className}>
+      <g stroke="currentColor" strokeWidth="0.85" opacity="0.32">
+        <path d="M40 8v184M84 8v184M128 8v184M172 8v184" />
+        <path d="M8 44h184M8 88h184M8 132h184M8 176h184" />
+      </g>
+      <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.7">
+        <path d="M84 88h-8M88 88v-8M84 88h8M88 88v8" />
+      </g>
+      {/* Dropped pin at a grid intersection — accent. */}
+      <g transform="translate(128 88)">
+        <path
+          d="M0 28 C -11 12 -13 8 -13 0 A 13 13 0 1 1 13 0 C 13 8 11 12 0 28Z"
+          fill="var(--color-accent)"
+        />
+        <circle cx="0" cy="-1" r="4.5" fill="var(--sc-bg)" />
+      </g>
+    </svg>
+  );
+}
+
+/* Meridian — a globe wireframe of longitude/latitude arcs. Scope, the map. */
+export function Meridian({ className = '' }) {
+  return (
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true" className={className}>
+      <circle cx="100" cy="100" r="84" stroke="currentColor" strokeWidth="1.25" opacity="0.7" />
+      <g stroke="currentColor" fill="none" strokeWidth="0.9" opacity="0.5">
+        <ellipse cx="100" cy="100" rx="34" ry="84" />
+        <ellipse cx="100" cy="100" rx="64" ry="84" />
+        <path d="M16 100h168" />
+        <path d="M28 60h144M28 140h144" />
+      </g>
+      {/* A pinned point on the globe — accent. */}
+      <circle cx="132" cy="64" r="3.6" fill="var(--color-accent)" />
+      <circle cx="132" cy="64" r="8" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+    </svg>
+  );
+}
+
 /* Wordmark + mark. `inverse` is for photo/teal surfaces (mint on dark). */
 export default function Brand({ inverse = false, className = '' }) {
   return (

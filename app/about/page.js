@@ -1,4 +1,4 @@
-import { CompassRose, GitHubIcon } from '../../components/layout/Brand.js';
+import { Constellation, Meridian, GitHubIcon } from '../../components/layout/Brand.js';
 import ContactForm from '../../components/about/ContactForm.js';
 import DeveloperHero from '../../components/about/DeveloperHero.js';
 import CreditCard from '../../components/about/CreditCard.js';
@@ -176,8 +176,8 @@ export default async function AboutPage() {
         <div className="wrap">
           <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-14 sm:px-12 sm:py-16">
             <div aria-hidden="true" className="texture-doodle-night" />
-            <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 -top-28 size-96 text-mint/10" />
-            <CompassRose className="pointer-events-none absolute -bottom-32 -left-24 size-80 text-mint/[0.07]" />
+            <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/15" />
+            <Meridian className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.09]" />
 
             <div className="relative grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
               <div>

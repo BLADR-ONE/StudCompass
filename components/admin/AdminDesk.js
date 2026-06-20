@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { CompassRose } from '../layout/Brand.js';
+import { Meridian, WaypointGrid } from '../layout/Brand.js';
 import ModerationList from './ModerationList.js';
 import UsersList from './UsersList.js';
 import StatsPanel from './StatsPanel.js';
@@ -22,8 +22,8 @@ const TABS = [
 function DeskOffline() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
-      <CompassRose className="pointer-events-none absolute -bottom-24 -left-16 size-72 text-primary/[0.08] dark:text-primary-soft/10" />
-      <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+      <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
+      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.09] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h2 className="font-display text-2xl font-semibold">
           Masa e goală — atlasul nu e conectat.

@@ -39,6 +39,3 @@ yarn-error.log*
 
 # Firestore import/export artifacts
 firestore-export.json
-
-# Session handoff reports (not part of the product)
-SESSION-HANDOFF-*.md

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
-import { CompassRose } from '../layout/Brand.js';
+import { TrailWeave, Horizon } from '../layout/Brand.js';
 import { trackAnalyticsEvent } from '../../lib/analytics.js';
 import QuestionCard, { ANSWER_SELECTED } from './QuestionCard.js';
 import ResultsView from './ResultsView.js';
@@ -254,7 +254,7 @@ export default function TestJourney() {
     <div ref={topRef} className="scroll-mt-24">
       {phase === 'intro' && (
         <section className="animate-pop relative overflow-hidden rounded-3xl border border-border bg-surface-raised p-6 shadow-card sm:p-10">
-          <CompassRose className="pointer-events-none absolute -right-24 -top-28 size-80 text-primary/[0.06] dark:text-primary-soft/[0.07]" />
+          <TrailWeave className="animate-trail-draw pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
 
           <div className="relative max-w-xl">
             <p className="eyebrow">
@@ -492,7 +492,7 @@ export default function TestJourney() {
 
       {phase === 'offline' && (
         <section className="animate-pop relative overflow-hidden rounded-3xl border-2 border-dashed border-border px-6 py-14 text-center">
-          <CompassRose className="pointer-events-none absolute -bottom-24 -left-20 size-64 text-primary/[0.06] dark:text-primary-soft/[0.07]" />
+          <Horizon className="animate-sway pointer-events-none absolute -bottom-20 -left-20 size-64 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
 
           <div className="relative mx-auto max-w-md">
             <p className="eyebrow justify-center">Pauză de semnal</p>

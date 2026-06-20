@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Button from '../ui/Button.js';
-import { CompassRose } from '../layout/Brand.js';
+import { Constellation, TrailWeave } from '../layout/Brand.js';
 
 export default function CtaBand() {
   return (
@@ -9,8 +9,8 @@ export default function CtaBand() {
         {/* Always the night map, in both themes — a deliberate full-stop. */}
         <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-16 text-center sm:px-12 sm:py-20">
           <div aria-hidden="true" className="texture-doodle-night" />
-          <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 -top-28 size-96 text-mint/10" />
-          <CompassRose className="pointer-events-none absolute -bottom-32 -left-24 size-80 text-mint/[0.07]" />
+          <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/15" />
+          <TrailWeave className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.09]" />
 
           <div className="relative mx-auto max-w-2xl">
             <p className="eyebrow justify-center !text-mint">

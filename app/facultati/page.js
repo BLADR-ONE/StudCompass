@@ -4,7 +4,7 @@ import dbModule from '../../lib/db/index.js';
 import FilterBar from '../../components/faculty/FilterBar.js';
 import FacultyCard from '../../components/faculty/FacultyCard.js';
 import Button from '../../components/ui/Button.js';
-import { CompassRose } from '../../components/layout/Brand.js';
+import { WaypointGrid, Meridian } from '../../components/layout/Brand.js';
 import ChapterHeader from '../../components/layout/ChapterHeader.js';
 
 const { db, schema } = dbModule;
@@ -162,8 +162,8 @@ async function getCatalog(filters) {
 function OfflineState() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
-      <CompassRose className="pointer-events-none absolute -bottom-24 -left-16 size-72 text-primary/[0.08] dark:text-primary-soft/10" />
-      <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+      <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
+      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h2 className="font-display text-2xl font-semibold">
           Catalogul se desenează chiar acum.
@@ -191,7 +191,7 @@ function OfflineState() {
 function NoResults() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-14 text-center sm:py-16">
-      <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-72 text-primary/[0.08] dark:text-primary-soft/10" />
+      <WaypointGrid className="pointer-events-none absolute -right-20 -top-24 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h2 className="font-display text-2xl font-semibold">
           Nimic în această zonă a hărții.

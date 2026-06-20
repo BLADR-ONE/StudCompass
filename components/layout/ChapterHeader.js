@@ -1,4 +1,4 @@
-import { CompassRose } from './Brand.js';
+import { Contour } from './Brand.js';
 
 export default function ChapterHeader({
   eyebrow,
@@ -9,14 +9,14 @@ export default function ChapterHeader({
   const shellClass = heroMode
     ? 'pb-16 pt-28 sm:pb-20 sm:pt-36'
     : 'pb-10 pt-14 sm:pt-20';
-  const compassClass = heroMode
-    ? 'pointer-events-none absolute -bottom-24 -right-24 hidden size-[22rem] text-primary/[0.08] dark:text-primary-soft/10 lg:block'
-    : 'pointer-events-none absolute -right-28 -top-24 hidden size-[22rem] text-primary/[0.08] dark:text-primary-soft/10 lg:block';
+  const motifClass = heroMode
+    ? 'animate-sway pointer-events-none absolute -bottom-20 -right-24 hidden size-[24rem] text-primary/[0.09] dark:text-primary-soft/10 lg:block'
+    : 'animate-sway pointer-events-none absolute -right-28 -top-20 hidden size-[24rem] text-primary/[0.09] dark:text-primary-soft/10 lg:block';
 
   return (
     <section className="relative overflow-hidden bg-bg">
       <div aria-hidden="true" className="texture-doodle" />
-      <CompassRose className={compassClass} />
+      <Contour className={motifClass} />
 
       <div className={`wrap relative ${shellClass}`}>
         <p className="eyebrow animate-rise" style={{ animationDelay: '60ms' }}>

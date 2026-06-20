@@ -1,5 +1,5 @@
 import Spinner from '../ui/Spinner.js';
-import { CompassRose } from '../layout/Brand.js';
+import { Meridian } from '../layout/Brand.js';
 
 /* Small shared pieces of the cartographer's desk — kept together so the
    three drawers (recenzii / mesaje / utilizatori) stay visually identical. */
@@ -49,7 +49,7 @@ export function ActionPill({
 export function DeskEmpty({ title, children, action = null }) {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-14 text-center sm:py-16">
-      <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-72 text-primary/[0.08] dark:text-primary-soft/10" />
+      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h3 className="font-display text-2xl font-semibold">{title}</h3>
         <p className="mt-3 text-pretty text-sm leading-relaxed text-text-muted">

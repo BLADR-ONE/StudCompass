@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
 import StarRating from '../ui/StarRating.js';
-import { CompassRose } from '../layout/Brand.js';
+import { Constellation } from '../layout/Brand.js';
 
 const dateFormatter = new Intl.DateTimeFormat('ro-RO', {
   day: 'numeric',
@@ -197,7 +197,7 @@ export default function Reviews({ facultySlug }) {
           </div>
         ) : (
           <div className="relative overflow-hidden p-6 text-center sm:p-8">
-            <CompassRose className="pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+            <Constellation className="animate-twinkle pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
             <div className="relative">
               <h3 className="font-display text-lg font-semibold">
                 Spune-ți părerea

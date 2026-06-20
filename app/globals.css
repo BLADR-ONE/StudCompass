@@ -30,6 +30,16 @@
   --animate-bob: bob 2.6s ease-in-out infinite;
   --animate-spin-slow: spin 90s linear infinite;
 
+  /* Motif-family accents — slow, ambient, decorative only.
+     drift/sway move a few px so parallax-y backgrounds feel alive without
+     drawing the eye; twinkle gives constellation marks a faint pulse; the
+     scenery animations all stop under prefers-reduced-motion (base layer). */
+  --animate-drift: drift 16s ease-in-out infinite;
+  --animate-drift-slow: drift 24s ease-in-out infinite;
+  --animate-sway: sway 13s ease-in-out infinite;
+  --animate-twinkle: twinkle 6s ease-in-out infinite;
+  --animate-trail-draw: trail-draw 5.5s ease-in-out infinite;
+
   @keyframes rise {
     from {
       opacity: 0;
@@ -65,6 +75,46 @@
     }
     50% {
       transform: translateY(9px);
+    }
+  }
+  /* Gentle diagonal float for large decorative motifs. */
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-10px, 12px, 0);
+    }
+  }
+  /* Slow pendulum tilt — used on horizon / meridian scenery. */
+  @keyframes sway {
+    0%,
+    100% {
+      transform: rotate(-2.5deg);
+    }
+    50% {
+      transform: rotate(2.5deg);
+    }
+  }
+  /* Faint opacity pulse for constellation marks. */
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+  /* Dashed route that animates as though it's being plotted on a map. */
+  @keyframes trail-draw {
+    0%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dashoffset: -40;
     }
   }
 }

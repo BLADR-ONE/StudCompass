@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Button from '../components/ui/Button.js';
-import { CompassRose } from '../components/layout/Brand.js';
+import { TrailWeave } from '../components/layout/Brand.js';
 
 export const metadata = {
   title: 'Pagină negăsită',
@@ -14,7 +14,7 @@ export default function NotFound() {
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-b from-bg via-transparent to-bg"
       />
-      <CompassRose className="animate-spin-slow pointer-events-none absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2 text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+      <TrailWeave className="animate-trail-draw pointer-events-none absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
 
       <div className="wrap relative text-center">
         <p className="eyebrow animate-rise justify-center">Eroare 404</p>

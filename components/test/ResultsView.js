@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
-import { CompassRose } from '../layout/Brand.js';
+import { Constellation } from '../layout/Brand.js';
 import {
   DIMENSIONS,
   DIMENSION_KEYS,
@@ -41,7 +41,7 @@ export default function ResultsView({ scores }) {
       {/* Night-map header: the moment the needle settles. */}
       <header className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-7 sm:p-10">
         <div aria-hidden="true" className="texture-doodle-night" />
-        <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 size-80 text-mint/10" />
+        <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-80 text-mint/15" />
 
         <div className="relative max-w-lg">
           <p className="eyebrow !text-mint">Busola s-a aliniat</p>

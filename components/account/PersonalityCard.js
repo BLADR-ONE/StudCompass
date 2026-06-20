@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
-import { CompassRose } from '../layout/Brand.js';
+import { Horizon, Contour } from '../layout/Brand.js';
 
 /* RIASEC profiles, ported from the legacy account page (modern diacritics). */
 const DIMENSIONS = {
@@ -107,7 +107,7 @@ function EmptyState() {
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-8 text-center shadow-card sm:p-10">
       <div aria-hidden="true" className="texture-doodle-night" />
-      <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 size-72 text-mint/10" />
+      <Horizon className="animate-sway pointer-events-none absolute -right-16 -top-20 size-72 text-mint/15" />
 
       <div className="relative mx-auto max-w-sm">
         <p className="eyebrow justify-center !text-mint">Testul de carieră</p>
@@ -225,7 +225,7 @@ export default function PersonalityCard() {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card">
       <div className="relative overflow-hidden border-b border-dashed border-border p-6 sm:p-7">
-        <CompassRose className="pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+        <Contour className="animate-sway pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
 
         <div className="relative">
           <div className="flex flex-wrap items-baseline justify-between gap-2">

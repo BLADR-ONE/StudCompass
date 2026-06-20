@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Brand, { CompassRose, GitHubIcon } from './Brand.js';
+import Brand, { Meridian, GitHubIcon } from './Brand.js';
 
 const NAV_LINKS = [
   { href: '/', label: 'Acasă' },
@@ -45,7 +45,7 @@ export default function Footer() {
         aria-hidden="true"
         className="h-0.5 bg-gradient-to-r from-primary via-accent to-highlight"
       />
-      <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-[22rem] text-mint/[0.07]" />
+      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-[22rem] text-mint/[0.09]" />
 
       <div className="wrap relative grid gap-12 py-16 md:grid-cols-[1.5fr_1fr_1fr]">
         <div className="max-w-sm">

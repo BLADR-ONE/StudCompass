@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { CompassRose, GitHubIcon } from '../layout/Brand.js';
+import { Contour, GitHubIcon } from '../layout/Brand.js';
 import ScrollCue from '../ui/ScrollCue.js';
 import { DEFAULT_HEADER_IMAGE } from '../../lib/site-constants.js';
 
@@ -39,7 +39,7 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
         className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
       />
 
-      <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
+      <Contour className="animate-sway pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/20 lg:block" />
 
       <div className="wrap relative py-32">
         <p
@@ -74,7 +74,7 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
           style={{ animationDelay: '320ms' }}
         >
           <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12">
-            <CompassRose className="animate-spin-slow pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/10 lg:block" />
+            <Contour className="animate-sway pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/15 lg:block" />
 
             {/* Avatar, framed like a portrait coordinate. */}
             <div className="relative shrink-0">

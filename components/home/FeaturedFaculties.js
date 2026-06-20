@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import StarRating from '../ui/StarRating.js';
-import { CompassRose } from '../layout/Brand.js';
+import { WaypointGrid, Meridian } from '../layout/Brand.js';
 
 function Cover({ coverUrl, emblemUrl, name }) {
   const isLocal = typeof coverUrl === 'string' && coverUrl.startsWith('/');
@@ -83,8 +83,8 @@ function FacultyCard({ faculty }) {
 function EmptyState() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
-      <CompassRose className="pointer-events-none absolute -bottom-24 -left-16 size-72 text-primary/[0.08] dark:text-primary-soft/10" />
-      <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+      <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
+      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
       <div className="relative mx-auto max-w-md">
         <h3 className="font-display text-2xl font-semibold">
           Harta se desenează chiar acum.

@@ -9,7 +9,7 @@ import Button from '../../../components/ui/Button.js';
 import StarRating from '../../../components/ui/StarRating.js';
 import Reviews from '../../../components/faculty/Reviews.js';
 import Chat from '../../../components/faculty/Chat.js';
-import { CompassRose } from '../../../components/layout/Brand.js';
+import { Contour, WaypointGrid, Horizon } from '../../../components/layout/Brand.js';
 
 const { db, schema } = dbModule;
 
@@ -203,8 +203,8 @@ function OfflineState() {
   return (
     <section className="wrap py-20 sm:py-24">
       <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
-        <CompassRose className="pointer-events-none absolute -bottom-24 -left-16 size-72 text-primary/[0.08] dark:text-primary-soft/10" />
-        <CompassRose className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+        <Contour className="animate-sway pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
+        <WaypointGrid className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.09] dark:text-primary-soft/10" />
         <div className="relative mx-auto max-w-md">
           <h1 className="font-display text-2xl font-semibold sm:text-3xl">
             Foaia asta de hartă nu se poate încărca.
@@ -285,7 +285,7 @@ export default async function FacultyPage({ params }) {
 
         <div className="relative mt-4 h-[19rem] overflow-hidden rounded-[2.5rem] shadow-lift sm:h-[23rem] lg:h-[26rem]">
           <HeroCover coverUrl={faculty.coverUrl} name={faculty.name} />
-          <CompassRose className="pointer-events-none absolute -right-16 -top-20 size-72 text-mint/10" />
+          <Horizon className="animate-sway pointer-events-none absolute -right-16 -top-20 size-72 text-mint/15" />
 
           <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-6 sm:gap-6 sm:p-10">
             <span className="flex size-16 flex-none items-center justify-center overflow-hidden rounded-full border-2 border-white/80 bg-white shadow-lift sm:size-20">
