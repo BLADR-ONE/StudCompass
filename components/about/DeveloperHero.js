@@ -82,13 +82,13 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
                 aria-hidden="true"
                 className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-primary-soft/40 to-accent/25 blur-md"
               />
-              <img
+              <Image
                 src={owner.avatar_url}
                 alt={owner.name}
                 width={160}
                 height={160}
                 className="relative size-32 rounded-[1.6rem] border border-mint/25 object-cover shadow-sm sm:size-40"
-                loading="eager"
+                priority
               />
               <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-mint/30 bg-ink/80 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-mint/80 shadow-sm">
                 creator

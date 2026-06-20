@@ -292,12 +292,7 @@ export default function AuthTabs({ initialError = '', initialEmail = '' }) {
         return;
       }
 
-      if (res.status === 409) {
-        setBanner({
-          tone: 'error',
-          text: 'Există deja un cont cu acest email. Încearcă să te autentifici.',
-        });
-      } else if (res.status === 503) {
+      if (res.status === 503) {
         setBanner({
           tone: 'error',
           text: 'Înregistrarea nu e disponibilă momentan. Mai încearcă în câteva minute.',

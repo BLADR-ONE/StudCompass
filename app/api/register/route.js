@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import dbModule from '../../../lib/db/index.js';
 import { registerSchema } from '../../../lib/validate.js';
 import { isUniqueViolation } from '../../../lib/db-errors.js';
-import { sendAccountVerificationEmail } from '../../../lib/verification.js';
+import { sendAccountVerificationEmail, sendExistingAccountNotice } from '../../../lib/verification.js';
 
 const { db, schema } = dbModule;
 
@@ -38,7 +38,24 @@ export async function POST(request) {
     });
   } catch (error) {
     if (isUniqueViolation(error, 'users_email')) {
-      return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
+      // Do NOT return 409 — that leaks whether this email is registered.
+      // Instead, send a quiet "you already have an account" notice so a real
+      // user who forgot they're registered gets feedback, then return the same
+      // 201 shape as a real new registration so attackers can't probe the DB.
+      let notice;
+      try {
+        notice = await sendExistingAccountNotice({ email });
+      } catch {
+        notice = { ok: false, error: 'email_send_failed' };
+      }
+      return NextResponse.json(
+        {
+          ok: true,
+          verificationEmailSent: notice.ok,
+          verificationError: notice.ok ? null : notice.error,
+        },
+        { status: 201 },
+      );
     }
 
     return NextResponse.json(
