@@ -225,11 +225,11 @@ export default function PersonalityCard() {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card">
       <div className="relative overflow-hidden border-b border-dashed border-border p-6 sm:p-7">
-        <Contour className="animate-sway pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
+        <Contour className="animate-sway pointer-events-none absolute -right-16 -top-20 size-64 text-primary/[0.11] dark:text-primary-soft/[0.12]" />
 
         <div className="relative">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="font-display text-xl font-semibold">
+            <h2 className="font-display text-2xl font-semibold">
               Busola interioară
             </h2>
             {measuredOn && (
@@ -239,10 +239,10 @@ export default function PersonalityCard() {
             )}
           </div>
 
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
             Profil dominant
           </p>
-          <p className="wonky mt-1.5 font-display text-4xl font-semibold italic text-primary-strong dark:text-primary-soft">
+          <p className="wonky mt-1.5 font-display text-5xl font-semibold italic text-primary-strong dark:text-primary-soft">
             {dominant.label}
           </p>
           <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-text-muted">
@@ -267,7 +267,11 @@ export default function PersonalityCard() {
             );
             const isDominant = index === 0;
             return (
-              <li key={key}>
+              <li
+                key={key}
+                style={{ '--i': index }}
+                className="reveal-stagger"
+              >
                 <div className="flex items-baseline justify-between gap-3">
                   <span
                     className={`text-sm font-semibold ${
@@ -276,11 +280,17 @@ export default function PersonalityCard() {
                   >
                     {label}
                   </span>
-                  <span className="text-xs font-medium tabular-nums text-text-muted">
+                  <span
+                    className={`text-xs font-medium tabular-nums ${
+                      isDominant
+                        ? 'text-accent dark:text-highlight'
+                        : 'text-text-muted'
+                    }`}
+                  >
                     {score} / {MAX_PER_DIMENSION}
                   </span>
                 </div>
-                <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-border/60">
+                <div className="mt-2 h-3 overflow-hidden rounded-full bg-border/50">
                   <div
                     className={`h-full rounded-full transition-[width] duration-700 ease-out ${
                       isDominant
@@ -300,7 +310,7 @@ export default function PersonalityCard() {
 
         <Link
           href="/account/personalityTest"
-          className="mt-6 inline-block text-sm font-semibold text-primary-strong underline-offset-4 transition-colors hover:underline dark:text-primary-soft"
+          className="mt-7 inline-block text-sm font-semibold text-primary-strong underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:underline dark:text-primary-soft"
         >
           Refă testul de carieră →
         </Link>

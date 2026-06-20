@@ -63,13 +63,21 @@ export default function ProfileCard({ initialName = '' }) {
   };
 
   return (
-    <Card className="sm:p-7">
-      <h2 className="font-display text-xl font-semibold">Nume de călător</h2>
-      <p className="mt-1 text-sm leading-relaxed text-text-muted">
-        Numele apare lângă recenziile și mesajele tale de pe hartă.
-      </p>
+    <Card className="relative overflow-hidden shadow-glow sm:p-7">
+      {/* Beacon anchor — decorative radial glow behind the heading area */}
+      <span
+        aria-hidden="true"
+        className="beacon-glow-primary animate-beacon pointer-events-none absolute -left-12 -top-12 size-56"
+      />
 
-      <form onSubmit={save} noValidate className="mt-5">
+      <div className="relative">
+        <h2 className="font-display text-2xl font-semibold">Nume de călător</h2>
+        <p className="mt-1.5 text-sm leading-relaxed text-text-muted">
+          Numele apare lângă recenziile și mesajele tale de pe hartă.
+        </p>
+      </div>
+
+      <form onSubmit={save} noValidate className="relative mt-5">
         <Input
           label="Nume"
           type="text"
@@ -84,7 +92,7 @@ export default function ProfileCard({ initialName = '' }) {
           error={fieldError}
         />
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-border pt-4">
           <p
             aria-live="polite"
             className={`text-xs font-medium ${

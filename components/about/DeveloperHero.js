@@ -30,36 +30,46 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
       {/* Ink veil, heavier on the text side. Mirrors home Hero. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-ink/10"
+        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/65 to-ink/15"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_0%,transparent_38%,rgb(8_22_22/0.55)_100%)]"
       />
 
       {/* Top vignette for navbar legibility. */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
+        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/75 to-transparent"
       />
 
-      <Contour className="animate-sway pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/20 lg:block" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-28 top-20 hidden lg:block"
+      >
+        <span className="beacon-glow-primary animate-beacon absolute left-1/2 top-1/2 size-[30rem] -translate-x-1/2 -translate-y-1/2" />
+        <Contour className="animate-sway relative size-[28rem] text-mint/25" />
+      </div>
 
       <div className="wrap relative py-32">
         <p
-          className="eyebrow animate-rise !text-mint"
+          className="eyebrow animate-lift !text-mint"
           style={{ animationDelay: '60ms' }}
         >
           {eyebrow}
         </p>
 
         <h1
-          className="animate-rise mt-5 max-w-3xl text-balance font-display text-[clamp(2.4rem,5.5vw,4rem)] font-semibold leading-[1.05] text-white"
-          style={{ animationDelay: '140ms' }}
+          className="animate-lift mt-6 max-w-3xl text-balance font-display text-[length:var(--text-display)] font-semibold leading-[1.02] tracking-[-0.03em] text-white"
+          style={{ animationDelay: '160ms' }}
         >
           StudCompass este desenat de{' '}
           <em className="wonky italic text-highlight">un singur om</em>.
         </h1>
 
         <p
-          className="animate-rise mt-5 max-w-2xl text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
-          style={{ animationDelay: '220ms' }}
+          className="animate-lift mt-6 max-w-2xl text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
+          style={{ animationDelay: '260ms' }}
         >
           O busolă pentru elevii și studenții din România care vor să compare
           facultăți mai sigur — gândită, construită și întreținută de o singură
@@ -70,8 +80,8 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
             the right; collapses to a stacked layout on small screens.
             Night-glass treatment so it reads over the dark hero photo. */}
         <div
-          className="animate-rise mt-12 overflow-hidden rounded-[2.25rem] border border-mint/20 bg-ink/60 shadow-card backdrop-blur-md transition-[border-color,box-shadow] duration-300 ease-out-quint hover:border-mint/35 hover:shadow-lift"
-          style={{ animationDelay: '320ms' }}
+          className="animate-lift mt-12 overflow-hidden rounded-[2.25rem] border border-mint/20 bg-ink/60 shadow-glow backdrop-blur-md transition-[border-color,box-shadow] duration-300 ease-out-quint hover:border-mint/35 hover:shadow-lift"
+          style={{ animationDelay: '380ms' }}
         >
           <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12">
             <Contour className="animate-sway pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/15 lg:block" />

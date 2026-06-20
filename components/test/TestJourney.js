@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
-import { TrailWeave, Horizon } from '../layout/Brand.js';
+import { TrailWeave, Horizon, Contour } from '../layout/Brand.js';
 import { trackAnalyticsEvent } from '../../lib/analytics.js';
 import QuestionCard, { ANSWER_SELECTED } from './QuestionCard.js';
 import ResultsView from './ResultsView.js';
@@ -253,14 +253,23 @@ export default function TestJourney() {
   return (
     <div ref={topRef} className="scroll-mt-24">
       {phase === 'intro' && (
-        <section className="animate-pop relative overflow-hidden rounded-3xl border border-border bg-surface-raised p-6 shadow-card sm:p-10">
-          <TrailWeave className="animate-trail-draw pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
+        <section className="animate-lift relative overflow-hidden rounded-3xl border border-border bg-surface-raised p-6 shadow-lift sm:p-10">
+          {/* Section-scale TrailWeave — the journey motif as a prominent anchor */}
+          <TrailWeave className="animate-trail-draw pointer-events-none absolute -right-16 -top-16 size-[26rem] text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+          {/* Green beacon behind the motif for warmth */}
+          <span
+            aria-hidden="true"
+            className="beacon-glow-primary animate-beacon pointer-events-none absolute right-0 top-0 size-96 opacity-40"
+          />
 
           <div className="relative max-w-xl">
             <p className="eyebrow">
               {hasDraft ? 'Expediție în desfășurare' : 'Înainte de plecare'}
             </p>
-            <h2 className="mt-4 text-balance font-display text-2xl font-semibold sm:text-3xl">
+            <h2
+              className="mt-5 text-balance font-display font-semibold"
+              style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.6rem)' }}
+            >
               {hasDraft ? (
                 <>
                   Ai notat deja{' '}
@@ -332,14 +341,21 @@ export default function TestJourney() {
       )}
 
       {phase === 'quiz' && (
-        <section>
-          <header>
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <section className="relative">
+          {/* Contour — topographic depth behind the question stage */}
+          <Contour className="animate-drift-slow pointer-events-none absolute -right-24 top-0 size-72 text-primary/[0.06] dark:text-primary-soft/[0.07]" />
+
+          <header className="relative">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="eyebrow">
                 Etapa {step + 1} din {STEP_COUNT}
               </p>
-              <span className="text-xs font-medium tabular-nums text-text-muted">
-                {answeredCount} / {TOTAL_QUESTIONS} răspunsuri notate
+              {/* Confident question counter — larger, tabular, more presence */}
+              <span className="font-display text-base font-semibold tabular-nums text-text-muted">
+                <span className="text-2xl font-bold text-text">{answeredCount}</span>
+                <span className="mx-1 text-border">/</span>
+                {TOTAL_QUESTIONS}{' '}
+                <span className="text-sm font-normal">notate</span>
               </span>
             </div>
             <RouteProgress
@@ -349,7 +365,10 @@ export default function TestJourney() {
               furthest={furthest}
               onJump={jumpTo}
             />
-            <h2 className="mt-8 font-display text-2xl font-semibold sm:text-3xl">
+            <h2
+              className="mt-8 font-display font-semibold"
+              style={{ fontSize: 'clamp(1.75rem, 3.2vw, 2.5rem)' }}
+            >
               Ți-ar plăcea{' '}
               <em className="wonky italic text-primary-strong dark:text-primary-soft">
                 să…
@@ -398,9 +417,16 @@ export default function TestJourney() {
       )}
 
       {phase === 'review' && (
-        <section className="animate-pop">
+        <section className="animate-pop relative">
+          {/* Horizon — beginnings / completion motif at section scale */}
+          <Horizon className="pointer-events-none absolute -right-20 -top-10 size-80 text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+
+          <div className="relative">
           <p className="eyebrow">Ultima verificare</p>
-          <h2 className="mt-4 text-balance font-display text-2xl font-semibold sm:text-3xl">
+          <h2
+            className="mt-4 text-balance font-display font-semibold"
+            style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.6rem)' }}
+          >
             Traseu complet — mai arunci{' '}
             <em className="wonky italic text-primary-strong dark:text-primary-soft">
               o privire
@@ -487,6 +513,7 @@ export default function TestJourney() {
               Înapoi la întrebări
             </Button>
           </div>
+          </div>{/* end relative wrapper */}
         </section>
       )}
 

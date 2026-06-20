@@ -109,7 +109,7 @@ export default async function AboutPage() {
         <div className="wrap">
           <div className="max-w-2xl">
             <p className="eyebrow">Misiunea</p>
-            <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
+            <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold leading-[1.04] tracking-[-0.028em]">
               Busola care te ajută să alegi{' '}
               <em className="wonky italic text-highlight">facultatea potrivită</em>.
             </h2>
@@ -148,10 +148,11 @@ export default async function AboutPage() {
               aria-hidden="true"
               className="absolute -top-7 left-[16%] right-[16%] hidden border-t-2 border-dashed border-primary-soft/40 md:block"
             />
-            {ROUTE_FACTS.map(({ label, value }) => (
+            {ROUTE_FACTS.map(({ label, value }, index) => (
               <li
                 key={label}
-                className="group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1 hover:border-primary-soft/60 hover:shadow-lift"
+                style={{ '--i': index }}
+                className="reveal-stagger group relative rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift"
               >
                 <div
                   aria-hidden="true"
@@ -174,7 +175,7 @@ export default async function AboutPage() {
       ---------------------------------------------------------------- */}
       <section id="contact" className="scroll-mt-24 pb-24 sm:pb-28">
         <div className="wrap">
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-14 sm:px-12 sm:py-16">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-16 shadow-glow ring-1 ring-mint/10 sm:px-12 sm:py-20">
             <div aria-hidden="true" className="texture-doodle-night" />
             <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/15" />
             <Meridian className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.09]" />

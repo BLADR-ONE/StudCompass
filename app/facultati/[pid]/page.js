@@ -9,7 +9,7 @@ import Button from '../../../components/ui/Button.js';
 import StarRating from '../../../components/ui/StarRating.js';
 import Reviews from '../../../components/faculty/Reviews.js';
 import Chat from '../../../components/faculty/Chat.js';
-import { Contour, WaypointGrid, Horizon } from '../../../components/layout/Brand.js';
+import { Contour, WaypointGrid, Horizon, CompassRose } from '../../../components/layout/Brand.js';
 
 const { db, schema } = dbModule;
 
@@ -267,7 +267,7 @@ export default async function FacultyPage({ params }) {
   return (
     <>
       {/* --------------------------------------------------------------
-          Map sheet hero: cover plate + emblem seal + name
+          Map sheet hero: full-bleed cover plate + glass info panel
       -------------------------------------------------------------- */}
       <section className="wrap pt-5">
         <Link
@@ -283,58 +283,90 @@ export default async function FacultyPage({ params }) {
           Înapoi la catalog
         </Link>
 
-        <div className="relative mt-4 h-[19rem] overflow-hidden rounded-[2.5rem] shadow-lift sm:h-[23rem] lg:h-[26rem]">
+        {/* Cover plate */}
+        <div className="relative mt-4 h-[22rem] overflow-hidden rounded-[2.5rem] shadow-lift sm:h-[27rem] lg:h-[31rem]">
           <HeroCover coverUrl={faculty.coverUrl} name={faculty.name} />
-          <Horizon className="animate-sway pointer-events-none absolute -right-16 -top-20 size-72 text-mint/15" />
 
-          <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-6 sm:gap-6 sm:p-10">
-            <span className="flex size-16 flex-none items-center justify-center overflow-hidden rounded-full border-2 border-white/80 bg-white shadow-lift sm:size-20">
+          {/* Ink veil — gradient overlay for contrast */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-ink/10"
+          />
+          {/* Top vignette */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/75 to-transparent"
+          />
+
+          {/* Cartographer motif anchor — large decorative CompassRose */}
+          <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 -top-24 size-[28rem] text-mint/10 sm:-right-16 sm:-top-16" />
+          <Horizon className="animate-sway pointer-events-none absolute -bottom-10 right-[10%] size-56 text-mint/10" />
+
+          {/* Hero content — name block */}
+          <div className="absolute inset-x-0 bottom-0 flex items-end gap-5 p-6 sm:gap-7 sm:p-10">
+            {/* Emblem seal */}
+            <span className="flex size-20 flex-none items-center justify-center overflow-hidden rounded-2xl border-2 border-white/25 bg-white/10 shadow-lift backdrop-blur-sm sm:size-24">
               {faculty.emblemUrl ? (
                 <img
                   src={faculty.emblemUrl}
                   alt=""
-                  className="size-full object-contain p-1.5"
+                  className="size-full object-contain p-2"
                 />
               ) : (
                 <span
                   aria-hidden="true"
-                  className="wonky font-display text-3xl font-semibold italic text-primary-strong"
+                  className="wonky font-display text-4xl font-semibold italic text-white"
                 >
                   {faculty.name.charAt(0)}
                 </span>
               )}
             </span>
-            <div className="min-w-0 pb-0.5">
-              <p className="eyebrow !text-mint">Fișa facultății</p>
-              <h1 className="mt-2 text-balance font-display text-2xl font-semibold leading-tight text-white sm:text-4xl lg:text-[2.75rem]">
+
+            <div className="min-w-0 pb-1 animate-lift">
+              <p className="eyebrow !text-mint before:bg-gradient-to-r before:from-mint before:to-teal-soft">
+                Fișa facultății
+              </p>
+              <h1 className="mt-3 text-balance font-display text-[length:var(--text-display)] font-semibold leading-[1.05] tracking-[-0.03em] text-white">
                 {faculty.name}
               </h1>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Passport strip: rating, city, badges */}
-      <section className="wrap">
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-dashed border-border py-5">
-          {details.count > 0 && details.avg != null ? (
-            <StarRating value={details.avg} count={details.count} />
-          ) : (
-            <span className="text-sm text-text-muted">Fără recenzii încă</span>
-          )}
-          <span
-            aria-hidden="true"
-            className="size-1.5 rotate-45 bg-primary-soft/60"
-          />
-          <Badge tone="primary">{faculty.city}</Badge>
-          {faculty.multiCampus && (
-            <Badge tone="highlight">Mai multe campusuri</Badge>
-          )}
-          {details.domains.map((domain) => (
-            <Badge key={domain.slug} tone="neutral">
-              {domain.name}
-            </Badge>
-          ))}
+        {/* Glass passport strip — overlaps the bottom of the cover on large screens */}
+        <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-surface-raised px-5 py-4 shadow-glow sm:px-6 lg:-mt-0 lg:rounded-3xl">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            {details.count > 0 && details.avg != null ? (
+              <>
+                <StarRating value={details.avg} count={details.count} />
+                <span
+                  aria-hidden="true"
+                  className="hidden size-1.5 rotate-45 bg-primary-soft/60 sm:block"
+                />
+                <span className="font-display text-lg font-semibold text-primary-strong dark:text-primary-soft">
+                  {(Math.round(details.avg * 10) / 10).toFixed(1).replace('.', ',')}
+                </span>
+                <span className="text-xs text-text-muted">
+                  din {details.count} {details.count === 1 ? 'recenzie' : 'recenzii'}
+                </span>
+              </>
+            ) : (
+              <span className="text-sm text-text-muted">Fără recenzii încă</span>
+            )}
+            <span
+              aria-hidden="true"
+              className="size-1.5 rotate-45 bg-primary-soft/60"
+            />
+            <Badge tone="primary">{faculty.city}</Badge>
+            {faculty.multiCampus && (
+              <Badge tone="highlight">Mai multe campusuri</Badge>
+            )}
+            {details.domains.map((domain) => (
+              <Badge key={domain.slug} tone="neutral">
+                {domain.name}
+              </Badge>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -356,10 +388,11 @@ export default async function FacultyPage({ params }) {
             </h2>
             {details.programs.length > 0 ? (
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                {details.programs.map((program) => (
+                {details.programs.map((program, index) => (
                   <li
                     key={program.id}
-                    className="group flex items-center gap-3 rounded-2xl border border-border bg-surface-raised px-4 py-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-0.5 hover:border-primary-soft/60"
+                    style={{ '--i': index }}
+                    className="reveal-stagger group flex items-center gap-3 rounded-2xl border border-border bg-surface-raised px-4 py-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-0.5 hover:border-primary-soft/60 hover:shadow-lift"
                   >
                     <span
                       aria-hidden="true"
@@ -482,18 +515,25 @@ export default async function FacultyPage({ params }) {
           Community: reviews journal + public chat
       -------------------------------------------------------------- */}
       <section className="wrap mt-16 pb-24 sm:mt-20 sm:pb-28">
-        <div className="max-w-2xl">
-          <p className="eyebrow">Vocea studenților</p>
-          <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
-            Recenzii și discuții
-          </h2>
-          <p className="mt-4 text-pretty text-text-muted sm:text-lg">
-            Părerile sincere ale celor care au trecut pe aici — și un chat
-            public pentru întrebări rapide.
-          </p>
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-10 sm:px-10 sm:py-12">
+          <div aria-hidden="true" className="texture-doodle-night" />
+          <WaypointGrid className="pointer-events-none absolute -right-12 -top-12 size-72 text-mint/10" />
+          <span aria-hidden="true" className="beacon-glow animate-beacon absolute -left-8 top-4 size-64 opacity-40" />
+          <div className="relative max-w-2xl">
+            <p className="eyebrow !text-mint before:bg-gradient-to-r before:from-mint before:to-teal-soft">
+              Vocea studenților
+            </p>
+            <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold text-white">
+              Recenzii și discuții
+            </h2>
+            <p className="mt-4 text-pretty text-mint/75 sm:text-lg">
+              Părerile sincere ale celor care au trecut pe aici — și un chat
+              public pentru întrebări rapide.
+            </p>
+          </div>
         </div>
 
-        <div className="mt-10 grid items-start gap-8 lg:grid-cols-[1.2fr_1fr]">
+        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.2fr_1fr]">
           <Reviews facultySlug={faculty.slug} />
           <Chat facultySlug={faculty.slug} />
         </div>

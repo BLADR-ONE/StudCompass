@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
+import InitialAvatar from '../ui/InitialAvatar.js';
+import { TrailWeave } from '../layout/Brand.js';
 
 const POLL_INTERVAL = 15000;
 
@@ -34,18 +36,14 @@ function formatWhen(value) {
 function Message({ message }) {
   return (
     <li className="flex items-start gap-3">
-      <span
-        aria-hidden="true"
-        className="wonky mt-0.5 flex size-9 flex-none items-center justify-center rounded-full bg-teal-soft/20 font-display text-base font-semibold italic text-primary-strong dark:text-teal-soft"
-      >
-        {(message.authorName || '?').charAt(0).toUpperCase()}
-      </span>
-      <div className="min-w-0">
-        <p className="text-xs text-text-muted">
-          <span className="font-semibold text-text">{message.authorName}</span>{' '}
-          · {formatWhen(message.createdAt)}
+      <InitialAvatar name={message.authorName} size="sm" className="mt-0.5 bg-teal-soft/20 text-primary-strong dark:bg-teal-soft/15 dark:text-teal-soft" />
+      <div className="min-w-0 flex-1">
+        <p className="mb-1 text-xs text-text-muted">
+          <span className="font-semibold text-text">{message.authorName}</span>
+          <span aria-hidden="true" className="mx-1.5 opacity-40">·</span>
+          {formatWhen(message.createdAt)}
         </p>
-        <p className="mt-1 w-fit max-w-full whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm border border-border bg-surface px-3.5 py-2 text-sm leading-relaxed text-text">
+        <p className="w-fit max-w-full whitespace-pre-wrap break-words rounded-2xl rounded-tl-sm border border-border bg-surface px-4 py-2.5 text-sm leading-relaxed text-text shadow-[0_1px_2px_var(--sc-shadow-weak)]">
           {message.body}
         </p>
       </div>
@@ -135,10 +133,11 @@ export default function Chat({ facultySlug }) {
   };
 
   return (
-    <div className="flex flex-col rounded-3xl border border-border bg-surface-raised p-6 shadow-card">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="font-display text-lg font-semibold">Chat public</h3>
-        <span className="inline-flex items-center gap-2 text-xs font-medium text-text-muted">
+    <div className="flex flex-col rounded-3xl border border-border bg-surface-raised shadow-card">
+      {/* Chat header */}
+      <div className="flex items-center justify-between gap-3 border-b border-dashed border-border px-6 py-4">
+        <h3 className="font-display text-xl font-semibold">Chat public</h3>
+        <span className="inline-flex items-center gap-2 rounded-full border border-primary-soft/30 bg-primary/[0.07] px-3 py-1 text-xs font-semibold text-primary-strong dark:border-primary-soft/20 dark:bg-primary-soft/[0.08] dark:text-primary-soft">
           <span aria-hidden="true" className="relative flex size-2">
             <span className="absolute inset-0 animate-ping rounded-full bg-primary-soft opacity-60" />
             <span className="relative size-2 rounded-full bg-primary-soft" />
@@ -147,9 +146,10 @@ export default function Chat({ facultySlug }) {
         </span>
       </div>
 
+      {/* Message list */}
       <div
         ref={listRef}
-        className="mt-5 max-h-[26rem] min-h-[10rem] overflow-y-auto pr-1"
+        className="max-h-[26rem] min-h-[10rem] overflow-y-auto px-6 py-5"
       >
         {status === 'loading' && (
           <div className="flex h-full min-h-[10rem] items-center justify-center text-text-muted">
@@ -168,14 +168,15 @@ export default function Chat({ facultySlug }) {
 
         {status === 'ready' &&
           (messages && messages.length > 0 ? (
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-5">
               {messages.map((message) => (
                 <Message key={message.id} message={message} />
               ))}
             </ul>
           ) : (
-            <div className="flex h-full min-h-[10rem] items-center justify-center px-4 text-center">
-              <p className="text-sm leading-relaxed text-text-muted">
+            <div className="relative flex h-full min-h-[10rem] items-center justify-center overflow-hidden px-4 text-center">
+              <TrailWeave className="pointer-events-none absolute inset-0 m-auto size-36 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
+              <p className="relative text-sm leading-relaxed text-text-muted">
                 E liniște aici deocamdată. Sparge gheața — pune prima
                 întrebare.
               </p>
@@ -183,9 +184,10 @@ export default function Chat({ facultySlug }) {
           ))}
       </div>
 
+      {/* Composer */}
       {sessionStatus === 'authenticated' ? (
-        <div className="mt-5 border-t border-dashed border-border pt-4">
-          <form onSubmit={handleSend} className="flex items-center gap-2">
+        <div className="border-t border-dashed border-border px-6 pb-5 pt-4">
+          <form onSubmit={handleSend} className="flex items-center gap-2.5">
             <label htmlFor={`chat-${facultySlug}`} className="sr-only">
               Scrie un mesaj
             </label>
@@ -197,13 +199,13 @@ export default function Chat({ facultySlug }) {
               placeholder="Scrie un mesaj…"
               maxLength={4000}
               disabled={sending}
-              className="h-11 min-w-0 flex-1 rounded-full border border-border bg-surface px-4 text-sm text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition placeholder:text-text-muted/70 focus:border-primary focus:ring-2 focus:ring-primary/25 disabled:opacity-60"
+              className="h-11 min-w-0 flex-1 rounded-full border border-border bg-surface px-4 text-sm text-text shadow-[inset_0_1px_2px_var(--sc-shadow-weak)] outline-none transition-[border-color,box-shadow] placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/25 focus-visible:[outline-offset:-2px] disabled:opacity-60"
             />
             <button
               type="submit"
               disabled={sending || body.trim().length === 0}
               aria-label="Trimite mesajul"
-              className="inline-flex size-11 flex-none items-center justify-center rounded-full bg-primary text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.18)] transition-all duration-200 hover:bg-primary-strong active:scale-[0.95] disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex size-11 flex-none items-center justify-center rounded-full bg-primary text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.18)] transition-all duration-200 hover:bg-primary-strong hover:shadow-lift active:scale-[0.95] disabled:pointer-events-none disabled:opacity-50"
             >
               {sending ? (
                 <Spinner size="sm" />
@@ -238,7 +240,7 @@ export default function Chat({ facultySlug }) {
           </p>
         </div>
       ) : sessionStatus === 'unauthenticated' ? (
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-border pt-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-border px-6 py-5">
           <p className="text-sm text-text-muted">
             Intră în cont ca să intri în discuție.
           </p>

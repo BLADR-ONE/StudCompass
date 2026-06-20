@@ -26,7 +26,7 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[center_62%]"
+        className="scale-105 object-cover object-[center_62%]"
       />
 
       {/* Ink veil, heavier on the text side. Kept deep-teal in both themes so
@@ -34,27 +34,42 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
           token rather than a hardcoded hex. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-ink/10"
+        className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/65 to-ink/15"
+      />
+      {/* Deepened floor + corner falloff so the composition feels lit from the
+          upper-left and grounded at the base. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_0%,transparent_38%,rgb(8_22_22/0.55)_100%)]"
       />
       {/* Top vignette for navbar legibility */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/70 to-transparent"
+        className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/75 to-transparent"
       />
 
-      <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 top-24 hidden size-[26rem] text-mint/15 lg:block" />
+      {/* Signature compass — given real presence: a warm beacon glow behind it,
+          slow spin kept, slow beacon pulse on the glow. Decorative + hidden. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-28 top-16 hidden lg:block"
+      >
+        <span className="beacon-glow animate-beacon absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2" />
+        <CompassRose className="animate-spin-slow relative size-[30rem] text-mint/25" />
+        <CompassRose className="animate-spin-slow absolute inset-0 size-[30rem] text-highlight/10 [animation-direction:reverse] [animation-duration:140s]" />
+      </div>
 
       <div className="wrap relative py-32">
-        <div className="max-w-2xl">
+        <div className="max-w-3xl">
           <p
-            className="eyebrow animate-rise !text-mint"
+            className="eyebrow animate-lift !text-mint"
             style={{ animationDelay: '80ms' }}
           >
             Busola ta pentru studii
           </p>
 
           <h1
-            className="animate-rise mt-6 text-balance font-display text-[clamp(2.9rem,7vw,5.25rem)] font-semibold leading-[1.02] text-white"
+            className="animate-lift mt-7 text-balance font-display text-[length:var(--text-hero)] font-semibold leading-[0.98] tracking-[-0.03em] text-white"
             style={{ animationDelay: '180ms' }}
           >
             Primul pas spre{' '}
@@ -62,8 +77,8 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
           </h1>
 
           <p
-            className="animate-rise mt-7 max-w-xl text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
-            style={{ animationDelay: '300ms' }}
+            className="animate-lift mt-7 max-w-xl text-pretty text-base leading-relaxed text-mint/85 sm:text-lg"
+            style={{ animationDelay: '320ms' }}
           >
             Îți cauți drumul? StudCompass adună facultățile din România într-un
             singur loc — cu recenzii sincere de la studenți, filtre pe orașe și
@@ -72,8 +87,8 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
           </p>
 
           <div
-            className="animate-rise mt-10 flex flex-wrap items-center gap-4"
-            style={{ animationDelay: '420ms' }}
+            className="animate-lift mt-10 flex flex-wrap items-center gap-4"
+            style={{ animationDelay: '460ms' }}
           >
             <Button href="/facultati" variant="primary" size="lg">
               Explorează facultățile
@@ -102,9 +117,11 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
             </Button>
           </div>
 
+          {/* Trust strip — promoted from inline text into a frosted glass plate
+              so it reads as a deliberate badge of credibility over the photo. */}
           <ul
-            className="animate-rise mt-12 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-mint/65"
-            style={{ animationDelay: '540ms' }}
+            className="animate-lift mt-12 inline-flex flex-wrap items-center gap-x-6 gap-y-2.5 rounded-2xl border border-mint/15 bg-ink/35 px-5 py-3.5 text-sm text-mint/85 backdrop-blur-md"
+            style={{ animationDelay: '600ms' }}
           >
             {TRUST_POINTS.map((point) => (
               <li key={point} className="flex items-center gap-2">

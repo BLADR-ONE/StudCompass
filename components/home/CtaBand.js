@@ -7,16 +7,21 @@ export default function CtaBand() {
     <section className="pb-24 pt-4 sm:pb-28">
       <div className="wrap">
         {/* Always the night map, in both themes — a deliberate full-stop. */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-16 text-center sm:px-12 sm:py-20">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-20 text-center shadow-glow ring-1 ring-mint/10 sm:px-12 sm:py-24">
           <div aria-hidden="true" className="texture-doodle-night" />
-          <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/15" />
-          <TrailWeave className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.09]" />
+          <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-[28rem] text-mint/15" />
+          <TrailWeave className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-96 text-mint/[0.1]" />
+          {/* Warm accent beacon behind the CTA — the climax of the page. */}
+          <span
+            aria-hidden="true"
+            className="beacon-glow animate-beacon absolute bottom-2 left-1/2 size-[26rem] -translate-x-1/2"
+          />
 
           <div className="relative mx-auto max-w-2xl">
             <p className="eyebrow justify-center !text-mint">
               Testul de carieră
             </p>
-            <h2 className="mt-5 text-balance font-display text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem] lg:leading-tight">
+            <h2 className="mt-5 text-balance font-display text-[length:var(--text-display)] font-semibold leading-[1.02] tracking-[-0.028em] text-white">
               Nu știi încotro{' '}
               <em className="wonky italic text-highlight">s-o iei</em>?
             </h2>

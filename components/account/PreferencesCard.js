@@ -73,8 +73,8 @@ export default function PreferencesCard({
 
   return (
     <Card className="sm:p-7">
-      <h2 className="font-display text-xl font-semibold">Direcții preferate</h2>
-      <p className="mt-1 text-sm leading-relaxed text-text-muted">
+      <h2 className="font-display text-2xl font-semibold">Direcții preferate</h2>
+      <p className="mt-1.5 text-sm leading-relaxed text-text-muted">
         Orașul și domeniile spre care arată busola ta — ca să-ți scurtăm drumul
         prin catalog.
       </p>
@@ -97,11 +97,11 @@ export default function PreferencesCard({
         </Select>
 
         <div>
-          <p className="mb-1.5 text-sm font-semibold text-text">
+          <p className="mb-2 text-sm font-semibold text-text">
             Domenii de studiu
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
-            {domains.map(({ slug, name }) => {
+            {domains.map(({ slug, name }, index) => {
               const active = selected.includes(slug);
               return (
                 <button
@@ -109,15 +109,16 @@ export default function PreferencesCard({
                   type="button"
                   aria-pressed={active}
                   onClick={() => toggleDomain(slug)}
-                  className={`inline-flex select-none items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-200 active:scale-[0.97] ${
+                  style={{ '--i': index }}
+                  className={`reveal-stagger inline-flex select-none items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-[transform,border-color,box-shadow,background-color,color] duration-300 ease-out-quint active:scale-[0.97] ${
                     active
-                      ? 'border-primary/40 bg-primary/10 text-primary-strong dark:border-primary-soft/40 dark:bg-primary-soft/10 dark:text-primary-soft'
-                      : 'border-border bg-surface text-text-muted hover:border-primary-soft/60 hover:text-text'
+                      ? 'border-primary/40 bg-primary/10 text-primary-strong shadow-[0_0_0_1px_rgb(56_136_112/0.15)] dark:border-primary-soft/40 dark:bg-primary-soft/10 dark:text-primary-soft'
+                      : 'border-border bg-surface text-text-muted hover:-translate-y-0.5 hover:border-primary-soft/60 hover:text-text hover:shadow-[0_2px_8px_-2px_rgb(56_136_112/0.18)]'
                   }`}
                 >
                   <span
                     aria-hidden="true"
-                    className={`size-1.5 rotate-45 transition-colors ${
+                    className={`size-1.5 rotate-45 transition-colors duration-200 ${
                       active ? 'bg-accent' : 'bg-border'
                     }`}
                   />

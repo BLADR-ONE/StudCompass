@@ -43,9 +43,13 @@ export default function Footer() {
       {/* Brand spine */}
       <div
         aria-hidden="true"
-        className="h-0.5 bg-gradient-to-r from-primary via-accent to-highlight"
+        className="h-1 bg-gradient-to-r from-primary via-accent to-highlight shadow-[0_0_24px_-4px_rgb(240_120_32/0.5)]"
       />
-      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-[22rem] text-mint/[0.09]" />
+      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-[24rem] text-mint/[0.1]" />
+      <span
+        aria-hidden="true"
+        className="beacon-glow-primary absolute -left-28 bottom-0 size-[26rem] opacity-60"
+      />
 
       <div className="wrap relative grid gap-12 py-16 md:grid-cols-[1.5fr_1fr_1fr]">
         <div className="max-w-sm">

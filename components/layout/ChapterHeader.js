@@ -17,19 +17,25 @@ export default function ChapterHeader({
     <section className="relative overflow-hidden bg-bg">
       <div aria-hidden="true" className="texture-doodle" />
       <Contour className={motifClass} />
+      {heroMode && (
+        <span
+          aria-hidden="true"
+          className="beacon-glow-primary absolute -left-24 top-0 size-[26rem]"
+        />
+      )}
 
       <div className={`wrap relative ${shellClass}`}>
-        <p className="eyebrow animate-rise" style={{ animationDelay: '60ms' }}>
+        <p className="eyebrow animate-lift" style={{ animationDelay: '60ms' }}>
           {eyebrow}
         </p>
         <h1
-          className="animate-rise mt-5 max-w-2xl text-balance font-display text-4xl font-semibold leading-[1.06] sm:text-5xl"
+          className="animate-lift mt-5 max-w-2xl text-balance font-display text-[length:var(--text-display)] font-semibold leading-[1.02] tracking-[-0.028em]"
           style={{ animationDelay: '160ms' }}
         >
           {title}
         </h1>
         <p
-          className="animate-rise mt-5 max-w-xl text-pretty leading-relaxed text-text-muted sm:text-lg"
+          className="animate-lift mt-6 max-w-xl text-pretty leading-relaxed text-text-muted sm:text-lg"
           style={{ animationDelay: '280ms' }}
         >
           {subtitle}

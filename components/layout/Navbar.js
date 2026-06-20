@@ -39,7 +39,7 @@ export default function Navbar() {
   );
   const headerShellClass = overHero
     ? 'border-b border-transparent bg-transparent'
-    : 'border-b border-border bg-bg/85 shadow-[0_1px_0_0_var(--sc-border)] backdrop-blur-md';
+    : 'glass shadow-[0_8px_30px_-16px_var(--sc-shadow)]';
 
   useEffect(() => {
     let raf = 0;

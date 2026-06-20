@@ -60,7 +60,7 @@ function FacultyCard({ faculty }) {
   return (
     <Link
       href={`/facultati/${slug}`}
-      className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift focus-visible:[outline-offset:-2px]"
+      className="group flex w-full flex-col overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1.5 hover:border-primary-soft/60 hover:shadow-lift focus-visible:[outline-offset:-2px]"
     >
       <Cover coverUrl={coverUrl} emblemUrl={emblemUrl} name={name} />
       <div className="flex flex-1 flex-col gap-3 p-5">
@@ -112,19 +112,19 @@ function EmptyState() {
 
 export default function FeaturedFaculties({ faculties = [] }) {
   return (
-    <section className="py-10 sm:py-14">
+    <section className="py-20 sm:py-24">
       <div className="wrap">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-xl">
             <p className="eyebrow">Apreciate de comunitate</p>
-            <h2 className="mt-4 text-balance font-display text-3xl font-semibold sm:text-4xl">
+            <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold leading-[1.04] tracking-[-0.028em]">
               Facultăți cu cele mai bune recenzii
             </h2>
           </div>
           {faculties.length > 0 && (
             <Link
               href="/facultati"
-              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary-strong transition-colors hover:text-primary dark:text-primary-soft dark:hover:text-mint"
+              className="group inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-primary-strong transition-colors hover:border-primary-soft/60 hover:text-primary dark:text-primary-soft dark:hover:text-mint"
             >
               Vezi tot catalogul
               <span
@@ -137,11 +137,17 @@ export default function FeaturedFaculties({ faculties = [] }) {
           )}
         </div>
 
-        <div className="mt-10">
+        <div className="mt-12">
           {faculties.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {faculties.map((faculty) => (
-                <FacultyCard key={faculty.slug} faculty={faculty} />
+              {faculties.map((faculty, index) => (
+                <div
+                  key={faculty.slug}
+                  className="reveal-stagger flex"
+                  style={{ '--i': index }}
+                >
+                  <FacultyCard faculty={faculty} />
+                </div>
               ))}
             </div>
           ) : (

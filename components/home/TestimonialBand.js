@@ -8,12 +8,16 @@ export default function TestimonialBand({ testimonials = [] }) {
   const hasTestimonials = testimonials.length > 0;
 
   return (
-    <section className="py-24 sm:py-28">
-      <div className="wrap">
+    <section className="relative overflow-hidden py-24 sm:py-28">
+      <span
+        aria-hidden="true"
+        className="beacon-glow-primary absolute -left-32 top-24 size-[30rem]"
+      />
+      <div className="wrap relative">
         <p className="eyebrow">Vocea comunității</p>
 
         <div
-          className={`mt-10 grid items-start gap-12 lg:gap-16 ${
+          className={`mt-12 grid items-start gap-12 lg:gap-16 ${
             hasTestimonials ? 'lg:grid-cols-[1.15fr_1fr]' : ''
           }`}
         >
@@ -21,21 +25,21 @@ export default function TestimonialBand({ testimonials = [] }) {
           <figure className="relative">
             <span
               aria-hidden="true"
-              className="wonky pointer-events-none absolute -left-4 -top-14 select-none font-display text-[10rem] font-semibold italic leading-none text-primary/15 dark:text-primary-soft/15"
+              className="wonky pointer-events-none absolute -left-5 -top-16 select-none font-display text-[13rem] font-semibold italic leading-none text-primary/15 dark:text-primary-soft/15"
             >
               „
             </span>
             <blockquote className="relative">
-              <p className="wonky text-balance font-display text-2xl font-medium italic leading-snug text-text sm:text-3xl lg:text-[2.1rem]">
+              <p className="wonky text-balance font-display text-[clamp(1.7rem,3.4vw,2.6rem)] font-medium italic leading-[1.12] text-text">
                 Sunt puține locuri în care îți poți desena traseul spre
                 carieră. Noi am construit StudCompass ca să fie unul dintre
                 ele — busola fiecărui tânăr aflat în căutarea drumului său.
               </p>
             </blockquote>
-            <figcaption className="mt-6 flex items-center gap-3 text-sm font-semibold text-text-muted">
+            <figcaption className="mt-7 flex items-center gap-3 text-sm font-semibold text-text-muted">
               <span
                 aria-hidden="true"
-                className="h-px w-8 bg-gradient-to-r from-accent to-highlight"
+                className="h-px w-10 bg-gradient-to-r from-accent to-highlight"
               />
               Echipa StudCompass
             </figcaption>
@@ -47,7 +51,8 @@ export default function TestimonialBand({ testimonials = [] }) {
               {testimonials.map((item, index) => (
                 <figure
                   key={item.id}
-                  className={`rounded-3xl border border-border bg-surface-raised p-6 shadow-card ${
+                  style={{ '--i': index }}
+                  className={`reveal-stagger rounded-3xl border border-border bg-surface-raised p-6 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out-quint hover:-translate-y-1 hover:border-primary-soft/50 hover:shadow-lift ${
                     index % 2 === 1 ? 'lg:ml-10' : 'lg:mr-10'
                   }`}
                 >
