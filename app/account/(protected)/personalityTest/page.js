@@ -12,6 +12,7 @@ export default function PersonalityTestPage() {
   return (
     <>
       <ChapterHeader
+        bold
         eyebrow="Expediția interioară"
         title={
           <>

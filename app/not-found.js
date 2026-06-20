@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from '../components/ui/Button.js';
 import { TrailWeave } from '../components/layout/Brand.js';
+import MotifScroll from '../components/ui/MotifScroll.js';
 
 export const metadata = {
   title: 'Pagină negăsită',
@@ -18,7 +19,12 @@ export default function NotFound() {
         aria-hidden="true"
         className="beacon-glow-primary absolute left-1/2 top-1/2 size-[24rem] -translate-x-1/2 -translate-y-1/2"
       />
-      <TrailWeave className="animate-trail-draw pointer-events-none absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2 text-primary/[0.1] dark:text-primary-soft/[0.11]" />
+      <MotifScroll
+        draw
+        className="pointer-events-none absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2 text-primary/[0.14] dark:text-primary-soft/[0.15]"
+      >
+        <TrailWeave className="animate-trail-draw size-full" />
+      </MotifScroll>
 
       <div className="wrap relative text-center">
         <p className="eyebrow animate-lift justify-center">Eroare 404</p>

@@ -7,6 +7,7 @@ import Spinner from '../ui/Spinner.js';
 import StarRating from '../ui/StarRating.js';
 import InitialAvatar from '../ui/InitialAvatar.js';
 import { Constellation, RiverDelta, NorthStar } from '../layout/Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 
 const dateFormatter = new Intl.DateTimeFormat('ro-RO', {
   day: 'numeric',
@@ -200,7 +201,7 @@ export default function Reviews({ facultySlug }) {
           </div>
         ) : (
           <div className="relative overflow-hidden p-6 text-center sm:p-8">
-            <Constellation className="animate-twinkle pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
+            <Constellation className="animate-twinkle pointer-events-none absolute -right-16 -top-20 size-56 text-primary/[0.13] dark:text-primary-soft/[0.14]" />
             <div className="relative">
               <h3 className="font-display text-xl font-semibold">
                 Spune-ți părerea
@@ -227,7 +228,7 @@ export default function Reviews({ facultySlug }) {
 
         {status === 'unavailable' && (
           <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-border px-6 py-10 text-center">
-            <RiverDelta className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
+            <RiverDelta className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.12] dark:text-primary-soft/[0.13]" />
             <p className="relative text-sm leading-relaxed text-text-muted">
               Recenziile nu pot fi încărcate momentan. Mai încearcă puțin mai
               târziu.
@@ -244,7 +245,13 @@ export default function Reviews({ facultySlug }) {
             </ul>
           ) : (
             <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-primary-soft/40 px-6 py-12 text-center">
-              <NorthStar className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.09] dark:text-primary-soft/[0.1]" />
+              <MotifScroll
+                effect="rotate"
+                speed={1}
+                className="pointer-events-none absolute -right-8 -top-8 size-40 text-primary/[0.13] dark:text-primary-soft/[0.14]"
+              >
+                <NorthStar className="size-full" />
+              </MotifScroll>
               <div className="relative">
                 <p className="font-display text-xl font-semibold">
                   Jurnalul e încă alb.

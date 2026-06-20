@@ -1,8 +1,14 @@
-import { Constellation, Meridian, GitHubIcon } from '../../components/layout/Brand.js';
+import {
+  Constellation,
+  Meridian,
+  WindRose,
+  GitHubIcon,
+} from '../../components/layout/Brand.js';
 import ContactForm from '../../components/about/ContactForm.js';
 import DeveloperHero from '../../components/about/DeveloperHero.js';
 import CreditCard from '../../components/about/CreditCard.js';
 import Reveal from '../../components/ui/Reveal.js';
+import MotifScroll from '../../components/ui/MotifScroll.js';
 import { getSiteSettings } from '../../lib/content.js';
 import { getDefaultHeaderImage } from '../../lib/site-constants.js';
 
@@ -106,8 +112,16 @@ export default async function AboutPage() {
       {/* ----------------------------------------------------------------
           Mission — what the project is and who it's for
       ---------------------------------------------------------------- */}
-      <section className="pb-24 pt-12 sm:pb-28 sm:pt-14">
-        <div className="wrap">
+      <section className="relative overflow-hidden pb-24 pt-12 sm:pb-28 sm:pt-14">
+        {/* WindRose — bold signature eye-catcher, scroll-rotated into the page. */}
+        <MotifScroll
+          effect="rotate"
+          speed={1.3}
+          className="pointer-events-none absolute -right-24 top-0 hidden size-[30rem] text-primary/[0.1] dark:text-primary-soft/[0.12] lg:block"
+        >
+          <WindRose className="size-full" />
+        </MotifScroll>
+        <div className="wrap relative">
           <Reveal variant="fade-up" className="max-w-2xl">
             <p className="eyebrow">Misiunea</p>
             <h2 className="mt-4 text-balance font-display text-[length:var(--text-section)] font-semibold leading-[1.04] tracking-[-0.028em]">
@@ -181,8 +195,20 @@ export default async function AboutPage() {
         <div className="wrap">
           <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-16 shadow-glow ring-1 ring-mint/10 sm:px-12 sm:py-20">
             <div aria-hidden="true" className="texture-doodle-night" />
-            <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/15" />
-            <Meridian className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.09]" />
+            <MotifScroll
+              effect="rotate"
+              speed={1.1}
+              className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-96 text-mint/20"
+            >
+              <Constellation className="size-full" />
+            </MotifScroll>
+            <MotifScroll
+              effect="parallax-up"
+              speed={1.3}
+              className="pointer-events-none absolute -bottom-28 -left-24 size-80 text-mint/[0.14]"
+            >
+              <Meridian className="size-full" />
+            </MotifScroll>
 
             <Reveal
               variant="fade-up"

@@ -175,7 +175,7 @@ export default function Chat({ facultySlug }) {
             </ul>
           ) : (
             <div className="relative flex h-full min-h-[10rem] items-center justify-center overflow-hidden px-4 text-center">
-              <TrailWeave className="pointer-events-none absolute inset-0 m-auto size-36 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
+              <TrailWeave className="pointer-events-none absolute inset-0 m-auto size-36 text-primary/[0.12] dark:text-primary-soft/[0.13]" />
               <p className="relative text-sm leading-relaxed text-text-muted">
                 E liniște aici deocamdată. Sparge gheața — pune prima
                 întrebare.

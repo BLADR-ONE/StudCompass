@@ -107,7 +107,7 @@ function EmptyState() {
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-8 text-center shadow-card sm:p-10">
       <div aria-hidden="true" className="texture-doodle-night" />
-      <Horizon className="animate-sway pointer-events-none absolute -right-16 -top-20 size-72 text-mint/15" />
+      <Horizon className="animate-sway pointer-events-none absolute -right-16 -top-20 size-72 text-mint/20" />
 
       <div className="relative mx-auto max-w-sm">
         <p className="eyebrow justify-center !text-mint">Testul de carieră</p>
@@ -225,7 +225,7 @@ export default function PersonalityCard() {
   return (
     <div className="overflow-hidden rounded-3xl border border-border bg-surface-raised shadow-card">
       <div className="relative overflow-hidden border-b border-dashed border-border p-6 sm:p-7">
-        <Switchback className="animate-drift-slow pointer-events-none absolute -right-16 -top-20 size-64 text-primary/[0.11] dark:text-primary-soft/[0.12]" />
+        <Switchback className="animate-drift-slow pointer-events-none absolute -right-16 -top-20 size-64 text-primary/[0.15] dark:text-primary-soft/[0.16]" />
 
         <div className="relative">
           <div className="flex flex-wrap items-baseline justify-between gap-2">

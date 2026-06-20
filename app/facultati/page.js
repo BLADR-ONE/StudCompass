@@ -5,7 +5,8 @@ import FilterBar from '../../components/faculty/FilterBar.js';
 import FacultyCard from '../../components/faculty/FacultyCard.js';
 import Button from '../../components/ui/Button.js';
 import Reveal from '../../components/ui/Reveal.js';
-import { WaypointGrid, Astrolabe } from '../../components/layout/Brand.js';
+import { WaypointGrid, Astrolabe, Sextant } from '../../components/layout/Brand.js';
+import MotifScroll from '../../components/ui/MotifScroll.js';
 import ChapterHeader from '../../components/layout/ChapterHeader.js';
 
 const { db, schema } = dbModule;
@@ -163,8 +164,14 @@ async function getCatalog(filters) {
 function OfflineState() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
-      <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
-      <Astrolabe className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.08] dark:text-primary-soft/10" />
+      <WaypointGrid className="pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.13] dark:text-primary-soft/[0.14]" />
+      <MotifScroll
+        effect="rotate"
+        speed={1.1}
+        className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.12] dark:text-primary-soft/[0.14]"
+      >
+        <Astrolabe className="size-full" />
+      </MotifScroll>
       <div className="relative mx-auto max-w-md">
         <h2 className="font-display text-2xl font-semibold">
           Catalogul se desenează chiar acum.
@@ -192,7 +199,14 @@ function OfflineState() {
 function NoResults() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-14 text-center sm:py-16">
-      <WaypointGrid className="pointer-events-none absolute -right-20 -top-24 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
+      <WaypointGrid className="pointer-events-none absolute -right-20 -top-24 size-72 text-primary/[0.13] dark:text-primary-soft/[0.14]" />
+      <MotifScroll
+        effect="rotate-rev"
+        speed={0.9}
+        className="pointer-events-none absolute -bottom-16 -left-16 size-64 text-primary/[0.12] dark:text-primary-soft/[0.13]"
+      >
+        <Sextant className="size-full" />
+      </MotifScroll>
       <div className="relative mx-auto max-w-md">
         <h2 className="font-display text-2xl font-semibold">
           Nimic în această zonă a hărții.
@@ -219,6 +233,7 @@ export default async function FacultiesPage({ searchParams }) {
   return (
     <>
       <ChapterHeader
+        bold
         eyebrow="Catalogul facultăților"
         title={
           <>

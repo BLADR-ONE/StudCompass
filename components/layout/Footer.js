@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Brand, { Meridian, GitHubIcon } from './Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 
 const NAV_LINKS = [
   { href: '/', label: 'Acasă' },
@@ -45,7 +46,13 @@ export default function Footer() {
         aria-hidden="true"
         className="h-1 bg-gradient-to-r from-primary via-accent to-highlight shadow-[0_0_24px_-4px_rgb(240_120_32/0.5)]"
       />
-      <Meridian className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 size-[24rem] text-mint/[0.1]" />
+      <MotifScroll
+        effect="rotate"
+        speed={0.9}
+        className="pointer-events-none absolute -right-20 -top-24 size-[24rem] text-mint/[0.16]"
+      >
+        <Meridian className="size-full" />
+      </MotifScroll>
       <span
         aria-hidden="true"
         className="beacon-glow-primary absolute -left-28 bottom-0 size-[26rem] opacity-60"

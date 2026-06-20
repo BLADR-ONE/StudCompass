@@ -1,5 +1,6 @@
 import { Contour } from '../layout/Brand.js';
 import Reveal from '../ui/Reveal.js';
+import MotifScroll from '../ui/MotifScroll.js';
 
 const STEPS = [
   {
@@ -24,9 +25,15 @@ export default function HowItWorks() {
     <section className="chapter-band relative overflow-hidden py-24 sm:py-28">
       {/* Theme-tied education doodles, faded like pencil on paper */}
       <div aria-hidden="true" className="texture-doodle" />
-      {/* Full-bleed contour terrain anchoring the band — the motif promoted from
-          corner decoration to a section-scale background element. */}
-      <Contour className="animate-drift-slow pointer-events-none absolute -right-32 -top-24 hidden size-[40rem] text-primary/[0.06] dark:text-primary-soft/[0.07] lg:block" />
+      {/* Full-bleed contour terrain anchoring the band — promoted to a bold
+          section-scale element with a scroll-driven parallax drift + draw-on. */}
+      <MotifScroll
+        effect="parallax"
+        speed={1.5}
+        className="pointer-events-none absolute -right-32 -top-24 hidden size-[40rem] text-primary/[0.1] dark:text-primary-soft/[0.12] lg:block"
+      >
+        <Contour className="size-full animate-drift-slow" />
+      </MotifScroll>
       <span
         aria-hidden="true"
         className="beacon-glow-primary absolute -left-24 top-10 size-[28rem]"

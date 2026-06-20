@@ -1,22 +1,41 @@
 import { ScaleBar } from './Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 
 export default function ChapterHeader({
   eyebrow,
   title,
   subtitle,
   heroMode = false,
+  /* Public marketing surfaces opt INTO the bold, scroll-driven eye-catcher.
+     Defaults OFF so the shared header stays a clean, restrained mark on admin
+     (which never passes this) — admin reads as a management tool, not a poster. */
+  bold = false,
 }) {
   const shellClass = heroMode
     ? 'pb-16 pt-28 sm:pb-20 sm:pt-36'
     : 'pb-10 pt-14 sm:pt-20';
-  const motifClass = heroMode
-    ? 'animate-drift-slow pointer-events-none absolute -bottom-16 -right-24 hidden size-[24rem] text-primary/[0.09] dark:text-primary-soft/10 lg:block'
-    : 'animate-drift-slow pointer-events-none absolute -right-28 -top-20 hidden size-[24rem] text-primary/[0.09] dark:text-primary-soft/10 lg:block';
+  const positionClass = heroMode
+    ? 'pointer-events-none absolute -bottom-16 -right-24 hidden size-[24rem] lg:block'
+    : 'pointer-events-none absolute -right-28 -top-20 hidden size-[24rem] lg:block';
+  /* Bolder, scroll-animated mark for public headers; quiet + static otherwise. */
+  const toneClass = bold
+    ? 'text-primary/[0.13] dark:text-primary-soft/[0.14]'
+    : 'text-primary/[0.09] dark:text-primary-soft/10';
 
   return (
     <section className="relative overflow-hidden bg-bg">
       <div aria-hidden="true" className="texture-doodle" />
-      <ScaleBar className={motifClass} />
+      {bold ? (
+        <MotifScroll
+          effect="parallax"
+          speed={1.2}
+          className={`${positionClass} ${toneClass}`}
+        >
+          <ScaleBar className="size-full animate-drift-slow" />
+        </MotifScroll>
+      ) : (
+        <ScaleBar className={`animate-drift-slow ${positionClass} ${toneClass}`} />
+      )}
       {heroMode && (
         <span
           aria-hidden="true"

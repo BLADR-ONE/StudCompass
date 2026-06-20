@@ -3,6 +3,8 @@ import { auth } from '../../../lib/auth.js';
 import dbModule from '../../../lib/db/index.js';
 import Badge from '../../../components/ui/Badge.js';
 import ChapterHeader from '../../../components/layout/ChapterHeader.js';
+import { Latitude } from '../../../components/layout/Brand.js';
+import MotifScroll from '../../../components/ui/MotifScroll.js';
 import ProfileCard from '../../../components/account/ProfileCard.js';
 import PreferencesCard from '../../../components/account/PreferencesCard.js';
 import PersonalityCard from '../../../components/account/PersonalityCard.js';
@@ -125,6 +127,7 @@ export default async function AccountPage() {
   return (
     <>
       <ChapterHeader
+        bold
         eyebrow="Jurnal de călătorie"
         title={
           <>
@@ -138,8 +141,16 @@ export default async function AccountPage() {
         subtitle="Numele tău, direcțiile preferate și busola interioară — tot ce ai descoperit până acum, într-un singur loc."
       />
 
-      <section className="pb-24 sm:pb-28">
-        <div className="wrap">
+      <section className="relative overflow-hidden pb-24 sm:pb-28">
+        {/* Latitude — banded globe eye-catcher, scroll-parallax behind the cards. */}
+        <MotifScroll
+          effect="parallax"
+          speed={1.3}
+          className="pointer-events-none absolute -left-24 top-10 hidden size-[26rem] text-primary/[0.1] dark:text-primary-soft/[0.12] lg:block"
+        >
+          <Latitude className="size-full" />
+        </MotifScroll>
+        <div className="wrap relative">
           {/* Identity strip */}
           <div className="animate-pop flex flex-wrap items-center gap-4 rounded-3xl border border-border bg-surface-raised p-5 shadow-card sm:p-6">
             <span

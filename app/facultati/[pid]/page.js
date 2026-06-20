@@ -11,6 +11,7 @@ import Reviews from '../../../components/faculty/Reviews.js';
 import Chat from '../../../components/faculty/Chat.js';
 import Reveal from '../../../components/ui/Reveal.js';
 import { Contour, WaypointGrid, Horizon, CompassRose, RiverDelta } from '../../../components/layout/Brand.js';
+import MotifScroll from '../../../components/ui/MotifScroll.js';
 
 const { db, schema } = dbModule;
 
@@ -204,8 +205,8 @@ function OfflineState() {
   return (
     <section className="wrap py-20 sm:py-24">
       <div className="relative overflow-hidden rounded-[2rem] border-2 border-dashed border-primary-soft/40 px-6 py-16 text-center sm:py-20">
-        <Contour className="animate-sway pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.09] dark:text-primary-soft/10" />
-        <WaypointGrid className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.09] dark:text-primary-soft/10" />
+        <Contour className="animate-sway pointer-events-none absolute -bottom-20 -left-16 size-72 text-primary/[0.13] dark:text-primary-soft/[0.14]" />
+        <WaypointGrid className="pointer-events-none absolute -right-20 -top-24 size-80 text-primary/[0.13] dark:text-primary-soft/[0.14]" />
         <div className="relative mx-auto max-w-md">
           <h1 className="font-display text-2xl font-semibold sm:text-3xl">
             Foaia asta de hartă nu se poate încărca.
@@ -299,9 +300,16 @@ export default async function FacultyPage({ params }) {
             className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink/75 to-transparent"
           />
 
-          {/* Cartographer motif anchor — large decorative CompassRose */}
-          <CompassRose className="animate-spin-slow pointer-events-none absolute -right-24 -top-24 size-[28rem] text-mint/10 sm:-right-16 sm:-top-16" />
-          <Horizon className="animate-sway pointer-events-none absolute -bottom-10 right-[10%] size-56 text-mint/10" />
+          {/* Cartographer motif anchor — large CompassRose, parallax on scroll
+              while it keeps its slow spin (parallax on the outer wrapper). */}
+          <MotifScroll
+            effect="parallax"
+            speed={1.2}
+            className="pointer-events-none absolute -right-24 -top-24 size-[28rem] text-mint/[0.16] sm:-right-16 sm:-top-16"
+          >
+            <CompassRose className="animate-spin-slow size-full" />
+          </MotifScroll>
+          <Horizon className="animate-sway pointer-events-none absolute -bottom-10 right-[10%] size-56 text-mint/[0.16]" />
 
           {/* Hero content — name block */}
           <div className="absolute inset-x-0 bottom-0 flex items-end gap-5 p-6 sm:gap-7 sm:p-10">
@@ -521,7 +529,13 @@ export default async function FacultyPage({ params }) {
       <section className="wrap mt-16 pb-24 sm:mt-20 sm:pb-28">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-10 sm:px-10 sm:py-12">
           <div aria-hidden="true" className="texture-doodle-night" />
-          <RiverDelta className="animate-drift-slow pointer-events-none absolute -right-12 -top-12 size-72 text-mint/10" />
+          <MotifScroll
+            effect="rotate"
+            speed={0.9}
+            className="pointer-events-none absolute -right-12 -top-12 size-72 text-mint/[0.16]"
+          >
+            <RiverDelta className="size-full" />
+          </MotifScroll>
           <span aria-hidden="true" className="beacon-glow animate-beacon absolute -left-8 top-4 size-64 opacity-40" />
           <Reveal variant="fade-up" className="relative max-w-2xl">
             <p className="eyebrow !text-mint before:bg-gradient-to-r before:from-mint before:to-teal-soft">

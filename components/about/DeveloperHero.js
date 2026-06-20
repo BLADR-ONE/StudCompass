@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Contour, Astrolabe, GitHubIcon } from '../layout/Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 import ScrollCue from '../ui/ScrollCue.js';
 import { DEFAULT_HEADER_IMAGE } from '../../lib/site-constants.js';
 
@@ -48,7 +49,13 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
         className="pointer-events-none absolute -right-28 top-20 hidden lg:block"
       >
         <span className="beacon-glow-primary animate-beacon absolute left-1/2 top-1/2 size-[30rem] -translate-x-1/2 -translate-y-1/2" />
-        <Contour className="animate-sway relative size-[28rem] text-mint/25" />
+        <MotifScroll
+          effect="parallax"
+          speed={1.2}
+          className="relative block size-[28rem] text-mint/30"
+        >
+          <Contour className="animate-sway size-full" />
+        </MotifScroll>
       </div>
 
       <div className="wrap relative py-32">
@@ -84,7 +91,13 @@ export default function DeveloperHero({ owner, eyebrow = 'Despre noi', headerIma
           style={{ animationDelay: '380ms' }}
         >
           <div className="relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12">
-            <Astrolabe className="animate-drift-slow pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/15 lg:block" />
+            <MotifScroll
+              effect="rotate"
+              speed={1.1}
+              className="pointer-events-none absolute -right-20 -top-24 hidden size-80 text-mint/20 lg:block"
+            >
+              <Astrolabe className="size-full" />
+            </MotifScroll>
 
             {/* Avatar, framed like a portrait coordinate. */}
             <div className="relative shrink-0">

@@ -5,6 +5,7 @@ import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import Spinner from '../ui/Spinner.js';
 import { TrailWeave, Horizon, RiverDelta } from '../layout/Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 import { trackAnalyticsEvent } from '../../lib/analytics.js';
 import QuestionCard, { ANSWER_SELECTED } from './QuestionCard.js';
 import ResultsView from './ResultsView.js';
@@ -254,8 +255,14 @@ export default function TestJourney() {
     <div ref={topRef} className="scroll-mt-24">
       {phase === 'intro' && (
         <section className="animate-lift relative overflow-hidden rounded-3xl border border-border bg-surface-raised p-6 shadow-lift sm:p-10">
-          {/* Section-scale TrailWeave — the journey motif as a prominent anchor */}
-          <TrailWeave className="animate-trail-draw pointer-events-none absolute -right-16 -top-16 size-[26rem] text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+          {/* Section-scale TrailWeave — bold journey anchor, parallax on scroll. */}
+          <MotifScroll
+            effect="parallax"
+            speed={1.3}
+            className="pointer-events-none absolute -right-16 -top-16 size-[26rem] text-primary/[0.11] dark:text-primary-soft/[0.13]"
+          >
+            <TrailWeave className="animate-trail-draw size-full" />
+          </MotifScroll>
           {/* Green beacon behind the motif for warmth */}
           <span
             aria-hidden="true"
@@ -342,8 +349,14 @@ export default function TestJourney() {
 
       {phase === 'quiz' && (
         <section className="relative">
-          {/* RiverDelta — branching watercourses behind the question stage */}
-          <RiverDelta className="animate-drift-slow pointer-events-none absolute -right-24 top-0 size-72 text-primary/[0.06] dark:text-primary-soft/[0.07]" />
+          {/* RiverDelta — watercourses behind the question stage, scroll-rotated. */}
+          <MotifScroll
+            effect="rotate-rev"
+            speed={0.8}
+            className="pointer-events-none absolute -right-24 top-0 size-72 text-primary/[0.1] dark:text-primary-soft/[0.12]"
+          >
+            <RiverDelta className="size-full" />
+          </MotifScroll>
 
           <header className="relative">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -418,8 +431,14 @@ export default function TestJourney() {
 
       {phase === 'review' && (
         <section className="animate-pop relative">
-          {/* Horizon — beginnings / completion motif at section scale */}
-          <Horizon className="pointer-events-none absolute -right-20 -top-10 size-80 text-primary/[0.07] dark:text-primary-soft/[0.08]" />
+          {/* Horizon — beginnings / completion motif, bolder + parallax. */}
+          <MotifScroll
+            effect="parallax-up"
+            speed={1.1}
+            className="pointer-events-none absolute -right-20 -top-10 size-80 text-primary/[0.11] dark:text-primary-soft/[0.13]"
+          >
+            <Horizon className="size-full" />
+          </MotifScroll>
 
           <div className="relative">
           <p className="eyebrow">Ultima verificare</p>
@@ -519,7 +538,7 @@ export default function TestJourney() {
 
       {phase === 'offline' && (
         <section className="animate-pop relative overflow-hidden rounded-3xl border-2 border-dashed border-border px-6 py-14 text-center">
-          <Horizon className="animate-sway pointer-events-none absolute -bottom-20 -left-20 size-64 text-primary/[0.08] dark:text-primary-soft/[0.09]" />
+          <Horizon className="animate-sway pointer-events-none absolute -bottom-20 -left-20 size-64 text-primary/[0.12] dark:text-primary-soft/[0.13]" />
 
           <div className="relative mx-auto max-w-md">
             <p className="eyebrow justify-center">Pauză de semnal</p>

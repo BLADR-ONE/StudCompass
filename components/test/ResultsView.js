@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Badge from '../ui/Badge.js';
 import Button from '../ui/Button.js';
 import { Constellation, TrailWeave } from '../layout/Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 import {
   DIMENSIONS,
   DIMENSION_KEYS,
@@ -48,8 +49,14 @@ export default function ResultsView({ scores }) {
       <header className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-7 pb-10 pt-12 sm:px-12 sm:pb-14 sm:pt-16">
         <div aria-hidden="true" className="texture-doodle-night" />
 
-        {/* Section-scale Constellation anchors the entire header as a discovery motif */}
-        <Constellation className="animate-twinkle pointer-events-none absolute -right-16 -top-16 size-[28rem] text-mint/10 sm:size-[34rem]" />
+        {/* Section-scale Constellation anchors the header — bolder, scroll-rotated. */}
+        <MotifScroll
+          effect="rotate"
+          speed={1.1}
+          className="animate-twinkle pointer-events-none absolute -right-16 -top-16 size-[28rem] text-mint/[0.16] sm:size-[34rem]"
+        >
+          <Constellation className="size-full" />
+        </MotifScroll>
 
         {/* Accent beacon glow behind the constellation — one focal pulse */}
         <span
@@ -57,8 +64,14 @@ export default function ResultsView({ scores }) {
           className="beacon-glow animate-beacon pointer-events-none absolute right-8 top-8 size-80 opacity-30"
         />
 
-        {/* TrailWeave as a subtle secondary motif in the lower-left corner */}
-        <TrailWeave className="animate-trail-draw pointer-events-none absolute -bottom-10 -left-10 size-56 text-mint/[0.07]" />
+        {/* TrailWeave secondary motif, lower-left — bolder, parallax drift. */}
+        <MotifScroll
+          effect="parallax"
+          speed={1.2}
+          className="pointer-events-none absolute -bottom-10 -left-10 size-56 text-mint/[0.13]"
+        >
+          <TrailWeave className="animate-trail-draw size-full" />
+        </MotifScroll>
 
         <div className="relative max-w-xl">
           <p className="eyebrow !text-mint">Busola s-a aliniat</p>

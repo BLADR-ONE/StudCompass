@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Button from '../ui/Button.js';
 import { Constellation, TrailWeave } from '../layout/Brand.js';
 import Reveal from '../ui/Reveal.js';
+import MotifScroll from '../ui/MotifScroll.js';
 
 export default function CtaBand() {
   return (
@@ -10,8 +11,20 @@ export default function CtaBand() {
         {/* Always the night map, in both themes — a deliberate full-stop. */}
         <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary-strong via-night-mid to-night-deep px-6 py-20 text-center shadow-glow ring-1 ring-mint/10 sm:px-12 sm:py-24">
           <div aria-hidden="true" className="texture-doodle-night" />
-          <Constellation className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-[28rem] text-mint/15" />
-          <TrailWeave className="animate-drift-slow pointer-events-none absolute -bottom-28 -left-24 size-96 text-mint/[0.1]" />
+          <MotifScroll
+            effect="rotate"
+            speed={1.2}
+            className="animate-twinkle pointer-events-none absolute -right-20 -top-24 size-[28rem] text-mint/20"
+          >
+            <Constellation className="size-full" />
+          </MotifScroll>
+          <MotifScroll
+            effect="parallax-up"
+            speed={1.4}
+            className="pointer-events-none absolute -bottom-28 -left-24 size-96 text-mint/[0.16]"
+          >
+            <TrailWeave className="size-full" />
+          </MotifScroll>
           {/* Warm accent beacon behind the CTA — the climax of the page. */}
           <span
             aria-hidden="true"

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Button from '../ui/Button.js';
 import { CompassRose } from '../layout/Brand.js';
+import MotifScroll from '../ui/MotifScroll.js';
 import ScrollCue from '../ui/ScrollCue.js';
 import { DEFAULT_HEADER_IMAGE } from '../../lib/site-constants.js';
 
@@ -49,15 +50,19 @@ export default function Hero({ headerImage = DEFAULT_HEADER_IMAGE }) {
       />
 
       {/* Signature compass — given real presence: a warm beacon glow behind it,
-          slow spin kept, slow beacon pulse on the glow. Decorative + hidden. */}
-      <div
+          slow spin kept, slow beacon pulse on the glow, and a scroll-driven
+          parallax drift so it sinks gently as the hero scrolls away.
+          Decorative + hidden. */}
+      <MotifScroll
+        effect="parallax"
+        speed={1.6}
         aria-hidden="true"
         className="pointer-events-none absolute -right-28 top-16 hidden lg:block"
       >
         <span className="beacon-glow animate-beacon absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2" />
         <CompassRose className="animate-spin-slow relative size-[30rem] text-mint/25" />
         <CompassRose className="animate-spin-slow absolute inset-0 size-[30rem] text-highlight/10 [animation-direction:reverse] [animation-duration:140s]" />
-      </div>
+      </MotifScroll>
 
       <div className="wrap relative py-32">
         <div className="max-w-3xl">

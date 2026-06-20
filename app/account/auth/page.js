@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '../../../lib/auth.js';
 import AuthTabs from '../../../components/account/AuthTabs.js';
 import { Horizon, Meridian } from '../../../components/layout/Brand.js';
+import MotifScroll from '../../../components/ui/MotifScroll.js';
 
 export const metadata = {
   title: 'Autentificare',
@@ -44,8 +45,14 @@ export default async function AuthPage({ searchParams }) {
           {/* Left page: always the night map, in both themes. */}
           <div className="relative overflow-hidden bg-gradient-to-br from-primary-strong via-night-mid to-night-deep p-8 sm:p-10">
             <div aria-hidden="true" className="texture-doodle-night" />
-            <Horizon className="animate-sway pointer-events-none absolute -left-24 -top-24 size-72 text-mint/15" />
-            <Meridian className="animate-drift-slow pointer-events-none absolute -bottom-28 -right-20 size-64 text-mint/[0.09]" />
+            <Horizon className="animate-sway pointer-events-none absolute -left-24 -top-24 size-72 text-mint/20" />
+            <MotifScroll
+              effect="rotate"
+              speed={1}
+              className="pointer-events-none absolute -bottom-28 -right-20 size-64 text-mint/[0.14]"
+            >
+              <Meridian className="size-full" />
+            </MotifScroll>
             <span
               aria-hidden="true"
               className="beacon-glow animate-beacon absolute -bottom-10 -left-10 size-72"
